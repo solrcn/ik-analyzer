@@ -4,6 +4,7 @@
 package org.wltea.analysis;
 
 /**
+ * IK Analyzer v3.0
  * 表示词典检索的命中结果
  * @author 林良益
  *

@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.wltea.analysis.DictSegment;
+import org.wltea.analysis.Dictionary;
 import org.wltea.analysis.Hit;
 
 import junit.framework.TestCase;
@@ -27,17 +28,13 @@ import junit.framework.TestCase;
  */
 public class DictionaryTester extends TestCase {
 	
-	private static final String DIC_MAIN = "/org/wltea/analysis/dic/main.dic";
-	private static final String DIC_SURNAME = "/org/wltea/analysis/dic/surname.dic";
-
-	
 	public void testMainDicEncoding(){
 		int count = 0;
-        InputStream is = DictionaryTester.class.getResourceAsStream(DIC_MAIN);
+        InputStream is = DictionaryTester.class.getResourceAsStream(Dictionary.PATH_DIC_MAIN);
 		try {
 			
 			String theWord = null;
-			BufferedReader br = new BufferedReader(new InputStreamReader(is , "UTF-8"), 512);
+			BufferedReader br = new BufferedReader(new InputStreamReader(is,"UTF-8"), 512);
 			do {
 				theWord = br.readLine();
 				if (theWord != null) {
@@ -64,7 +61,7 @@ public class DictionaryTester extends TestCase {
 	}
 	
 	public void testMainDictMemoryConsume(){
-        InputStream is = DictionaryTester.class.getResourceAsStream(DIC_MAIN);
+        InputStream is = DictionaryTester.class.getResourceAsStream(Dictionary.PATH_DIC_MAIN);
         System.out.println(new Date() + " before load dictionary");
         DictSegment _root_ = new DictSegment((char)0);
         try {
@@ -111,7 +108,7 @@ public class DictionaryTester extends TestCase {
 	public void testCountWordHeader(){
 		FileOutputStream fos = null;
 		Map<String , Integer> wordMap = new HashMap<String ,Integer>();
-        InputStream is = DictionaryTester.class.getResourceAsStream(DIC_MAIN);
+        InputStream is = DictionaryTester.class.getResourceAsStream(Dictionary.PATH_DIC_MAIN);
         
 		try {
 			fos = new FileOutputStream("D:/testCountWordHeader.txt");
@@ -175,7 +172,7 @@ public class DictionaryTester extends TestCase {
 	
 	public void testSurNameDicEncoding(){
 		int count = 0;
-        InputStream is = DictionaryTester.class.getResourceAsStream(DIC_SURNAME);
+        InputStream is = DictionaryTester.class.getResourceAsStream(Dictionary.PATH_DIC_SURNAME);
 		try {
 			
 			String theWord = null;
@@ -206,7 +203,7 @@ public class DictionaryTester extends TestCase {
 	}
 	
 	public void testDictSegmentSearch(){
-        InputStream is = DictionaryTester.class.getResourceAsStream(DIC_MAIN);
+        InputStream is = DictionaryTester.class.getResourceAsStream(Dictionary.PATH_DIC_SURNAME);
         System.out.println(new Date() + " before load dictionary");
 
         DictSegment _root_ = new DictSegment((char)0);
@@ -253,7 +250,7 @@ public class DictionaryTester extends TestCase {
 		int umCount = 0;
 		int mCount = 0;
 		for(String word : allWords){			
-			hit = _root_.search(word.toCharArray());
+			hit = _root_.match(word.toCharArray());
 			if(hit.isUnmatch()){
 				System.out.println(word);
 				umCount++;

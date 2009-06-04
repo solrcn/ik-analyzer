@@ -8,6 +8,7 @@ import java.util.Map;
 
 
 /**
+ * IK Analyzer v3.0
  * 字典子片断 字典匹配核心类
  * 该类采用 数组 结合 HashMap，实现词典存储，词语匹配
  * 
@@ -63,8 +64,8 @@ public class DictSegment {
 	 * @param charArray
 	 * @return
 	 */
-	public Hit search(char[] charArray ){
-		return this.search(charArray , 0 , charArray.length - 1);
+	public Hit match(char[] charArray){
+		return this.match(charArray , 0 , charArray.length - 1);
 	}
 	
 	/**
@@ -75,7 +76,7 @@ public class DictSegment {
 	 * @param searchHit
 	 * @return
 	 */
-	public Hit search(char[] charArray , int begin , int end){
+	public Hit match(char[] charArray , int begin , int end){
 		Character keyChar = new Character(charArray[begin]);
 		DictSegment ds = null;
 		
@@ -100,7 +101,7 @@ public class DictSegment {
 		if(ds != null){			
 			if(begin < end){
 				//词未匹配完，继续往下搜索
-				return ds.search(charArray, begin + 1 , end);
+				return ds.match(charArray, begin + 1 , end);
 			}else if (begin == end){
 				Hit searchHit= new Hit();
 				//搜索最后一个char
