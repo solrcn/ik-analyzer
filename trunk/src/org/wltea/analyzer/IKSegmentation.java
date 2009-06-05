@@ -7,36 +7,36 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.TreeSet;
 
-import org.apache.lucene.analysis.Token;
-import org.apache.lucene.analysis.Tokenizer;
-
 /**
  * IK Analyzer v3.0
- * 词元分解器
- * 单个词元分解器负责一个Reader内字串的分析
+ * IK分词器
+ * 注：IKSegmentation是一个lucene无关的通用分词器
  * @author 林良益
  *
  */
-final class IKTokenizer extends Tokenizer {
+public final class IKSegmentation{
 	
+	private Reader input;
 	//词元容器池
-	private TokenPool tokenPool;
-	//分析器上下文
+	private LexemePool lexemePool;
+	//分词器上下文
 	private Context context;
 
     
     
-	IKTokenizer(Reader input){
-		super(input);
+	public IKSegmentation(Reader input){
+		this.input = input ;
 		context = new Context();
-		tokenPool = new TokenPool();
+		lexemePool = new LexemePool();
 	}
 	
-    /* (non-Javadoc)
-     * @see org.apache.lucene.analysis.TokenStream#next()
-     */
-	public final Token next() throws IOException {
-		if(tokenPool.isEmpty()){
+	/**
+	 * 获取下一个语义单元
+	 * @return 没有更多的词元，则返回null
+	 * @throws IOException
+	 */
+	public final Lexeme next() throws IOException {
+		if(lexemePool.isEmpty()){
 			//可处理的字串长度
 			int available = context.fillBuffer(input);			
             if(available <= 0){
@@ -49,11 +49,11 @@ final class IKTokenizer extends Tokenizer {
             	//记录已分析的字符长度，同时累计已分析的字符长度
             	context.setLastAnalyzed(analyzed);
             	//读取词元池中的词元
-            	return tokenPool.pull();
+            	return lexemePool.pull();
             }
 		}else{
 			//读取词元池中的已有词元
-			return tokenPool.pull();
+			return lexemePool.pull();
 		}	
 	}
 	
@@ -63,6 +63,7 @@ final class IKTokenizer extends Tokenizer {
 	 * @return 本次处理的字串长度
 	 */
 	private int analyze(int available){
+		//TODO 
 		return 0;
 	}
 	
@@ -135,26 +136,27 @@ final class IKTokenizer extends Tokenizer {
 			this.lastAnalyzed = lastAnalyzed;
 			this.analyzedLength += lastAnalyzed;
 		}
-	}	
+	}
+	
 	
 	/**
 	 * 词元容器
 	 * @author 林良益
 	 *
 	 */
-	class TokenPool{
+	class LexemePool{
 		
 	    //词元组,存贮切分完成的词元代理
-	    private TreeSet<TokenDelegate> tokenDelegateSet;
+	    private TreeSet<Lexeme> lexemeSet;
 	    
-	    private TokenPool(){
-	    	tokenDelegateSet = new TreeSet<TokenDelegate>();
+	    private LexemePool(){
+	    	lexemeSet = new TreeSet<Lexeme>();
 	    }
 		/**
 		 * 向容器压入切分出的词元对象代理
-		 * @param tokenDelegate
+		 * @param lexeme
 		 */
-		void push(TokenDelegate tokenDelegate){
+		void push(Lexeme lexeme){
 			//TODO 这里要实现某种排歧义的算法
 		}
 		
@@ -162,10 +164,9 @@ final class IKTokenizer extends Tokenizer {
 		 * 从容器中按顺序，逐个取出词元对象
 		 * @return
 		 */
-		Token pull(){
+		Lexeme pull(){
 			if(!isEmpty()){
-				TokenDelegate tokenDelegate = tokenDelegateSet.pollFirst();
-				return tokenDelegate.toToken();
+				return lexemeSet.pollFirst();
 			}else{
 				return null;
 			}
@@ -176,7 +177,7 @@ final class IKTokenizer extends Tokenizer {
 		 * @return
 		 */
 		int size(){
-			return tokenDelegateSet.size();
+			return lexemeSet.size();
 		}
 		
 		/**
@@ -184,30 +185,8 @@ final class IKTokenizer extends Tokenizer {
 		 * @return
 		 */
 		boolean isEmpty(){
-			return tokenDelegateSet.isEmpty();
+			return lexemeSet.isEmpty();
 		}
 	}
-	
-	/**
-	 * 词元代理
-	 * 对Token的封装
-	 * @author 林良益
-	 *
-	 */
-	class TokenDelegate implements Comparable<TokenDelegate>{
-		
-		private TokenDelegate(){
-			
-		}
-		
-		Token toToken() {
-			return null;
-		}
 
-		public int compareTo(TokenDelegate other) {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-		
-	}
 }
