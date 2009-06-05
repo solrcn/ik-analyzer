@@ -7,8 +7,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.List;
 
-import org.wltea.analyzer.help.statistics.DictionaryTester;
+import org.wltea.analyzer.cfg.Configuration;
 
 /**
  * IK Analyzer v3.0
@@ -17,12 +18,6 @@ import org.wltea.analyzer.help.statistics.DictionaryTester;
  *
  */
 public class Dictionary {
-	
-	/*
-	 * 分词器配置文件路径
-	 */
-	public static final String PATH_CFG = "/IKAnalyzer.cfg.xml";
-	
 	/*
 	 * 分词器默认字典路径 
 	 */
@@ -60,13 +55,13 @@ public class Dictionary {
 	}
 
 	/**
-	 * 加载主词典
+	 * 加载主词典及扩展词典
 	 */
 	private void loadMainDict(){
 		//建立一个主词典实例
 		_MainDict = new DictSegment((char)0);
-		
-        InputStream is = DictionaryTester.class.getResourceAsStream(Dictionary.PATH_DIC_MAIN);
+		//读取主词典文件
+        InputStream is = Dictionary.class.getResourceAsStream(Dictionary.PATH_DIC_MAIN);
 		try {
 			BufferedReader br = new BufferedReader(new InputStreamReader(is , "UTF-8"), 512);
 			String theWord = null;
@@ -78,7 +73,7 @@ public class Dictionary {
 			} while (theWord != null);
 			
 		} catch (IOException ioe) {
-			System.err.println("主词典库载入异常.");
+			System.err.println("主词典库加载异常.");
 			ioe.printStackTrace();
 			
 		}finally{
@@ -91,6 +86,40 @@ public class Dictionary {
 				e.printStackTrace();
 			}
 		}
+		
+		//加载扩展词典配置
+		List<String> extDictFiles  = Configuration.getExtDictionarys();
+		if(extDictFiles != null){
+			for(String extDictName : extDictFiles){
+				//读取扩展词典文件
+				is = Dictionary.class.getResourceAsStream(extDictName);
+				try {
+					BufferedReader br = new BufferedReader(new InputStreamReader(is , "UTF-8"), 512);
+					String theWord = null;
+					do {
+						theWord = br.readLine();
+						if (theWord != null) {
+							//加载扩展词典数据到主内存词典中
+							_MainDict.fillSegment(theWord.trim().toCharArray());
+						}
+					} while (theWord != null);
+					
+				} catch (IOException ioe) {
+					System.err.println("扩展典库加载异常.");
+					ioe.printStackTrace();
+					
+				}finally{
+					try {
+						if(is != null){
+		                    is.close();
+		                    is = null;
+						}
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
 	}	
 	
 	/**
@@ -99,8 +128,8 @@ public class Dictionary {
 	private void loadSurnameDict(){
 		//建立一个主词典实例
 		_SurnameDict = new DictSegment((char)0);
-		
-        InputStream is = DictionaryTester.class.getResourceAsStream(Dictionary.PATH_DIC_SURNAME);
+		//读取姓氏词典文件
+        InputStream is = Dictionary.class.getResourceAsStream(Dictionary.PATH_DIC_SURNAME);
 		try {
 			BufferedReader br = new BufferedReader(new InputStreamReader(is , "UTF-8"), 512);
 			String theWord = null;
@@ -112,7 +141,7 @@ public class Dictionary {
 			} while (theWord != null);
 			
 		} catch (IOException ioe) {
-			System.err.println("主词典库载入异常.");
+			System.err.println("姓氏词典加载异常.");
 			ioe.printStackTrace();
 			
 		}finally{
@@ -127,6 +156,21 @@ public class Dictionary {
 		}
 	}	
 
+	/**
+	 * 加载扩展的词条
+	 * @param words
+	 */
+	public static void loadExtendWords(List<String> extWords){
+		if(extWords != null){
+			for(String extWord : extWords){
+				if (extWord != null) {
+					//加载扩展词条到主内存词典中
+					singleton._MainDict.fillSegment(extWord.trim().toCharArray());
+				}
+			}
+		}
+	}
+	
 	/**
 	 * 在主词典中匹配char数组
 	 * @param charArray
