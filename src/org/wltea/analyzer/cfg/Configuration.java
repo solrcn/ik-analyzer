@@ -17,8 +17,11 @@ import java.util.Properties;
  *
  */
 public class Configuration {
-	
+	/*
+	 * 分词器配置文件路径
+	 */	
 	private static final String FILE_NAME = "/IKAnalyzer.cfg.xml";
+	//配置属性——扩展字典
 	private static final String EXT_DICT = "ext_dict";
 	
 	private static final Configuration CFG = new Configuration();
@@ -57,7 +60,7 @@ public class Configuration {
 				for(String filePath : filePaths){
 					if(filePath != null && !"".equals(filePath.trim())){
 						extDictFiles.add(filePath.trim());
-						System.out.println(filePath.trim());
+						//System.out.println(filePath.trim());
 					}
 				}
 			}
