@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.wltea.analysis;
+package org.wltea.analyzer.dic;
 
 import java.util.HashMap;
 import java.util.Map;
