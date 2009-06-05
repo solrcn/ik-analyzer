@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.wltea.analysis;
+package org.wltea.analyzer;
 
 import java.io.IOException;
 import java.io.Reader;

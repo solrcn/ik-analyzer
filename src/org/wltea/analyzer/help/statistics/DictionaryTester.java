@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.wltea.analysis.help.statistics;
+package org.wltea.analyzer.help.statistics;
 
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
@@ -15,9 +15,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.wltea.analysis.DictSegment;
-import org.wltea.analysis.Dictionary;
-import org.wltea.analysis.Hit;
+import org.wltea.analyzer.dic.DictSegment;
+import org.wltea.analyzer.dic.Dictionary;
+import org.wltea.analyzer.dic.Hit;
 
 import junit.framework.TestCase;
 

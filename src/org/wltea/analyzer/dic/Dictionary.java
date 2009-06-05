@@ -1,14 +1,14 @@
 /**
  * 
  */
-package org.wltea.analysis;
+package org.wltea.analyzer.dic;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import org.wltea.analysis.help.statistics.DictionaryTester;
+import org.wltea.analyzer.help.statistics.DictionaryTester;
 
 /**
  * IK Analyzer v3.0
@@ -157,7 +157,5 @@ public class Dictionary {
 	public static Hit matchInSurnameDict(char[] charArray , int begin, int end){
 		return singleton._SurnameDict.match(charArray, begin, end);
 	}
-
-
 	
 }

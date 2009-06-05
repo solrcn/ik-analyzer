@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.wltea.analysis;
+package org.wltea.analyzer.dic;
 
 /**
  * IK Analyzer v3.0
