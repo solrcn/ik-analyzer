@@ -8,6 +8,6 @@ package org.wltea.analyzer.help;
  * @author 林良益
  *
  */
-public class CharaterHelper {
+public class CharacterHelper {
 
 }
