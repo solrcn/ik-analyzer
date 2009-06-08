@@ -10,6 +10,11 @@ import java.util.InvalidPropertiesFormatException;
 import java.util.List;
 import java.util.Properties;
 
+import org.wltea.analyzer.seg.ChineseSegmenter;
+import org.wltea.analyzer.seg.ISegmenter;
+import org.wltea.analyzer.seg.LetterSegmenter;
+import org.wltea.analyzer.seg.QuantifierSegmenter;
+
 /**
  * IK Analyzer v3.0
  * 简单的配置管理类,单子模式
@@ -66,5 +71,21 @@ public class Configuration {
 			}
 		}		
 		return extDictFiles;		
+	}
+	
+	/**
+	 * 初始化子分词器实现
+	 * （目前暂时不考虑配置扩展）
+	 * @return
+	 */
+	public static List<ISegmenter> loadSegmenter(){
+		List<ISegmenter> segmenters = new ArrayList<ISegmenter>(4);
+		//处理字母的子分词器
+		segmenters.add(new LetterSegmenter()); 
+		//处理数量词的子分词器
+		segmenters.add(new QuantifierSegmenter());
+		//处理中文词的子分词器
+		segmenters.add(new ChineseSegmenter());
+		return segmenters;
 	}
 }
