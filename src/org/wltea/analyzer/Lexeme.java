@@ -13,9 +13,9 @@ public final class Lexeme implements Comparable<Lexeme>{
 	
 	//词元的起始位移
 	private int offset;
-    //词元的起始位置
+    //词元的相对起始位置
     private int begin;
-    //词元的终止位置
+    //词元的相对终止位置
     private int end;
     //词元文本
     private String lexemeText;
@@ -102,6 +102,13 @@ public final class Lexeme implements Comparable<Lexeme>{
 	public int getBegin() {
 		return begin;
 	}
+	/**
+	 * 获取词元的绝对起始位置
+	 * @return
+	 */
+	public int getBeginPosition(){
+		return offset + begin;
+	}
 
 	public void setBegin(int begin) {
 		this.begin = begin;
@@ -110,7 +117,14 @@ public final class Lexeme implements Comparable<Lexeme>{
 	public int getEnd() {
 		return end;
 	}
-
+	/**
+	 * 获取词元的绝对终止位置
+	 * @return
+	 */
+	public int getEndPosition(){
+		return offset + end;
+	}
+	
 	public void setEnd(int end) {
 		this.end = end;
 	}
@@ -120,6 +134,9 @@ public final class Lexeme implements Comparable<Lexeme>{
 	}
 	
 	public String getLexemeText() {
+		if(lexemeText == null){
+			return "";
+		}
 		return lexemeText;
 	}
 

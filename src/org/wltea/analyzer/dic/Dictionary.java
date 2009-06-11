@@ -73,7 +73,7 @@ public class Dictionary {
 			} while (theWord != null);
 			
 		} catch (IOException ioe) {
-			System.err.println("主词典库加载异常.");
+			System.err.println("Main Dictionary loading exception.");
 			ioe.printStackTrace();
 			
 		}finally{
@@ -105,7 +105,7 @@ public class Dictionary {
 					} while (theWord != null);
 					
 				} catch (IOException ioe) {
-					System.err.println("扩展典库加载异常.");
+					System.err.println("Extension Dictionary loading exception.");
 					ioe.printStackTrace();
 					
 				}finally{
@@ -141,7 +141,7 @@ public class Dictionary {
 			} while (theWord != null);
 			
 		} catch (IOException ioe) {
-			System.err.println("姓氏词典加载异常.");
+			System.err.println("Surname Dictionary loading exception.");
 			ioe.printStackTrace();
 			
 		}finally{
