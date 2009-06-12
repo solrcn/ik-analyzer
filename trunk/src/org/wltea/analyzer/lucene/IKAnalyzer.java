@@ -13,7 +13,7 @@ import org.apache.lucene.analysis.TokenStream;
  * @author 林良益
  *
  */
-public class IKAnalyzer extends Analyzer {
+public final class IKAnalyzer extends Analyzer {
 	
 	public IKAnalyzer(){
 		super();

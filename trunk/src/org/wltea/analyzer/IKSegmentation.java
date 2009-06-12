@@ -105,7 +105,7 @@ public final class IKSegmentation{
 		 */
 	    private void push(Lexeme lexeme , char[] segmentBuff){
 			//生成lexeme的词元文本
-			String lexemeText = new String(segmentBuff , lexeme.getBegin() , lexeme.getLexemeLength());
+			String lexemeText = new String(segmentBuff , lexeme.getBegin() , lexeme.getLength());
 			lexeme.setLexemeText(lexemeText);
 			lexemeSet.add(lexeme);
 		}		
