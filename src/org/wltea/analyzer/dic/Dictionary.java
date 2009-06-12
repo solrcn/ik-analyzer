@@ -21,8 +21,8 @@ public class Dictionary {
 	/*
 	 * 分词器默认字典路径 
 	 */
-	public static final String PATH_DIC_MAIN = "/org/wltea/analysis/dic/main.dic";
-	public static final String PATH_DIC_SURNAME = "/org/wltea/analysis/dic/surname.dic";
+	public static final String PATH_DIC_MAIN = "/org/wltea/analyzer/dic/main.dic";
+	public static final String PATH_DIC_SURNAME = "/org/wltea/analyzer/dic/surname.dic";
 	
 	
 	/*
@@ -157,6 +157,19 @@ public class Dictionary {
 	}	
 
 	/**
+	 * 词典初始化
+	 * 由于IK Analyzer的词典采用Dictionary类的静态方法进行词典初始化
+	 * 只有当Dictionary类被实际调用时，才会开始载入词典，
+	 * 这将延长首次分词操作的时间
+	 * 该方法提供了一个在应用加载阶段就初始化字典的手段
+	 * 用来缩短首次分词时的时延
+	 * @return
+	 */
+	public static Dictionary getInsance(){
+		return Dictionary.singleton;
+	}
+	
+	/**
 	 * 加载扩展的词条
 	 * @param words
 	 */
@@ -187,8 +200,8 @@ public class Dictionary {
 	 * @param end
 	 * @return
 	 */
-	public static Hit matchInMainDict(char[] charArray , int begin, int end){
-		return singleton._MainDict.match(charArray, begin, end);
+	public static Hit matchInMainDict(char[] charArray , int begin, int length){
+		return singleton._MainDict.match(charArray, begin, length);
 	}	
 	
 	/**
@@ -198,8 +211,8 @@ public class Dictionary {
 	 * @param end
 	 * @return
 	 */
-	public static Hit matchInSurnameDict(char[] charArray , int begin, int end){
-		return singleton._SurnameDict.match(charArray, begin, end);
+	public static Hit matchInSurnameDict(char[] charArray , int begin, int length){
+		return singleton._SurnameDict.match(charArray, begin, length);
 	}
 	
 }

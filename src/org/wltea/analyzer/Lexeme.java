@@ -15,8 +15,8 @@ public final class Lexeme implements Comparable<Lexeme>{
 	private int offset;
     //词元的相对起始位置
     private int begin;
-    //词元的相对终止位置
-    private int end;
+    //词元的长度
+    private int length;
     //词元文本
     private String lexemeText;
     
@@ -24,10 +24,13 @@ public final class Lexeme implements Comparable<Lexeme>{
 		
 	}
 	
-	Lexeme(int offset , int begin , int end){
+	Lexeme(int offset , int begin , int length){
 		this.offset = offset;
 		this.begin = begin;
-		this.end = end;
+		if(length < 0){
+			throw new IllegalArgumentException("length < 0");
+		}
+		this.length = length;
 	}
 	
     /*
@@ -48,7 +51,7 @@ public final class Lexeme implements Comparable<Lexeme>{
 			Lexeme other = (Lexeme)o;
 			if(this.offset == other.getOffset()
 					&& this.begin == other.getBegin()
-					&& this.end == other.getEnd()){
+					&& this.length == other.getLength()){
 				return true;			
 			}else{
 				return false;
@@ -63,9 +66,9 @@ public final class Lexeme implements Comparable<Lexeme>{
      * @see java.lang.Object#hashCode()
      */
     public int hashCode(){
-    	int absBegin = this.begin + this.offset;
-    	int absEnd = this.end + this.offset;
-    	return  (absBegin * 37) + (absEnd * 31) + ((absBegin * absEnd) % this.getLexemeLength()) * 11;
+    	int absBegin = getBeginPosition();
+    	int absEnd = getEndPosition();
+    	return  (absBegin * 37) + (absEnd * 31) + ((absBegin * absEnd) % getLength()) * 11;
     }
     
     /*
@@ -78,11 +81,11 @@ public final class Lexeme implements Comparable<Lexeme>{
             return -1;
         }else if(this.begin == other.getBegin()){
         	//词元长度优先
-        	if(this.end > other.getEnd()){
+        	if(this.length > other.getLength()){
         		return -1;
-        	}else if(this.end == other.getEnd()){
+        	}else if(this.length == other.getLength()){
         		return 0;
-        	}else {//this.end < other.getEnd()
+        	}else {//this.length < other.getLength()
         		return 1;
         	}
         	
@@ -114,23 +117,23 @@ public final class Lexeme implements Comparable<Lexeme>{
 		this.begin = begin;
 	}
 
-	public int getEnd() {
-		return end;
-	}
 	/**
 	 * 获取词元的绝对终止位置
 	 * @return
 	 */
 	public int getEndPosition(){
-		return offset + end;
+		return offset + begin + length;
 	}
 	
-	public void setEnd(int end) {
-		this.end = end;
-	}
-
-	public int getLexemeLength(){
-		return (this.end - this.begin + 1);
+	public int getLength(){
+		return this.length;
+	}	
+	
+	public void setLength(int length) {
+		if(this.length < 0){
+			throw new IllegalArgumentException("length < 0");
+		}
+		this.length = length;
 	}
 	
 	public String getLexemeText() {
@@ -141,7 +144,13 @@ public final class Lexeme implements Comparable<Lexeme>{
 	}
 
 	public void setLexemeText(String lexemeText) {
-		this.lexemeText = lexemeText;
+		if(lexemeText == null){
+			this.lexemeText = "";
+			this.length = 0;
+		}else{
+			this.lexemeText = lexemeText;
+			this.length = lexemeText.length();
+		}
 	}
 	
 }

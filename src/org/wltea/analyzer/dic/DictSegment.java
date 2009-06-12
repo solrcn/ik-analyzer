@@ -65,18 +65,18 @@ public class DictSegment {
 	 * @return
 	 */
 	public Hit match(char[] charArray){
-		return this.match(charArray , 0 , charArray.length - 1);
+		return this.match(charArray , 0 , charArray.length);
 	}
 	
 	/**
 	 * 匹配词段
 	 * @param seg
 	 * @param begin
-	 * @param end
+	 * @param length
 	 * @param searchHit
 	 * @return
 	 */
-	public Hit match(char[] charArray , int begin , int end){
+	public Hit match(char[] charArray , int begin , int length){
 		Character keyChar = new Character(charArray[begin]);
 		DictSegment ds = null;
 		
@@ -99,10 +99,10 @@ public class DictSegment {
 		}
 		//STEP2 找到DictSegment，判断词的匹配状态，是否继续递归，还是返回结果
 		if(ds != null){			
-			if(begin < end){
+			if(length > 1){
 				//词未匹配完，继续往下搜索
-				return ds.match(charArray, begin + 1 , end);
-			}else if (begin == end){
+				return ds.match(charArray, begin + 1 , length - 1);
+			}else if (length == 1){
 				Hit searchHit= new Hit();
 				//搜索最后一个char
 				if(ds.nodeState == 1){
@@ -126,16 +126,16 @@ public class DictSegment {
 	 * @param charArray
 	 */
 	public void fillSegment(char[] charArray){
-		this.fillSegment(charArray, 0 , charArray.length - 1); 
+		this.fillSegment(charArray, 0 , charArray.length); 
 	}
 	
 	/**
 	 * 填充词典片段
 	 * @param charArray
 	 * @param begin
-	 * @param end
+	 * @param length
 	 */
-	public synchronized void fillSegment(char[] charArray , int begin , int end){
+	public synchronized void fillSegment(char[] charArray , int begin , int length){
 		//获取字典表中的汉字对象
 		Character beginChar = new Character(charArray[begin]);
 		Character keyChar = charMap.get(beginChar);
@@ -148,10 +148,10 @@ public class DictSegment {
 		//搜索当前节点的存储，查询对应keyChar的keyChar，如果没有则创建
 		DictSegment ds = lookforSegment(keyChar);
 		//处理keyChar对应的segment
-		if(begin < end){
+		if(length > 1){
 			//词元还没有完全加入词典树
-			ds.fillSegment(charArray, begin + 1, end);
-		}else if (begin == end){
+			ds.fillSegment(charArray, begin + 1, length - 1);
+		}else if (length == 1){
 			//已经是词元的最后一个char,设置当前节点状态为1，表明一个完整的词
 			ds.nodeState = 1;
 		}

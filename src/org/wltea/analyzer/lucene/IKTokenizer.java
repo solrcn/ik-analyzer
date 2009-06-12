@@ -33,13 +33,8 @@ final class IKTokenizer extends Tokenizer {
     /* (non-Javadoc)
      * @see org.apache.lucene.analysis.TokenStream#next()
      */
-	public final Token next() throws IOException {
-		Token nextToken = null;
-		Lexeme nextLexeme = _IKImplement.next();
-		if(nextLexeme != null){
-			nextToken = toToken(nextLexeme);
-		}
-		return nextToken;
+	public Token next() throws IOException {
+		return toToken(_IKImplement.next());
 	}
 	
 	/**
@@ -48,7 +43,13 @@ final class IKTokenizer extends Tokenizer {
 	 * @return
 	 */
 	private Token toToken(Lexeme lexeme){
-		//TODO 
-		return null;
+		if(lexeme == null){
+			return null;
+		}
+		Token token = new Token();
+		token.setStartOffset(lexeme.getBeginPosition());		
+		token.setEndOffset(lexeme.getEndPosition());
+		token.setTermBuffer(lexeme.getLexemeText());
+		return token;
 	}
 }
