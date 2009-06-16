@@ -20,11 +20,11 @@ public final class Lexeme implements Comparable<Lexeme>{
     //词元文本
     private String lexemeText;
     
-	Lexeme(){
+	public Lexeme(){
 		
 	}
 	
-	Lexeme(int offset , int begin , int length){
+	public Lexeme(int offset , int begin , int length){
 		this.offset = offset;
 		this.begin = begin;
 		if(length < 0){
