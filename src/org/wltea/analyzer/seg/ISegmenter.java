@@ -13,6 +13,5 @@ import org.wltea.analyzer.Context;
  */
 public interface ISegmenter {
 	
-	Lexeme nextLexeme(Context context);
-
+	Lexeme nextLexeme(char[] segmentBuff , Context context);
 }

@@ -16,7 +16,7 @@ import org.wltea.analyzer.Context;
  * @author 林良益
  *
  */
-public class QuantifierSegmenter implements ISegmenter {
+public class QuantifierSegmenter extends AbsSegmenter  {
 	//阿拉伯数字
 	public static String Arabic = "0123456789";
 	//GB库中的罗马字符
@@ -34,7 +34,7 @@ public class QuantifierSegmenter implements ISegmenter {
 	//时钟符号
 	public static String Clock_Sign = ":";
 	//数字符号_前缀
-	public static String Num_Sign_Pre = "-+";
+	public static String Num_Sign_Pre = "-+$￥";
 	//数字符号_中间
 	public static String Num_Sign_Mid = "./点";
 	//数字符号_后缀
@@ -43,9 +43,10 @@ public class QuantifierSegmenter implements ISegmenter {
 	/* (non-Javadoc)
 	 * @see org.wltea.analyzer.ISegmenter#nextLexeme(org.wltea.analyzer.IKSegmentation.Context)
 	 */
-	public Lexeme nextLexeme(Context context) {
+	public Lexeme nextLexeme(char[] segmentBuff , Context context) {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 
 }
