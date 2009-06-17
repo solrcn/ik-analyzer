@@ -15,14 +15,15 @@ import org.wltea.analyzer.Lexeme;
  * @author 林良益
  *
  */
-public class ChineseSegmenter implements ISegmenter {
+public class ChineseSegmenter extends AbsSegmenter {
 
 	/* (non-Javadoc)
 	 * @see org.wltea.analyzer.seg.ISegmenter#nextLexeme(org.wltea.analyzer.Context)
 	 */
-	public Lexeme nextLexeme(Context context) {
+	public Lexeme nextLexeme(char[] segmentBuff , Context context) {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 
 }

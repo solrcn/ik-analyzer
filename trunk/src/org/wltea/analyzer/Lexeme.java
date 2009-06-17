@@ -153,4 +153,11 @@ public final class Lexeme implements Comparable<Lexeme>{
 		}
 	}
 	
+	public String toString(){
+		StringBuffer strbuf = new StringBuffer();
+		strbuf.append(this.getBeginPosition()).append("-").append(this.getEndPosition());
+		strbuf.append(" : ").append(this.lexemeText);
+		return strbuf.toString();
+	}
+	
 }
