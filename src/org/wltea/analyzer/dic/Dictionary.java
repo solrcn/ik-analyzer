@@ -23,6 +23,7 @@ public class Dictionary {
 	 */
 	public static final String PATH_DIC_MAIN = "/org/wltea/analyzer/dic/main.dic";
 	public static final String PATH_DIC_SURNAME = "/org/wltea/analyzer/dic/surname.dic";
+	public static final String PATH_DIC_QUANTIFIER = "/org/wltea/analyzer/dic/quantifier.dic";
 	
 	
 	/*
@@ -45,12 +46,16 @@ public class Dictionary {
 	 * 姓氏词典
 	 */
 	private DictSegment _SurnameDict;
-	
+	/*
+	 * 量词词典
+	 */
+	private DictSegment _QuantifierDict;
 	
 	private Dictionary(){
 		//初始化系统词典
 		loadMainDict();
 		loadSurnameDict();
+		loadQuantifierDict();
 		//TODO 名词后缀、停止词
 	}
 
@@ -154,7 +159,41 @@ public class Dictionary {
 				e.printStackTrace();
 			}
 		}
-	}	
+	}
+	
+	/**
+	 * 加载量词词典
+	 */
+	private void loadQuantifierDict(){
+		//建立一个主词典实例
+		_QuantifierDict = new DictSegment((char)0);
+		//读取量词词典文件
+        InputStream is = Dictionary.class.getResourceAsStream(Dictionary.PATH_DIC_QUANTIFIER);
+		try {
+			BufferedReader br = new BufferedReader(new InputStreamReader(is , "UTF-8"), 512);
+			String theWord = null;
+			do {
+				theWord = br.readLine();
+				if (theWord != null) {
+					_QuantifierDict.fillSegment(theWord.trim().toCharArray());
+				}
+			} while (theWord != null);
+			
+		} catch (IOException ioe) {
+			System.err.println("Quantifier Dictionary loading exception.");
+			ioe.printStackTrace();
+			
+		}finally{
+			try {
+				if(is != null){
+                    is.close();
+                    is = null;
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}		
 
 	/**
 	 * 词典初始化
@@ -214,5 +253,17 @@ public class Dictionary {
 	public static Hit matchInSurnameDict(char[] charArray , int begin, int length){
 		return singleton._SurnameDict.match(charArray, begin, length);
 	}
+	
+	/**
+	 * 在量词词典中匹配指定位置的char数组
+	 * @param charArray
+	 * @param begin
+	 * @param end
+	 * @return
+	 */
+	public static Hit matchInQuantifierDict(char[] charArray , int begin, int length){
+		return singleton._QuantifierDict.match(charArray, begin, length);
+	}
+	
 	
 }

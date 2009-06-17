@@ -32,15 +32,6 @@ public class Context{
     Context(){
     	buffLocker = new HashSet<ISegmenter>(4);
 	}
-    
-    public void reset(){
-    	buffOffset = 0;
-    	maxAnalyzedIndex = 0;
-//    	lastReadIn = 0;
-    	lastAnalyzed = 0;
-		cursor = 0;
-		buffLocker.clear();
-	}
 
 	public int getBuffOffset() {
 		return buffOffset;
