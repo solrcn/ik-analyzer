@@ -214,7 +214,7 @@ public class QuantifierSegmenter implements ISegmenter {
 			//记录起始位置
 			nStart = context.getCursor();
 			//记录当前的字符状态
-			nStatus = inputStatus;
+			nStatus = inputStatus;	
 			
 		}else if(NC_CHINESE.equals(inputStatus)){//中文数词
 			//记录起始位置
@@ -382,22 +382,35 @@ public class QuantifierSegmenter implements ISegmenter {
 	 */
 	private void onCNPStatus(String inputStatus ,  Context context){
 		if(NC_CHINESE.equals(inputStatus)){//中文数字
-			//记录当前的字符状态
-			nStatus = inputStatus;
 			//记录可能的结束位置
-			nEnd = context.getCursor();
+			nEnd = context.getCursor() - 1;
+			//输出可能存在的数词
+			outputNumLexeme(context);
+			//重置数词状态
+			nReset();
+			//进入初始态进行处理
+			onNaNStatus(inputStatus , context);			
+
 			
 		}else if(NC_ARABIC.equals(inputStatus)){//阿拉伯数字
-			//记录当前的字符状态
-			nStatus = inputStatus;
 			//记录可能的结束位置
-			nEnd = context.getCursor();
+			nEnd = context.getCursor() - 1;
+			//输出可能存在的数词
+			outputNumLexeme(context);
+			//重置数词状态
+			nReset();
+			//进入初始态进行处理
+			onNaNStatus(inputStatus , context);	
 			
 		}else if(NC_ROME.equals(inputStatus)){//罗马数字
-			//记录当前的字符状态
-			nStatus = inputStatus;
 			//记录可能的结束位置
-			nEnd = context.getCursor();
+			nEnd = context.getCursor() - 1;
+			//输出可能存在的数词
+			outputNumLexeme(context);
+			//重置数词状态
+			nReset();
+			//进入初始态进行处理
+			onNaNStatus(inputStatus , context);	
 			
 //		}else if(NC_ENGLISH.equals(inputStatus)){//英文借代数字
 //			//记录当前的字符状态
