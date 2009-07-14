@@ -34,12 +34,12 @@ public class Hit {
 	public void setMatch() {
 		this.hitState = this.hitState | MATCH;
 	}
-	/**
-	 * 判断是否完全匹配，且是另一个词的前缀
-	 */
-	public boolean isMatchAndPrefix() {
-		return ((this.hitState & MATCH) > 0) &&  ((this.hitState & PREFIX) > 0);
-	}
+//	/**
+//	 * 判断是否完全匹配，且是另一个词的前缀
+//	 */
+//	public boolean isMatchAndPrefix() {
+//		return ((this.hitState & MATCH) > 0) &&  ((this.hitState & PREFIX) > 0);
+//	}
 	/**
 	 * 判断是否是词的前缀
 	 */

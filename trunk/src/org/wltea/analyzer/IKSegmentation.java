@@ -6,6 +6,7 @@ package org.wltea.analyzer;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.List;
+import java.util.Set;
 import java.util.TreeSet;
 
 import org.wltea.analyzer.cfg.Configuration;
@@ -65,7 +66,7 @@ public final class IKSegmentation{
             }else{
             	
             	//分词处理
-        		Lexeme lexeme = null;
+        		Set<Lexeme> lexemeSet = null;
         		int buffIndex = 0;
         		for( ; buffIndex < available ;  buffIndex++){
         			//标识最大分析位置
@@ -78,9 +79,9 @@ public final class IKSegmentation{
         			segmentBuff[buffIndex] = CharacterHelper.SBC2DBC(segmentBuff[buffIndex]);
         			//遍历子分词器
         			for(ISegmenter segmenter : segmenters){
-        				lexeme = segmenter.nextLexeme(segmentBuff , context);
-        				if(lexeme != null){
-        					lexemePool.push(lexeme, segmentBuff);
+        				lexemeSet = segmenter.nextLexeme(segmentBuff , context);
+        				if(lexemeSet != null && lexemeSet.size() > 0){
+        					lexemePool.push(lexemeSet, segmentBuff);
         				}
         			}
         			/*
@@ -145,20 +146,22 @@ public final class IKSegmentation{
 	private class LexemePool{
 		
 	    //词元组,存贮切分完成的词元代理
-	    private TreeSet<Lexeme> lexemeSet;
+	    private TreeSet<Lexeme> lexemeTreeSet;
 	    
 	    private LexemePool(){
-	    	lexemeSet = new TreeSet<Lexeme>();
+	    	lexemeTreeSet = new TreeSet<Lexeme>();
 	    }
 		/**
 		 * 向容器压入切分出的词元对象代理
 		 * @param lexeme
 		 */
-	    private void push(Lexeme lexeme , char[] segmentBuff){
-			//生成lexeme的词元文本
-			String lexemeText = new String(segmentBuff , lexeme.getBegin() , lexeme.getLength());
-			lexeme.setLexemeText(lexemeText);
-			lexemeSet.add(lexeme);
+	    private void push(Set<Lexeme> lexemeSet , char[] segmentBuff){
+	    	for(Lexeme lexeme : lexemeSet){
+				//生成lexeme的词元文本
+				String lexemeText = new String(segmentBuff , lexeme.getBegin() , lexeme.getLength());
+				lexeme.setLexemeText(lexemeText);
+				lexemeTreeSet.add(lexeme);
+	    	}
 		}		
 		/**
 		 * 从容器中按顺序，逐个取出词元对象
@@ -166,7 +169,7 @@ public final class IKSegmentation{
 		 */
 		private Lexeme pull(){
 			if(!isEmpty()){
-				return lexemeSet.pollFirst();
+				return lexemeTreeSet.pollFirst();
 			}else{
 				return null;
 			}
@@ -176,7 +179,7 @@ public final class IKSegmentation{
 		 * @return
 		 */
 		private boolean isEmpty(){
-			return lexemeSet.isEmpty();
+			return lexemeTreeSet.isEmpty();
 		}
 	}
 

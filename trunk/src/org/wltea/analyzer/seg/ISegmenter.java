@@ -3,6 +3,8 @@
  */
 package org.wltea.analyzer.seg;
 
+import java.util.Set;
+
 import org.wltea.analyzer.Lexeme;
 import org.wltea.analyzer.Context;
 
@@ -13,5 +15,5 @@ import org.wltea.analyzer.Context;
  */
 public interface ISegmenter {
 	
-	Lexeme nextLexeme(char[] segmentBuff , Context context);
+	Set<Lexeme> nextLexeme(char[] segmentBuff , Context context);
 }
