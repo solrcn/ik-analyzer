@@ -60,6 +60,8 @@ public class SegmentorTester extends TestCase{
 //		testStr.add("欢迎使用阿江统计2.01版");
 //		testStr.add("51千克五十一千克五万一千克两千克拉");
 //		testStr.add("十一点半下班十一点下班");
+		testStr.add("福州第一中学福州一中福州第三十六中赐进士及第");
+		
 		
 		for(String t : testStr){
 			System.out.println(t);	
