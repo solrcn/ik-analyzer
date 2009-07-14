@@ -111,8 +111,7 @@ public class QuantifierSegmenter implements ISegmenter {
 		//数词处理部分
 		processNumber(segmentBuff , context);
 		
-		//量词处理部分
-		
+		//量词处理部分		
 		if(countStart == -1){//未开始处理量词
 			//当前游标的位置紧挨着数词
 			if((lexemeSet.size() > 0 && nStart == -1)
@@ -633,7 +632,6 @@ public class QuantifierSegmenter implements ISegmenter {
 	 */
 	private void processCount(char[] segmentBuff , Context context){
 		Hit hit = null;
-		//System.out.println(context.getCursor());
 
 		if(countStart == -1){
 			hit = Dictionary.matchInQuantifierDict(segmentBuff , context.getCursor() , 1);
