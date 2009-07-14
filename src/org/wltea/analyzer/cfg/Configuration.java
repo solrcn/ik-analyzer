@@ -85,7 +85,7 @@ public class Configuration {
 		//处理数量词的子分词器
 		segmenters.add(new QuantifierSegmenter());
 		//处理中文词的子分词器
-		//segmenters.add(new ChineseSegmenter());
+		segmenters.add(new ChineseSegmenter());
 		return segmenters;
 	}
 }
