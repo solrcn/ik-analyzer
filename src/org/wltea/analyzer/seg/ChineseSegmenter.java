@@ -3,6 +3,8 @@
  */
 package org.wltea.analyzer.seg;
 
+import java.util.Set;
+
 import org.wltea.analyzer.Context;
 import org.wltea.analyzer.Lexeme;
 
@@ -15,12 +17,12 @@ import org.wltea.analyzer.Lexeme;
  * @author 林良益
  *
  */
-public class ChineseSegmenter extends AbsSegmenter {
+public class ChineseSegmenter implements ISegmenter {
 
 	/* (non-Javadoc)
 	 * @see org.wltea.analyzer.seg.ISegmenter#nextLexeme(org.wltea.analyzer.Context)
 	 */
-	public Lexeme nextLexeme(char[] segmentBuff , Context context) {
+	public Set<Lexeme> nextLexeme(char[] segmentBuff , Context context) {
 		// TODO Auto-generated method stub
 		return null;
 	}

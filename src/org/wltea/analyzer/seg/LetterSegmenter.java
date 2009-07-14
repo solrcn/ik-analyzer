@@ -3,6 +3,9 @@
  */
 package org.wltea.analyzer.seg;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.wltea.analyzer.Lexeme;
 import org.wltea.analyzer.Context;
 import org.wltea.analyzer.help.CharacterHelper;
@@ -15,7 +18,7 @@ import org.wltea.analyzer.help.CharacterHelper;
  * @author 林良益
  *
  */
-public class LetterSegmenter extends AbsSegmenter {
+public class LetterSegmenter implements ISegmenter {
 	
 	//链接符号
 	public static final char[] Sign_Connector = new char[]{'-','_','.','@','&'};
@@ -30,34 +33,32 @@ public class LetterSegmenter extends AbsSegmenter {
 	 * end记录的是在词元中最后一个出现的Letter但非Sign_Connector的字符的位置
 	 */
 	private int end;
+	/*
+	 * 词元集合
+	 */
+	private Set<Lexeme> lexemeSet;
 	
 	public LetterSegmenter(){
 		start = -1;
 		end = -1;
+		lexemeSet = new HashSet<Lexeme>();
 	}
 	
 	/* (non-Javadoc)
 	 * @see org.wltea.analyzer.ISegmenter#nextLexeme(org.wltea.analyzer.IKSegmentation.Context)
 	 */
-	public Lexeme nextLexeme(char[] segmentBuff , Context context) {	
+	public Set<Lexeme> nextLexeme(char[] segmentBuff , Context context) {
+		//清空结果集
+		lexemeSet.clear();
 		//读取当前位置的char	
 		char input = segmentBuff[context.getCursor()];
 		
 		if(start == -1){//当前的分词器尚未开始处理字符			
 			if(isAcceptedCharStart(input)){
-				if(context.getCursor() != context.getAvailable() - 1){
-					//记录起始指针的位置,标明分词器进入处理状态
-					start = context.getCursor();
-					end = start;
-					//锁定缓冲区
-					context.lockBuffer(this);
-				}else {//context.getCursor() == context.getAvailable() - 1读取缓冲区最后一个字符，直接输出
-					//生成已切分的词元
-					Lexeme newLexeme = new Lexeme(context.getBuffOffset() , context.getCursor() , 1);
-					return newLexeme;
-				}
+				//记录起始指针的位置,标明分词器进入处理状态
+				start = context.getCursor();
+				end = start;
 			}
-			return null;
 			
 		}else{//当前的分词器正在处理字符			
 			if(isAcceptedChar(input)){
@@ -65,35 +66,45 @@ public class LetterSegmenter extends AbsSegmenter {
 				if(!isLetterConnector(input)){
 					end = context.getCursor();
 				}
-				if(context.getCursor() == context.getAvailable() - 1){
-					//读取缓冲区最后一个字符，直接输出
-					//生成已切分的词元
-					Lexeme newLexeme = new Lexeme(context.getBuffOffset() , start , end - start + 1);
-					//设置当前分词器状态为“待处理”
-					start = -1;
-					end = -1;
-					//对缓冲区解锁
-					context.unlockBuffer(this);
-					return newLexeme;
-					
-				}else{
-					//啥也不做
-					return null;
-				}
 			}else{
 				//生成已切分的词元
 				Lexeme newLexeme = new Lexeme(context.getBuffOffset() , start , end - start + 1);
+				lexemeSet.add(newLexeme);
 				//设置当前分词器状态为“待处理”
 				start = -1;
 				end = -1;
-				//对缓冲区解锁
-				context.unlockBuffer(this);
-				return newLexeme;
+
 			}			
 		}
 		
+		//context.getCursor() == context.getAvailable() - 1读取缓冲区最后一个字符，直接输出
+		if(context.getCursor() == context.getAvailable() - 1
+				&& start != -1 && end != -1){
+			//生成已切分的词元
+			Lexeme newLexeme = new Lexeme(context.getBuffOffset() , start , end - start + 1);
+			lexemeSet.add(newLexeme);
+			//设置当前分词器状态为“待处理”
+			start = -1;
+			end = -1;
+		}
+		
+		//判断是否锁定缓冲区
+		if(start == -1 && end == -1){
+			//对缓冲区解锁
+			context.unlockBuffer(this);
+		}else{
+			context.lockBuffer(this);
+		}
+		
+		return lexemeSet;
+		
 	}
 	
+	/**
+	 * 
+	 * @param input
+	 * @return
+	 */
 	public static boolean isLetterConnector(char input){
 		for(char c : Sign_Connector){
 			if(c == input){
