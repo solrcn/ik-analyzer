@@ -24,6 +24,8 @@ public class Dictionary {
 	public static final String PATH_DIC_MAIN = "/org/wltea/analyzer/dic/main.dic";
 	public static final String PATH_DIC_SURNAME = "/org/wltea/analyzer/dic/surname.dic";
 	public static final String PATH_DIC_QUANTIFIER = "/org/wltea/analyzer/dic/quantifier.dic";
+	public static final String PATH_DIC_SUFFIX = "/org/wltea/analyzer/dic/suffix.dic";
+	public static final String PATH_DIC_PREP = "/org/wltea/analyzer/dic/preposition.dic";
 	
 	
 	/*
@@ -50,13 +52,22 @@ public class Dictionary {
 	 * 量词词典
 	 */
 	private DictSegment _QuantifierDict;
+	/*
+	 * 后缀词典
+	 */
+	private DictSegment _SuffixDict;
+	/*
+	 * 副词，介词词典
+	 */
+	private DictSegment _PrepDict;
 	
 	private Dictionary(){
 		//初始化系统词典
 		loadMainDict();
 		loadSurnameDict();
 		loadQuantifierDict();
-		//TODO 名词后缀、停止词
+		loadSuffixDict();
+		loadPrepDict();
 	}
 
 	/**
@@ -131,7 +142,7 @@ public class Dictionary {
 	 * 加载姓氏词典
 	 */
 	private void loadSurnameDict(){
-		//建立一个主词典实例
+		//建立一个姓氏词典实例
 		_SurnameDict = new DictSegment((char)0);
 		//读取姓氏词典文件
         InputStream is = Dictionary.class.getResourceAsStream(Dictionary.PATH_DIC_SURNAME);
@@ -165,7 +176,7 @@ public class Dictionary {
 	 * 加载量词词典
 	 */
 	private void loadQuantifierDict(){
-		//建立一个主词典实例
+		//建立一个量词典实例
 		_QuantifierDict = new DictSegment((char)0);
 		//读取量词词典文件
         InputStream is = Dictionary.class.getResourceAsStream(Dictionary.PATH_DIC_QUANTIFIER);
@@ -193,8 +204,76 @@ public class Dictionary {
 				e.printStackTrace();
 			}
 		}
-	}		
+	}
+	
+	/**
+	 * 加载后缀词典
+	 */
+	private void loadSuffixDict(){
+		//建立一个后缀词典实例
+		_SuffixDict = new DictSegment((char)0);
+		//读取量词词典文件
+        InputStream is = Dictionary.class.getResourceAsStream(Dictionary.PATH_DIC_SUFFIX);
+		try {
+			BufferedReader br = new BufferedReader(new InputStreamReader(is , "UTF-8"), 512);
+			String theWord = null;
+			do {
+				theWord = br.readLine();
+				if (theWord != null) {
+					_SuffixDict.fillSegment(theWord.trim().toCharArray());
+				}
+			} while (theWord != null);
+			
+		} catch (IOException ioe) {
+			System.err.println("Suffix Dictionary loading exception.");
+			ioe.printStackTrace();
+			
+		}finally{
+			try {
+				if(is != null){
+                    is.close();
+                    is = null;
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}			
 
+	/**
+	 * 加载介词\副词词典
+	 */
+	private void loadPrepDict(){
+		//建立一个介词\副词词典实例
+		_PrepDict = new DictSegment((char)0);
+		//读取量词词典文件
+        InputStream is = Dictionary.class.getResourceAsStream(Dictionary.PATH_DIC_PREP);
+		try {
+			BufferedReader br = new BufferedReader(new InputStreamReader(is , "UTF-8"), 512);
+			String theWord = null;
+			do {
+				theWord = br.readLine();
+				if (theWord != null) {
+					_PrepDict.fillSegment(theWord.trim().toCharArray());
+				}
+			} while (theWord != null);
+			
+		} catch (IOException ioe) {
+			System.err.println("preposition Dictionary loading exception.");
+			ioe.printStackTrace();
+			
+		}finally{
+			try {
+				if(is != null){
+                    is.close();
+                    is = null;
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}			
+	
 	/**
 	 * 词典初始化
 	 * 由于IK Analyzer的词典采用Dictionary类的静态方法进行词典初始化
@@ -241,7 +320,7 @@ public class Dictionary {
 	 */
 	public static Hit matchInMainDict(char[] charArray , int begin, int length){
 		return singleton._MainDict.match(charArray, begin, length);
-	}	
+	}
 	
 	/**
 	 * 在姓氏词典中匹配指定位置的char数组
@@ -252,7 +331,27 @@ public class Dictionary {
 	 */
 	public static Hit matchInSurnameDict(char[] charArray , int begin, int length){
 		return singleton._SurnameDict.match(charArray, begin, length);
-	}
+	}		
+	
+//	/**
+//	 * 
+//	 * 在姓氏词典中匹配指定位置的char数组
+//	 * （对传入的字串进行后缀匹配）
+//	 * @param charArray
+//	 * @param begin
+//	 * @param end
+//	 * @return
+//	 */
+//	public static boolean endsWithSurnameDict(char[] charArray , int begin, int length){
+//		Hit hit = null;
+//		for(int i = 1 ; i <= length ; i++){
+//			hit = singleton._SurnameDict.match(charArray, begin + (length - i) , i);
+//			if(hit.isMatch()){
+//				return true;
+//			}
+//		}
+//		return false;
+//	}
 	
 	/**
 	 * 在量词词典中匹配指定位置的char数组
@@ -265,5 +364,46 @@ public class Dictionary {
 		return singleton._QuantifierDict.match(charArray, begin, length);
 	}
 	
+	/**
+	 * 在后缀词典中匹配指定位置的char数组
+	 * @param charArray
+	 * @param begin
+	 * @param length
+	 * @return
+	 */
+	public static Hit matchInSuffixDict(char[] charArray , int begin, int length){
+		return singleton._SuffixDict.match(charArray, begin, length);
+	}
 	
+//	/**
+//	 * 在后缀词典中匹配指定位置的char数组
+//	 * （对传入的字串进行前缀匹配）
+//	 * @param charArray
+//	 * @param begin
+//	 * @param end
+//	 * @return
+//	 */
+//	public static boolean startsWithSuffixDict(char[] charArray , int begin, int length){
+//		Hit hit = null;
+//		for(int i = 1 ; i <= length ; i++){
+//			hit = singleton._SuffixDict.match(charArray, begin , i);
+//			if(hit.isMatch()){
+//				return true;
+//			}else if(hit.isUnmatch()){
+//				return false;
+//			}
+//		}
+//		return false;
+//	}
+	
+	/**
+	 * 在介词、副词词典中匹配指定位置的char数组
+	 * @param charArray
+	 * @param begin
+	 * @param end
+	 * @return
+	 */
+	public static Hit matchInPrepDict(char[] charArray , int begin, int length){
+		return singleton._PrepDict.match(charArray, begin, length);
+	}	
 }
