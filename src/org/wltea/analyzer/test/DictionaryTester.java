@@ -4,10 +4,12 @@
 package org.wltea.analyzer.test;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -189,7 +191,7 @@ public class DictionaryTester extends TestCase {
 			} while (theWord != null && count < 20);
 			
 		} catch (IOException ioe) {
-			System.err.println("主词典库载入异常.");
+			System.err.println("姓氏典库载入异常.");
 			ioe.printStackTrace();
 		}finally{
 			try {
@@ -202,6 +204,39 @@ public class DictionaryTester extends TestCase {
 			}
 		}
 	}
+	
+	public void testSuffixDicEncoding(){
+		int count = 0;
+        InputStream is = DictionaryTester.class.getResourceAsStream(Dictionary.PATH_DIC_SUFFIX);
+		try {
+			
+			String theWord = null;
+			BufferedReader br = new BufferedReader(new InputStreamReader(is , "UTF-8"), 512);
+			do {
+				theWord = br.readLine();
+				if (theWord != null) {
+					theWord = theWord.trim();
+                    /*Test Logging*/
+                    System.out.println(theWord);
+				}
+				count++;
+			} while (theWord != null && count < 20);
+			
+		} catch (IOException ioe) {
+			System.err.println("后缀典库载入异常.");
+			ioe.printStackTrace();
+		}finally{
+			try {
+				if(is != null){
+                    is.close();
+                    is = null;
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+		
 	
 	public void testDictSegmentSearch(){
         InputStream is = DictionaryTester.class.getResourceAsStream(Dictionary.PATH_DIC_QUANTIFIER);
@@ -322,7 +357,7 @@ public class DictionaryTester extends TestCase {
 	 * 量词排序
 	 */
 	public void testSortCount(){
-		InputStream is = DictionaryTester.class.getResourceAsStream(Dictionary.PATH_DIC_QUANTIFIER);
+		InputStream is = DictionaryTester.class.getResourceAsStream(Dictionary.PATH_DIC_MAIN);
 		TreeSet<String> allWords = new TreeSet<String>();
 	        
 		try {
@@ -332,7 +367,7 @@ public class DictionaryTester extends TestCase {
 				theWord = br.readLine();
 				if (theWord != null) {
 					allWords.add(theWord.trim());
-					System.out.println(theWord.trim());
+					//System.out.println(theWord.trim());
 				}
 			} while (theWord != null);
 			
@@ -350,32 +385,69 @@ public class DictionaryTester extends TestCase {
 			}
 		}
 		
-//		FileOutputStream fos = null;
-//		try {
-//			fos = new FileOutputStream("D:/quantifier.dic");
-//			String w = null;
-//			for(w = allWords.pollFirst(); w != null ; w = allWords.pollFirst()){
-//				System.out.println(w);
-//				fos.write(w.getBytes("UTF-8"));
-//				fos.write("\r\n".getBytes("UTF-8"));
-//			}
-//			fos.flush();
-//		} catch (FileNotFoundException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (UnsupportedEncodingException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}finally{
-//			try {
-//				fos.close();
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//		}
+		FileOutputStream fos = null;
+		try {
+			fos = new FileOutputStream("E:/main.dic");
+			String w = null;
+			for(w = allWords.pollFirst(); w != null ; w = allWords.pollFirst()){
+				//System.out.println(w);
+				fos.write(w.getBytes("UTF-8"));
+				fos.write("\r\n".getBytes("UTF-8"));
+			}
+			fos.flush();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally{
+			try {
+				fos.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
+	
+//	public void testEndsWithSurnameDict(){
+//		
+//		Dictionary.getInsance();
+//		List<String> testStr = new ArrayList<String>();
+//		testStr.add("林");
+//		testStr.add("树林中");
+//		testStr.add("红树林");
+//		testStr.add("李");
+//		testStr.add("行李");
+//		testStr.add("东方");
+//		testStr.add("闻人");
+//		testStr.add("日出东方唯我不败");
+//		
+//		for(String t : testStr){
+//			System.out.println(t);	
+//			char[] charArray = t.toCharArray();
+//			System.out.println(Dictionary.endsWithSurnameDict(charArray, 0, charArray.length));
+//		}
+//	}
+//	
+//	
+//	public void testStartsWithSuffixDict(){
+//		
+//		Dictionary.getInsance();
+//		List<String> testStr = new ArrayList<String>();
+//		testStr.add("路");
+//		testStr.add("山上");
+//		testStr.add("斯基");
+//		testStr.add("党内");
+//		testStr.add("我党");
+//		testStr.add("冶山路");
+//		
+//		for(String t : testStr){
+//			System.out.println(t);	
+//			char[] charArray = t.toCharArray();
+//			System.out.println(Dictionary.startsWithSuffixDict(charArray, 0, charArray.length));
+//		}
+//	}	
 }

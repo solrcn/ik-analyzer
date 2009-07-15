@@ -3,7 +3,6 @@
  */
 package org.wltea.analyzer.help;
 
-
 /**
  * 字符集识别辅助工具类
  * @author 林良益
@@ -24,6 +23,11 @@ public class CharacterHelper {
 	
 	public static boolean isArabicNumber(char input){
 		return input >= '0' && input <= '9';
+	}
+	
+	public static boolean isCJKCharacter(char input){
+		return Character.UnicodeBlock.of(input) 
+					== Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS;
 	}
 	
 	/**
