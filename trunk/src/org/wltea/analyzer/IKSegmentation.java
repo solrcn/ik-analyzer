@@ -66,7 +66,6 @@ public final class IKSegmentation{
             }else{
             	
             	//分词处理
-        		Set<Lexeme> lexemeSet = null;
         		int buffIndex = 0;
         		for( ; buffIndex < available ;  buffIndex++){
 //        			//标识最大分析位置
@@ -77,11 +76,13 @@ public final class IKSegmentation{
         			context.setCursor(buffIndex);
         			//进行全角转半角处理
         			segmentBuff[buffIndex] = CharacterHelper.SBC2DBC(segmentBuff[buffIndex]);
+        			//清空缓存中的分词结果集
+        			context.clearLexemeSet();
         			//遍历子分词器
         			for(ISegmenter segmenter : segmenters){
-        				lexemeSet = segmenter.nextLexeme(segmentBuff , context);
-        				if(lexemeSet != null && lexemeSet.size() > 0){
-        					lexemePool.push(lexemeSet, segmentBuff);
+        				segmenter.nextLexeme(segmentBuff , context);
+        				if(context.getLexemeSet() != null && context.getLexemeSet().size() > 0){
+        					lexemePool.push(context.getLexemeSet(), segmentBuff);
         				}
         			}
         			/*
@@ -95,6 +96,10 @@ public final class IKSegmentation{
         					&& available - buffIndex > 1
         					&& available - buffIndex < BUFF_EXHAUST_CRITICAL
         					&& !context.isBufferLocked()){
+        				
+        				for(ISegmenter segmenter : segmenters){
+        					segmenter.reset();
+        				}
         				break;
         			}
         		}

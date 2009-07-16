@@ -4,9 +4,7 @@
 package org.wltea.analyzer.seg;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.wltea.analyzer.Context;
 import org.wltea.analyzer.Lexeme;
@@ -32,24 +30,19 @@ public class ChineseSegmenter implements ISegmenter {
 	 * 词段处理队列
 	 */
 	List<CSeg> _CSegList;
-	/*
-	 * 词元集合
-	 */
-	private Set<Lexeme> lexemeSet;
 	
 	public ChineseSegmenter(){
 		doneIndex = -1;
 		_CSegList = new ArrayList<CSeg>();
-		lexemeSet = new HashSet<Lexeme>();
+
 		Dictionary.getInstance();
 	}
 	
 	/* (non-Javadoc)
 	 * @see org.wltea.analyzer.seg.ISegmenter#nextLexeme(org.wltea.analyzer.Context)
 	 */
-	public Set<Lexeme> nextLexeme(char[] segmentBuff , Context context) {
-		//清空结果集
-		lexemeSet.clear();
+	public void nextLexeme(char[] segmentBuff , Context context) {
+
 		//读取当前位置的char	
 		char input = segmentBuff[context.getCursor()];
 		Hit hit = null;
@@ -63,11 +56,11 @@ public class ChineseSegmenter implements ISegmenter {
 						//判断是否有不可识别的词段
 						if(seg.start > doneIndex + 1){
 							//输出并处理从doneIndex+1 到 seg.start - 1之间的未知词段
-							processUnknown(segmentBuff , doneIndex + 1 , seg.start - 1);
+							processUnknown(segmentBuff , context , doneIndex + 1 , seg.start - 1);
 						}
 						//输出当前的词
 						Lexeme newLexeme = new Lexeme(context.getBuffOffset() , seg.start , context.getCursor() - seg.start + 1);
-						lexemeSet.add(newLexeme);
+						context.addLexeme(newLexeme);
 						//更新goneIndex，标识已处理
 						if(doneIndex < context.getCursor()){
 							doneIndex = context.getCursor();
@@ -101,11 +94,11 @@ public class ChineseSegmenter implements ISegmenter {
 				//判断是否有不可识别的词段
 				if(context.getCursor() > doneIndex + 1){
 					//输出并处理从doneIndex+1 到 context.getCursor()- 1之间的未知
-					processUnknown(segmentBuff , doneIndex + 1 , context.getCursor()- 1);
+					processUnknown(segmentBuff , context , doneIndex + 1 , context.getCursor()- 1);
 				}
 				//输出当前的词
 				Lexeme newLexeme = new Lexeme(context.getBuffOffset() , context.getCursor() , 1);
-				lexemeSet.add(newLexeme);
+				context.addLexeme(newLexeme);
 				//更新doneIndex，标识已处理
 				if(doneIndex < context.getCursor()){
 					doneIndex = context.getCursor();
@@ -135,9 +128,9 @@ public class ChineseSegmenter implements ISegmenter {
 					&&  doneIndex < context.getCursor() - 1){
 				for(CSeg seg : _CSegList){
 					//判断是否有不可识别的词段
-					if(seg.end > doneIndex + 1){
+					if(doneIndex < seg.end){
 						//输出并处理从doneIndex+1 到 seg.end之间的未知词段
-						processUnknown(segmentBuff , doneIndex + 1 , seg.end);
+						processUnknown(segmentBuff , context , doneIndex + 1 , seg.end);
 					}
 				}
 			}
@@ -157,7 +150,7 @@ public class ChineseSegmenter implements ISegmenter {
 					//判断是否有不可识别的词段
 					if(seg.end > doneIndex + 1){
 						//输出并处理从doneIndex+1 到 seg.end之间的未知词段
-						processUnknown(segmentBuff , doneIndex + 1 , seg.end);
+						processUnknown(segmentBuff , context , doneIndex + 1 , seg.end);
 					}
 				}
 			}
@@ -173,7 +166,6 @@ public class ChineseSegmenter implements ISegmenter {
 			context.lockBuffer(this);
 	
 		}
-		return lexemeSet;
 	}
 
 	/**
@@ -182,8 +174,44 @@ public class ChineseSegmenter implements ISegmenter {
 	 * @param uStart 起始位置
 	 * @param uEnd 终止位置
 	 */
-	private void processUnknown(char[] segmentBuff , int uStart , int uEnd){
-		//TODO
+	private void processUnknown(char[] segmentBuff , Context context , int uStart , int uEnd){
+		Lexeme newLexeme = null;
+		
+		Hit hit = Dictionary.matchInPrepDict(segmentBuff, uStart, 1);		
+		if(hit.isUnmatch()){//不是副词或介词			
+			if(uStart > 0){//处理姓氏
+				hit = Dictionary.matchInSurnameDict(segmentBuff, uStart - 1 , 1);
+				if(hit.isMatch()){
+					//输出姓氏
+					newLexeme = new Lexeme(context.getBuffOffset() , uStart - 1 , 1);
+					context.addLexeme(newLexeme);		
+				}
+			}
+		}
+		
+		//以单字输出未知词段
+		for(int i = uStart ; i <= uEnd ; i++){
+			//输出姓氏
+			newLexeme = new Lexeme(context.getBuffOffset() , i , 1);
+			context.addLexeme(newLexeme);		
+		}
+		
+		hit = Dictionary.matchInPrepDict(segmentBuff, uEnd, 1);
+		if(hit.isUnmatch()){//不是副词或介词
+			int length = 1;
+			while(uEnd < context.getAvailable() - length){//处理后缀词
+				hit = Dictionary.matchInSuffixDict(segmentBuff, uEnd + 1 , length);
+				if(hit.isMatch()){
+					//输出后缀
+					newLexeme = new Lexeme(context.getBuffOffset() , uEnd + 1  , length);
+					context.addLexeme(newLexeme);
+					break;
+				}
+				if(hit.isUnmatch()){
+					break;
+				}				
+			}
+		}		
 	}
 	
 	/**
