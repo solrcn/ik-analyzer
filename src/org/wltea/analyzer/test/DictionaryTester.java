@@ -365,7 +365,7 @@ public class DictionaryTester extends TestCase {
 			BufferedReader br = new BufferedReader(new InputStreamReader(is , "UTF-8"), 512);
 			do {
 				theWord = br.readLine();
-				if (theWord != null) {
+				if (theWord != null && theWord.length() > 1) {
 					allWords.add(theWord.trim());
 					//System.out.println(theWord.trim());
 				}

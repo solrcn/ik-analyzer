@@ -34,7 +34,6 @@ public class ChineseSegmenter implements ISegmenter {
 	public ChineseSegmenter(){
 		doneIndex = -1;
 		_CSegList = new ArrayList<CSeg>();
-
 		Dictionary.getInstance();
 	}
 	
@@ -148,7 +147,7 @@ public class ChineseSegmenter implements ISegmenter {
 				&& doneIndex < context.getCursor()){//最后一个字符还未被输出过
 				for(CSeg seg : _CSegList){
 					//判断是否有不可识别的词段
-					if(seg.end > doneIndex + 1){
+					if(doneIndex < seg.end ){
 						//输出并处理从doneIndex+1 到 seg.end之间的未知词段
 						processUnknown(segmentBuff , context , doneIndex + 1 , seg.end);
 					}
