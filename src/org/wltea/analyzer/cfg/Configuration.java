@@ -81,9 +81,9 @@ public class Configuration {
 	public static List<ISegmenter> loadSegmenter(){
 		List<ISegmenter> segmenters = new ArrayList<ISegmenter>(4);
 		//处理字母的子分词器
-		//segmenters.add(new LetterSegmenter()); 
+		segmenters.add(new LetterSegmenter()); 
 		//处理数量词的子分词器
-		//segmenters.add(new QuantifierSegmenter());
+		segmenters.add(new QuantifierSegmenter());
 		//处理中文词的子分词器
 		segmenters.add(new ChineseSegmenter());
 		return segmenters;

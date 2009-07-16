@@ -3,9 +3,6 @@
  */
 package org.wltea.analyzer.seg;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.wltea.analyzer.Lexeme;
 import org.wltea.analyzer.Context;
 import org.wltea.analyzer.help.CharacterHelper;
@@ -33,23 +30,17 @@ public class LetterSegmenter implements ISegmenter {
 	 * end记录的是在词元中最后一个出现的Letter但非Sign_Connector的字符的位置
 	 */
 	private int end;
-	/*
-	 * 词元集合
-	 */
-	private Set<Lexeme> lexemeSet;
 	
 	public LetterSegmenter(){
 		start = -1;
 		end = -1;
-		lexemeSet = new HashSet<Lexeme>();
 	}
 	
 	/* (non-Javadoc)
 	 * @see org.wltea.analyzer.ISegmenter#nextLexeme(org.wltea.analyzer.IKSegmentation.Context)
 	 */
-	public Set<Lexeme> nextLexeme(char[] segmentBuff , Context context) {
-		//清空结果集
-		lexemeSet.clear();
+	public void nextLexeme(char[] segmentBuff , Context context) {
+
 		//读取当前位置的char	
 		char input = segmentBuff[context.getCursor()];
 		
@@ -69,7 +60,7 @@ public class LetterSegmenter implements ISegmenter {
 			}else{
 				//生成已切分的词元
 				Lexeme newLexeme = new Lexeme(context.getBuffOffset() , start , end - start + 1);
-				lexemeSet.add(newLexeme);		
+				context.addLexeme(newLexeme);		
 				//设置当前分词器状态为“待处理”
 				start = -1;
 				end = -1;
@@ -82,7 +73,7 @@ public class LetterSegmenter implements ISegmenter {
 				&& start != -1 && end != -1){
 			//生成已切分的词元
 			Lexeme newLexeme = new Lexeme(context.getBuffOffset() , start , end - start + 1);
-			lexemeSet.add(newLexeme);
+			context.addLexeme(newLexeme);
 			//设置当前分词器状态为“待处理”
 			start = -1;
 			end = -1;
@@ -95,9 +86,6 @@ public class LetterSegmenter implements ISegmenter {
 		}else{
 			context.lockBuffer(this);
 		}
-		
-		return lexemeSet;
-		
 	}
 	
 	/**

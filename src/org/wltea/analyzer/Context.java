@@ -23,15 +23,21 @@ public class Context{
     private int lastAnalyzed;	
     //当前缓冲区位置指针
     private int cursor;
-
+ 
     /*
      * 记录正在使用buffer的分词器对象
      * 如果set中存在有分词器对象，则buffer不能进行位移操作（处于locked状态）
      */
     private Set<ISegmenter> buffLocker;
+    /*
+     * 词元结果集，为每次游标的移动，存储切分出来的词元
+     */
+	private Set<Lexeme> lexemeSet;
+
     
     Context(){
     	buffLocker = new HashSet<ISegmenter>(4);
+    	lexemeSet = new HashSet<Lexeme>(4);
 	}
 
 	public int getBuffOffset() {
@@ -95,6 +101,18 @@ public class Context{
 
 	public void setAvailable(int available) {
 		this.available = available;
+	}
+
+	public Set<Lexeme> getLexemeSet() {
+		return lexemeSet;
+	}
+	
+	public void addLexeme(Lexeme lexeme){
+		lexemeSet.add(lexeme);
+	}
+	
+	public void clearLexemeSet(){
+		lexemeSet.clear();
 	}
 
 }

@@ -3,9 +3,6 @@
  */
 package org.wltea.analyzer.seg;
 
-import java.util.Set;
-import java.util.TreeSet;
-
 import org.wltea.analyzer.Lexeme;
 import org.wltea.analyzer.Context;
 import org.wltea.analyzer.dic.Dictionary;
@@ -85,10 +82,7 @@ public class QuantifierSegmenter implements ISegmenter {
 	 * 量词终止位置
 	 */
 	private int countEnd;
-	/*
-	 * 词元集合
-	 */
-	private TreeSet<Lexeme> lexemeSet;	
+
 	
 	public QuantifierSegmenter(){
 		nStart = -1;
@@ -97,24 +91,19 @@ public class QuantifierSegmenter implements ISegmenter {
 		
 		countStart = -1;
 		countEnd = -1;
-		lexemeSet = new TreeSet<Lexeme>();
-		
 	}
 	
 	/* (non-Javadoc)
 	 * @see org.wltea.analyzer.ISegmenter#nextLexeme(org.wltea.analyzer.IKSegmentation.Context)
 	 */
-	public Set<Lexeme> nextLexeme(char[] segmentBuff , Context context) {
-		//清空结果集
-		lexemeSet.clear();
-		
+	public void nextLexeme(char[] segmentBuff , Context context) {
 		//数词处理部分
 		processNumber(segmentBuff , context);
 		
 		//量词处理部分		
 		if(countStart == -1){//未开始处理量词
 			//当前游标的位置紧挨着数词
-			if((lexemeSet.size() > 0 && nStart == -1)
+			if((context.getLexemeSet().size() > 0 && nStart == -1)
 					|| (nEnd != -1 && nEnd == context.getCursor() - 1)){				
 				//量词处理
 				processCount(segmentBuff , context);
@@ -133,8 +122,6 @@ public class QuantifierSegmenter implements ISegmenter {
 		}else{
 			context.lockBuffer(this);
 		}
-		
-		return lexemeSet;
 	}
 
 	/**
@@ -551,7 +538,7 @@ public class QuantifierSegmenter implements ISegmenter {
 		if(nStart > -1 && nEnd > -1){
 			//生成已切分的词元
 			Lexeme newLexeme = new Lexeme(context.getBuffOffset() ,nStart , nEnd - nStart + 1);
-			lexemeSet.add(newLexeme);
+			context.addLexeme(newLexeme);
 		}
 	}
 	
@@ -563,7 +550,7 @@ public class QuantifierSegmenter implements ISegmenter {
 		if(countStart > -1 && countEnd > -1){
 			//生成已切分的词元
 			Lexeme countLexeme = new Lexeme(context.getBuffOffset() ,countStart , countEnd - countStart + 1);
-			lexemeSet.add(countLexeme);
+			context.addLexeme(countLexeme);
 		}
 
 	}	
