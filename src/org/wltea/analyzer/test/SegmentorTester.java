@@ -102,6 +102,7 @@ public class SegmentorTester extends TestCase{
 		testStr.add("当结合成分子时");
 		testStr.add("永和服装饰品公司");
 		testStr.add("天福大酒店,陈文平是提拉米苏董事长,达利蛋黄派，家家都喜爱， 福州达利园食品有限公司.");
+		testStr.add("才科夫斯基 伊万诺夫 冶山路 新金党派 树林良益 景城阁老酒楼");
 		
 		
 		for(String t : testStr){

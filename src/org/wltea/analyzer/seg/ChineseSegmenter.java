@@ -208,7 +208,8 @@ public class ChineseSegmenter implements ISegmenter {
 				}
 				if(hit.isUnmatch()){
 					break;
-				}				
+				}
+				length++;
 			}
 		}		
 	}
