@@ -327,7 +327,7 @@ public class DictionaryTester extends TestCase {
 				}
 			}
 			
-			Dictionary.getInsance();
+			Dictionary.getInstance();
 	        try {
 				Thread.sleep(3000);
 			} catch (InterruptedException e1) {

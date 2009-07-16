@@ -69,7 +69,7 @@ public class LetterSegmenter implements ISegmenter {
 			}else{
 				//生成已切分的词元
 				Lexeme newLexeme = new Lexeme(context.getBuffOffset() , start , end - start + 1);
-				lexemeSet.add(newLexeme);
+				lexemeSet.add(newLexeme);		
 				//设置当前分词器状态为“待处理”
 				start = -1;
 				end = -1;
@@ -131,6 +131,12 @@ public class LetterSegmenter implements ISegmenter {
 		return isLetterConnector(input) 
 				|| CharacterHelper.isEnglishLetter(input) 
 				|| CharacterHelper.isArabicNumber(input);
+	}
+
+	@Override
+	public void reset() {
+		//do nothing
+		
 	}
 	
 

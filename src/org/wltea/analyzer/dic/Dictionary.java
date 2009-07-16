@@ -283,7 +283,7 @@ public class Dictionary {
 	 * 用来缩短首次分词时的时延
 	 * @return
 	 */
-	public static Dictionary getInsance(){
+	public static Dictionary getInstance(){
 		return Dictionary.singleton;
 	}
 	
