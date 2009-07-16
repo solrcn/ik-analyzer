@@ -69,10 +69,10 @@ public final class IKSegmentation{
         		Set<Lexeme> lexemeSet = null;
         		int buffIndex = 0;
         		for( ; buffIndex < available ;  buffIndex++){
-        			//标识最大分析位置
-        			if(context.getBuffOffset() + buffIndex > context.getMaxAnalyzedIndex()){
-        				context.setMaxAnalyzedIndex(context.getBuffOffset() + buffIndex );
-        			}
+//        			//标识最大分析位置
+//        			if(context.getBuffOffset() + buffIndex > context.getMaxAnalyzedIndex()){
+//        				context.setMaxAnalyzedIndex(context.getBuffOffset() + buffIndex );
+//        			}
         			//移动缓冲区指针
         			context.setCursor(buffIndex);
         			//进行全角转半角处理

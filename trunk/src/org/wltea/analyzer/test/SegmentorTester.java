@@ -79,5 +79,29 @@ public class SegmentorTester extends TestCase{
 		}
 		
 	}
+	
+	public void testChinese(){
+		List<String> testStr = new ArrayList<String>();
+		testStr.add("中华人民共和国");
+		testStr.add("中华人民共和国香港特别行政区");
+		testStr.add("据路透社报道，印度尼西亚社会事务部一官员星期二(29日)表示，" 
+		+ "日惹市附近当地时间27日晨5时53分发生的里氏6.2级地震已经造成至少5427人死亡，" 
+		+ "20000余人受伤，近20万人无家可归。");
+		for(String t : testStr){
+			System.out.println(t);	
+			IKSegmentation ikSeg = new IKSegmentation(new StringReader(t));
+			try {
+				Lexeme l = null;
+				while( (l = ikSeg.next()) != null){
+					System.out.println(l);
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			System.out.println("***************");	
+		}
+		
+	}	
 
 }
