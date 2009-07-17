@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.wltea.analyzer.cfg.Configuration;
+import org.wltea.analyzer.dic.Dictionary;
 import org.wltea.analyzer.help.CharacterHelper;
 import org.wltea.analyzer.seg.ISegmenter;
 
@@ -162,10 +163,12 @@ public final class IKSegmentation{
 		 */
 	    private void push(Set<Lexeme> lexemeSet , char[] segmentBuff){
 	    	for(Lexeme lexeme : lexemeSet){
-				//生成lexeme的词元文本
-				String lexemeText = new String(segmentBuff , lexeme.getBegin() , lexeme.getLength());
-				lexeme.setLexemeText(lexemeText);
-				lexemeTreeSet.add(lexeme);
+	    		if(Lexeme.TYPE_LETTER == lexeme.getLexemeType() &&
+	    				Dictionary.isStopWord(segmentBuff , lexeme.getBegin() , lexeme.getLength())
+	    				){
+	    			continue;
+	    		}
+	    		lexemeTreeSet.add(lexeme);
 	    	}
 		}		
 		/**
@@ -174,7 +177,26 @@ public final class IKSegmentation{
 		 */
 		private Lexeme pull(){
 			if(!isEmpty()){
-				return lexemeTreeSet.pollFirst();
+				Lexeme lexeme = lexemeTreeSet.pollFirst();
+				//生成lexeme的词元文本
+				String lexemeText = new String(segmentBuff , lexeme.getBegin() , lexeme.getLength());
+				switch(lexeme.getLexemeType()) {
+				case Lexeme.TYPE_CJK : 
+					lexeme.setLexemeText(lexemeText);
+					break;
+					
+				case Lexeme.TYPE_NC : 
+					lexeme.setLexemeText(lexemeText);
+					break ;
+					
+				case Lexeme.TYPE_LETTER :
+					lexeme.setLexemeText(lexemeText.toLowerCase());
+					break;
+					
+				default : 
+					lexeme.setLexemeText(lexemeText);
+				}
+				return lexeme;
 			}else{
 				return null;
 			}

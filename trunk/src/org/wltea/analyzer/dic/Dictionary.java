@@ -26,6 +26,7 @@ public class Dictionary {
 	public static final String PATH_DIC_QUANTIFIER = "/org/wltea/analyzer/dic/quantifier.dic";
 	public static final String PATH_DIC_SUFFIX = "/org/wltea/analyzer/dic/suffix.dic";
 	public static final String PATH_DIC_PREP = "/org/wltea/analyzer/dic/preposition.dic";
+	public static final String PATH_DIC_STOP = "/org/wltea/analyzer/dic/stopword.dic";
 	
 	
 	/*
@@ -60,6 +61,10 @@ public class Dictionary {
 	 * 副词，介词词典
 	 */
 	private DictSegment _PrepDict;
+	/*
+	 * 停止词集合
+	 */
+	private DictSegment _StopWords;
 	
 	private Dictionary(){
 		//初始化系统词典
@@ -68,6 +73,7 @@ public class Dictionary {
 		loadQuantifierDict();
 		loadSuffixDict();
 		loadPrepDict();
+		loadStopWordDict();
 	}
 
 	/**
@@ -272,6 +278,40 @@ public class Dictionary {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	/**
+	 * 加载停止词词典
+	 */
+	private void loadStopWordDict(){
+		//建立一个停止词典实例
+		_StopWords = new DictSegment((char)0);
+		//读取量词词典文件
+        InputStream is = Dictionary.class.getResourceAsStream(Dictionary.PATH_DIC_STOP);
+		try {
+			BufferedReader br = new BufferedReader(new InputStreamReader(is , "UTF-8"), 512);
+			String theWord = null;
+			do {
+				theWord = br.readLine();
+				if (theWord != null) {
+					_StopWords.fillSegment(theWord.trim().toCharArray());
+				}
+			} while (theWord != null);
+			
+		} catch (IOException ioe) {
+			System.err.println("Stop word Dictionary loading exception.");
+			ioe.printStackTrace();
+			
+		}finally{
+			try {
+				if(is != null){
+                    is.close();
+                    is = null;
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}			
 	
 	/**
@@ -405,5 +445,16 @@ public class Dictionary {
 	 */
 	public static Hit matchInPrepDict(char[] charArray , int begin, int length){
 		return singleton._PrepDict.match(charArray, begin, length);
+	}
+	
+	/**
+	 * 判断是否是停止词
+	 * @param charArray
+	 * @param begin
+	 * @param end
+	 * @return
+	 */
+	public static boolean isStopWord(char[] charArray , int begin, int length){			
+		return singleton._StopWords.match(charArray, begin, length).isMatch();
 	}	
 }

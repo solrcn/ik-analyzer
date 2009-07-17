@@ -236,6 +236,38 @@ public class DictionaryTester extends TestCase {
 			}
 		}
 	}
+	
+	public void testStopDicEncoding(){
+		int count = 0;
+        InputStream is = DictionaryTester.class.getResourceAsStream(Dictionary.PATH_DIC_STOP);
+		try {
+			
+			String theWord = null;
+			BufferedReader br = new BufferedReader(new InputStreamReader(is , "UTF-8"), 512);
+			do {
+				theWord = br.readLine();
+				if (theWord != null) {
+					theWord = theWord.trim();
+                    /*Test Logging*/
+                    System.out.println(theWord);
+				}
+				count++;
+			} while (theWord != null);
+			
+		} catch (IOException ioe) {
+			System.err.println("停止词典库载入异常.");
+			ioe.printStackTrace();
+		}finally{
+			try {
+				if(is != null){
+                    is.close();
+                    is = null;
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}	
 		
 	
 	public void testDictSegmentSearch(){
@@ -357,7 +389,7 @@ public class DictionaryTester extends TestCase {
 	 * 量词排序
 	 */
 	public void testSortCount(){
-		InputStream is = DictionaryTester.class.getResourceAsStream(Dictionary.PATH_DIC_MAIN);
+		InputStream is = DictionaryTester.class.getResourceAsStream(Dictionary.PATH_DIC_STOP);
 		TreeSet<String> allWords = new TreeSet<String>();
 	        
 		try {
@@ -365,9 +397,9 @@ public class DictionaryTester extends TestCase {
 			BufferedReader br = new BufferedReader(new InputStreamReader(is , "UTF-8"), 512);
 			do {
 				theWord = br.readLine();
-				if (theWord != null && theWord.length() > 1) {
+				if (theWord != null) {
 					allWords.add(theWord.trim());
-					//System.out.println(theWord.trim());
+					System.out.println(theWord.trim());
 				}
 			} while (theWord != null);
 			
@@ -387,7 +419,7 @@ public class DictionaryTester extends TestCase {
 		
 		FileOutputStream fos = null;
 		try {
-			fos = new FileOutputStream("E:/main.dic");
+			fos = new FileOutputStream("E:/stopword.dic");
 			String w = null;
 			for(w = allWords.pollFirst(); w != null ; w = allWords.pollFirst()){
 				//System.out.println(w);

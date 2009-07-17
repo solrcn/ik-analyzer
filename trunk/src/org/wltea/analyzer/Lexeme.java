@@ -10,6 +10,10 @@ package org.wltea.analyzer;
  *
  */
 public final class Lexeme implements Comparable<Lexeme>{
+	//lexemeType常量
+	public static final int TYPE_CJK = 0;
+	public static final int TYPE_NC = 1;
+	public static final int TYPE_LETTER = 2;
 	
 	//词元的起始位移
 	private int offset;
@@ -19,18 +23,21 @@ public final class Lexeme implements Comparable<Lexeme>{
     private int length;
     //词元文本
     private String lexemeText;
-    
-	public Lexeme(){
-		
-	}
+    //词元类型 0:中文 1：数量词 2：字母
+    private int lexemeType;
 	
-	public Lexeme(int offset , int begin , int length){
+    public Lexeme(int offset , int begin , int length){
+    	this(offset , begin , length , 0);
+    }
+    
+	public Lexeme(int offset , int begin , int length , int lexemeType){
 		this.offset = offset;
 		this.begin = begin;
 		if(length < 0){
 			throw new IllegalArgumentException("length < 0");
 		}
 		this.length = length;
+		this.lexemeType = lexemeType;
 	}
 	
     /*
@@ -152,6 +159,14 @@ public final class Lexeme implements Comparable<Lexeme>{
 			this.length = lexemeText.length();
 		}
 	}
+
+	public int getLexemeType() {
+		return lexemeType;
+	}
+
+	public void setLexemeType(int lexemeType) {
+		this.lexemeType = lexemeType;
+	}	
 	
 	public String toString(){
 		StringBuffer strbuf = new StringBuffer();
@@ -159,5 +174,6 @@ public final class Lexeme implements Comparable<Lexeme>{
 		strbuf.append(" : ").append(this.lexemeText);
 		return strbuf.toString();
 	}
+
 	
 }
