@@ -41,13 +41,14 @@ public class Configuration {
 		props = new Properties();
 		
 		InputStream input = Configuration.class.getResourceAsStream(FILE_NAME);
-		
-		try {
-			props.loadFromXML(input);
-		} catch (InvalidPropertiesFormatException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+		if(input != null){
+			try {
+				props.loadFromXML(input);
+			} catch (InvalidPropertiesFormatException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
