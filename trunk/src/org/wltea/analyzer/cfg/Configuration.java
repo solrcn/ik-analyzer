@@ -54,7 +54,7 @@ public class Configuration {
 	
 	/**
 	 * 获取扩展字典配置路径
-	 * @return
+	 * @return List<String> 相对类加载器的路径
 	 */
 	public static List<String> getExtDictionarys(){
 		List<String> extDictFiles = new ArrayList<String>(2);
@@ -77,7 +77,7 @@ public class Configuration {
 	/**
 	 * 初始化子分词器实现
 	 * （目前暂时不考虑配置扩展）
-	 * @return
+	 * @return List<ISegmenter>
 	 */
 	public static List<ISegmenter> loadSegmenter(){
 		List<ISegmenter> segmenters = new ArrayList<ISegmenter>(4);

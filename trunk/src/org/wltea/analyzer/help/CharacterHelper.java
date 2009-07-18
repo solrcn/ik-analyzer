@@ -9,12 +9,12 @@ package org.wltea.analyzer.help;
  *
  */
 public class CharacterHelper {
-	
-	public static boolean isSpaceLetter(char input){
-		return input == 8 || input == 9 
-				|| input == 10 || input == 13 
-				|| input == 32 || input == 160;
-	}
+
+//	public static boolean isSpaceLetter(char input){
+//		return input == 8 || input == 9 
+//				|| input == 10 || input == 13 
+//				|| input == 32 || input == 160;
+//	}
 	
 	public static boolean isEnglishLetter(char input){
 		return (input >= 'a' && input <= 'z') 
@@ -32,7 +32,8 @@ public class CharacterHelper {
 	
 	/**
 	 * 全角字符转半角字符
-	 * @return
+	 * @return char 半角字符
+	 * 
 	 */
 	public static char SBC2DBC(char input){
         if (input == 12288) {

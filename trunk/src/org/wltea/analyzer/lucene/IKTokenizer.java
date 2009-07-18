@@ -14,8 +14,9 @@ import org.wltea.analyzer.Lexeme;
 
 /**
  * IK Analyzer v3.0
- * 与lucene相关的词元分解器
+ * Lucene Tokenizer适配器类
  * 它封装了IKSegmentation实现
+ * 
  * @author 林良益
  *
  */

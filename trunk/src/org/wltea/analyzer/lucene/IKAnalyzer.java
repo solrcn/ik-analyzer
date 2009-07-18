@@ -9,7 +9,9 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 
 /**
- * 实现Lucene Analyzer接口,基于IK分词算法的中文分词器
+ * 实现Lucene Analyzer
+ * 基于IKTokenizer的中文分词器
+ * 
  * @author 林良益
  *
  */
