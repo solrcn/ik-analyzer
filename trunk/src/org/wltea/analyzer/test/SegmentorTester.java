@@ -8,8 +8,6 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.lucene.analysis.Token;
-import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.wltea.analyzer.IKSegmentation;
 import org.wltea.analyzer.Lexeme;
 
@@ -23,17 +21,17 @@ public class SegmentorTester extends TestCase{
 	
 	public void testLetter(){
 		String t = "AT&T and I.B.M Corp mail : 1.12.34.33 -1-2003%123*111-11+12 2009A17B10 10:10:23wo!r+d.1{}0.16-8AAAA_B$BB@0.1.12.34.33.10.18ok?hello";
-		Token ruToken = new Token();
-		StandardTokenizer st = new StandardTokenizer(new StringReader(t));
-		try {
-			while((ruToken = st.next(ruToken)) != null){
-				System.out.println(ruToken);
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+//		Token ruToken = new Token();
+//		StandardTokenizer st = new StandardTokenizer(new StringReader(t));
+//		try {
+//			while((ruToken = st.next(ruToken)) != null){
+//				System.out.println(ruToken);
+//			}
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		System.out.println(t);	
 		IKSegmentation ikSeg = new IKSegmentation(new StringReader(t));
 		try {
 			Lexeme l = null;
@@ -50,16 +48,15 @@ public class SegmentorTester extends TestCase{
 	
 	public void testNumberCount(){
 		List<String> testStr = new ArrayList<String>();
-		testStr.add("AT&T and I.B.M Corp mail : 1.12.34.33 -1-2003%123*111-11+12 2009A17B10 10:10:23wo!r+d.1{}0.16-8AAAA_B$BB@0.1.12.34.33.10.18ok?hello");
-//		testStr.add("一九九五年12月31日,");
-//		testStr.add("1500名常用的数量和人名的匹配 超过22万个");
-//		testStr.add("据路透社报道，印度尼西亚社会事务部一官员星期二(29日)表示，" 
-//				+ "日惹市附近当地时间27日晨5时53分发生的里氏6.2级地震已经造成至少5427人死亡，" 
-//				+ "20000余人受伤，近20万人无家可归。");
-//		testStr.add("古田县城关六一四路四百零五号");
-//		testStr.add("欢迎使用阿江统计2.01版");
-//		testStr.add("51千克五十一千克五万一千克两千克拉");
-//		testStr.add("十一点半下班十一点下班");
+		testStr.add("一九九五年12月31日,");
+		testStr.add("1500名常用的数量和人名的匹配 超过22万个");
+		testStr.add("据路透社报道，印度尼西亚社会事务部一官员星期二(29日)表示，" 
+				+ "日惹市附近当地时间27日晨5时53分发生的里氏6.2级地震已经造成至少5427人死亡，" 
+				+ "20000余人受伤，近20万人无家可归。");
+		testStr.add("古田县城关六一四路四百零五号");
+		testStr.add("欢迎使用阿江统计2.01版");
+		testStr.add("51千克五十一千克五万一千克两千克拉");
+		testStr.add("十一点半下班十一点下班");
 		testStr.add("福州第一中学福州一中福州第三十六中赐进士及第");
 		
 		
@@ -113,7 +110,7 @@ public class SegmentorTester extends TestCase{
 				"许多影视剧中都有小龙女的扮演，台湾人比较熟悉早期陈玉莲，潘迎紫，新加坡有范文芳，" +
 				"大陆的有刘亦菲，而其中最为经典的还属香港的李若彤，即便以最低标准的吴倩莲来说，" +
 				"以上诸位蔡英文能比哪一个？千万不要亵渎了影迷们心目中的小龙女的光辉形象。");
-		
+
 		for(String t : testStr){
 			System.out.println(t);	
 			IKSegmentation ikSeg = new IKSegmentation(new StringReader(t));

@@ -5,6 +5,7 @@ package org.wltea.analyzer.seg;
 
 import org.wltea.analyzer.Lexeme;
 import org.wltea.analyzer.Context;
+import org.wltea.analyzer.dic.Dictionary;
 import org.wltea.analyzer.help.CharacterHelper;
 
 /**
@@ -60,7 +61,9 @@ public class LetterSegmenter implements ISegmenter {
 			}else{
 				//生成已切分的词元
 				Lexeme newLexeme = new Lexeme(context.getBuffOffset() , start , end - start + 1 , Lexeme.TYPE_LETTER);
-				context.addLexeme(newLexeme);		
+				if(!Dictionary.isStopWord(segmentBuff , newLexeme.getBegin() , newLexeme.getLength())){
+					context.addLexeme(newLexeme);
+				}
 				//设置当前分词器状态为“待处理”
 				start = -1;
 				end = -1;
@@ -73,7 +76,9 @@ public class LetterSegmenter implements ISegmenter {
 				&& start != -1 && end != -1){
 			//生成已切分的词元
 			Lexeme newLexeme = new Lexeme(context.getBuffOffset() , start , end - start + 1 , Lexeme.TYPE_LETTER);
-			context.addLexeme(newLexeme);
+			if(!Dictionary.isStopWord(segmentBuff , newLexeme.getBegin() , newLexeme.getLength())){
+				context.addLexeme(newLexeme);
+			}
 			//设置当前分词器状态为“待处理”
 			start = -1;
 			end = -1;
