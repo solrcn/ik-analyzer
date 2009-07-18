@@ -62,7 +62,7 @@ public class DictSegment {
 	/**
 	 * 匹配词段
 	 * @param charArray
-	 * @return
+	 * @return Hit
 	 */
 	public Hit match(char[] charArray){
 		return this.match(charArray , 0 , charArray.length);
@@ -70,11 +70,10 @@ public class DictSegment {
 	
 	/**
 	 * 匹配词段
-	 * @param seg
+	 * @param charArray
 	 * @param begin
 	 * @param length
-	 * @param searchHit
-	 * @return
+	 * @return Hit 
 	 */
 	public Hit match(char[] charArray , int begin , int length){
 		Character keyChar = new Character(charArray[begin]);

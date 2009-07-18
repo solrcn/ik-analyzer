@@ -329,7 +329,7 @@ public class Dictionary {
 	
 	/**
 	 * 加载扩展的词条
-	 * @param words List<String>词条列表
+	 * @param extWords List<String>词条列表
 	 */
 	public static void loadExtendWords(List<String> extWords){
 		if(extWords != null){
@@ -355,7 +355,7 @@ public class Dictionary {
 	 * 检索匹配主词典
 	 * @param charArray
 	 * @param begin
-	 * @param end
+	 * @param length
 	 * @return Hit 匹配结果描述
 	 */
 	public static Hit matchInMainDict(char[] charArray , int begin, int length){
@@ -366,7 +366,7 @@ public class Dictionary {
 	 * 检索匹配姓氏词典
 	 * @param charArray
 	 * @param begin
-	 * @param end
+	 * @param length
 	 * @return Hit 匹配结果描述
 	 */
 	public static Hit matchInSurnameDict(char[] charArray , int begin, int length){
@@ -397,7 +397,7 @@ public class Dictionary {
 	 * 检索匹配量词词典
 	 * @param charArray
 	 * @param begin
-	 * @param end
+	 * @param length
 	 * @return Hit 匹配结果描述
 	 */
 	public static Hit matchInQuantifierDict(char[] charArray , int begin, int length){
@@ -440,7 +440,7 @@ public class Dictionary {
 	 * 检索匹配介词、副词词典
 	 * @param charArray
 	 * @param begin
-	 * @param end
+	 * @param length
 	 * @return  Hit 匹配结果描述
 	 */
 	public static Hit matchInPrepDict(char[] charArray , int begin, int length){
@@ -451,8 +451,8 @@ public class Dictionary {
 	 * 判断是否是停止词
 	 * @param charArray
 	 * @param begin
-	 * @param end
-	 * @return
+	 * @param length
+	 * @return boolean
 	 */
 	public static boolean isStopWord(char[] charArray , int begin, int length){			
 		return singleton._StopWords.match(charArray, begin, length).isMatch();
