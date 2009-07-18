@@ -58,9 +58,8 @@ public class Hit {
 	public boolean isUnmatch() {
 		return this.hitState == UNMATCH ;
 	}
-	
 	/**
-	 * @param unmatch The unmatch to set.
+	 * 
 	 */
 	public void setUnmatch() {
 		this.hitState = UNMATCH;
