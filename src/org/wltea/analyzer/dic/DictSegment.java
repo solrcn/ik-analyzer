@@ -122,7 +122,7 @@ public class DictSegment {
 	}
 
 	/**
-	 * 填充词典片段
+	 * 加载填充词典片段
 	 * @param charArray
 	 */
 	public void fillSegment(char[] charArray){
@@ -130,7 +130,7 @@ public class DictSegment {
 	}
 	
 	/**
-	 * 填充词典片段
+	 * 加载填充词典片段
 	 * @param charArray
 	 * @param begin
 	 * @param length

@@ -93,7 +93,7 @@ public class LetterSegmenter implements ISegmenter {
 	 * @param input
 	 * @return
 	 */
-	public static boolean isLetterConnector(char input){
+	private boolean isLetterConnector(char input){
 		for(char c : Sign_Connector){
 			if(c == input){
 				return true;
@@ -106,7 +106,7 @@ public class LetterSegmenter implements ISegmenter {
 	 * 判断char是否是可接受的起始子符
 	 * @return
 	 */
-	public boolean isAcceptedCharStart(char input){
+	private boolean isAcceptedCharStart(char input){
 		return CharacterHelper.isEnglishLetter(input) 
 				|| CharacterHelper.isArabicNumber(input);
 	}
@@ -115,7 +115,7 @@ public class LetterSegmenter implements ISegmenter {
 	 * 判断char是否是可接受的字符
 	 * @return
 	 */
-	public boolean isAcceptedChar(char input){
+	private boolean isAcceptedChar(char input){
 		return isLetterConnector(input) 
 				|| CharacterHelper.isEnglishLetter(input) 
 				|| CharacterHelper.isArabicNumber(input);

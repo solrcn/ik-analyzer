@@ -19,8 +19,11 @@ import org.wltea.analyzer.IKSegmentation;
 import org.wltea.analyzer.Lexeme;
 
 /**
- * 查询分析器
+ * IK查询分析器
+ * 实现了对分词歧义结果的非冲突排列组合
+ * 有效的优化对歧义关键词的搜索命中
  * 针对IK Analyzer V3的优化实现
+ * 
  * @author 林良益
  *
  */

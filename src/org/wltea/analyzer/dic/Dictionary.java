@@ -321,7 +321,7 @@ public class Dictionary {
 	 * 这将延长首次分词操作的时间
 	 * 该方法提供了一个在应用加载阶段就初始化字典的手段
 	 * 用来缩短首次分词时的时延
-	 * @return
+	 * @return Dictionary
 	 */
 	public static Dictionary getInstance(){
 		return Dictionary.singleton;
@@ -329,7 +329,7 @@ public class Dictionary {
 	
 	/**
 	 * 加载扩展的词条
-	 * @param words
+	 * @param words List<String>词条列表
 	 */
 	public static void loadExtendWords(List<String> extWords){
 		if(extWords != null){
@@ -343,31 +343,31 @@ public class Dictionary {
 	}
 	
 	/**
-	 * 在主词典中匹配char数组
+	 * 检索匹配主词典
 	 * @param charArray
-	 * @return
+	 * @return Hit 匹配结果描述
 	 */
 	public static Hit matchInMainDict(char[] charArray){
 		return singleton._MainDict.match(charArray);
 	}
 	
 	/**
-	 * 在主词典中匹配指定位置的char数组
+	 * 检索匹配主词典
 	 * @param charArray
 	 * @param begin
 	 * @param end
-	 * @return
+	 * @return Hit 匹配结果描述
 	 */
 	public static Hit matchInMainDict(char[] charArray , int begin, int length){
 		return singleton._MainDict.match(charArray, begin, length);
 	}
 	
 	/**
-	 * 在姓氏词典中匹配指定位置的char数组
+	 * 检索匹配姓氏词典
 	 * @param charArray
 	 * @param begin
 	 * @param end
-	 * @return
+	 * @return Hit 匹配结果描述
 	 */
 	public static Hit matchInSurnameDict(char[] charArray , int begin, int length){
 		return singleton._SurnameDict.match(charArray, begin, length);
@@ -394,22 +394,22 @@ public class Dictionary {
 //	}
 	
 	/**
-	 * 在量词词典中匹配指定位置的char数组
+	 * 检索匹配量词词典
 	 * @param charArray
 	 * @param begin
 	 * @param end
-	 * @return
+	 * @return Hit 匹配结果描述
 	 */
 	public static Hit matchInQuantifierDict(char[] charArray , int begin, int length){
 		return singleton._QuantifierDict.match(charArray, begin, length);
 	}
 	
 	/**
-	 * 在后缀词典中匹配指定位置的char数组
+	 * 检索匹配在后缀词典
 	 * @param charArray
 	 * @param begin
 	 * @param length
-	 * @return
+	 * @return Hit 匹配结果描述
 	 */
 	public static Hit matchInSuffixDict(char[] charArray , int begin, int length){
 		return singleton._SuffixDict.match(charArray, begin, length);
@@ -437,11 +437,11 @@ public class Dictionary {
 //	}
 	
 	/**
-	 * 在介词、副词词典中匹配指定位置的char数组
+	 * 检索匹配介词、副词词典
 	 * @param charArray
 	 * @param begin
 	 * @param end
-	 * @return
+	 * @return  Hit 匹配结果描述
 	 */
 	public static Hit matchInPrepDict(char[] charArray , int begin, int length){
 		return singleton._PrepDict.match(charArray, begin, length);

@@ -113,8 +113,8 @@ public final class Lexeme implements Comparable<Lexeme>{
 		return begin;
 	}
 	/**
-	 * 获取词元的绝对起始位置
-	 * @return
+	 * 获取词元在文本中的起始位置
+	 * @return int
 	 */
 	public int getBeginPosition(){
 		return offset + begin;
@@ -125,13 +125,17 @@ public final class Lexeme implements Comparable<Lexeme>{
 	}
 
 	/**
-	 * 获取词元的绝对终止位置
-	 * @return
+	 * 获取词元在文本中的结束位置
+	 * @return int
 	 */
 	public int getEndPosition(){
 		return offset + begin + length;
 	}
 	
+	/**
+	 * 获取词元的字符长度
+	 * @return int
+	 */
 	public int getLength(){
 		return this.length;
 	}	
@@ -143,6 +147,10 @@ public final class Lexeme implements Comparable<Lexeme>{
 		this.length = length;
 	}
 	
+	/**
+	 * 获取词元的文本内容
+	 * @return String
+	 */
 	public String getLexemeText() {
 		if(lexemeText == null){
 			return "";
@@ -160,6 +168,13 @@ public final class Lexeme implements Comparable<Lexeme>{
 		}
 	}
 
+	/**
+	 * 获取词元类型
+	 * TYPE_CJK : 中文
+	 * TYPE_NC : 数量词
+	 * TYPE_LETTER : 字母符号
+	 * @return int
+	 */
 	public int getLexemeType() {
 		return lexemeType;
 	}
