@@ -6,11 +6,9 @@ package org.wltea.analyzer;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.List;
-import java.util.Set;
 import java.util.TreeSet;
 
 import org.wltea.analyzer.cfg.Configuration;
-import org.wltea.analyzer.dic.Dictionary;
 import org.wltea.analyzer.help.CharacterHelper;
 import org.wltea.analyzer.seg.ISegmenter;
 
@@ -23,17 +21,13 @@ import org.wltea.analyzer.seg.ISegmenter;
  */
 public final class IKSegmentation{
 	
-	private Reader input;
-	
+	private Reader input;	
 	//默认缓冲区大小
 	private static final int BUFF_SIZE = 1024;
 	//缓冲区耗尽的临界值
 	private static final int BUFF_EXHAUST_CRITICAL = 64;	
     //字符窜读取缓冲
     private char[] segmentBuff;
-    
-	//词元容器池
-	private LexemePool lexemePool;
 	//分词器上下文
 	private Context context;
 	//分词处理器列表
@@ -44,7 +38,6 @@ public final class IKSegmentation{
 		this.input = input ;
 		segmentBuff = new char[BUFF_SIZE];
 		context = new Context();
-		lexemePool = new LexemePool();
 		segmenters = Configuration.loadSegmenter();
 	}
 	
@@ -54,7 +47,7 @@ public final class IKSegmentation{
 	 * @throws IOException
 	 */
 	public Lexeme next() throws IOException {
-		if(lexemePool.isEmpty()){
+		if(context.getLexemeSet().isEmpty()){
 			/*
 			 * 从reader中读取数据，填充buffer
 			 * 如果reader是分次读入buffer的，那么buffer要进行移位处理
@@ -65,26 +58,16 @@ public final class IKSegmentation{
             if(available <= 0){
                 return null;
             }else{
-            	
             	//分词处理
         		int buffIndex = 0;
         		for( ; buffIndex < available ;  buffIndex++){
-//        			//标识最大分析位置
-//        			if(context.getBuffOffset() + buffIndex > context.getMaxAnalyzedIndex()){
-//        				context.setMaxAnalyzedIndex(context.getBuffOffset() + buffIndex );
-//        			}
         			//移动缓冲区指针
         			context.setCursor(buffIndex);
         			//进行全角转半角处理
         			segmentBuff[buffIndex] = CharacterHelper.SBC2DBC(segmentBuff[buffIndex]);
-        			//清空缓存中的分词结果集
-        			context.clearLexemeSet();
         			//遍历子分词器
         			for(ISegmenter segmenter : segmenters){
         				segmenter.nextLexeme(segmentBuff , context);
-        				if(context.getLexemeSet() != null && context.getLexemeSet().size() > 0){
-        					lexemePool.push(context.getLexemeSet(), segmentBuff);
-        				}
         			}
         			/*
         			 * 满足一下条件时，
@@ -110,11 +93,11 @@ public final class IKSegmentation{
             	//同时累计已分析的字符长度
         		context.setBuffOffset(context.getBuffOffset() + buffIndex);
             	//读取词元池中的词元
-            	return lexemePool.pull();
+            	return nextLexeme(context.getLexemeSet());
             }
 		}else{
 			//读取词元池中的已有词元
-			return lexemePool.pull();
+			return nextLexeme(context.getLexemeSet());
 		}	
 	}
 	
@@ -144,70 +127,35 @@ public final class IKSegmentation{
     	return readCount;
     }	
 	
-	/**
-	 * 词元容器
-	 * @author 林良益
-	 *
-	 */
-	private class LexemePool{
-		
-	    //词元组,存贮切分完成的词元代理
-	    private TreeSet<Lexeme> lexemeTreeSet;
-	    
-	    private LexemePool(){
-	    	lexemeTreeSet = new TreeSet<Lexeme>();
-	    }
-		/**
-		 * 向容器压入切分出的词元对象代理
-		 * @param lexeme
-		 */
-	    private void push(Set<Lexeme> lexemeSet , char[] segmentBuff){
-	    	for(Lexeme lexeme : lexemeSet){
-	    		if(Lexeme.TYPE_LETTER == lexeme.getLexemeType() &&
-	    				Dictionary.isStopWord(segmentBuff , lexeme.getBegin() , lexeme.getLength())
-	    				){
-	    			continue;
-	    		}
-	    		lexemeTreeSet.add(lexeme);
-	    	}
-		}		
-		/**
-		 * 从容器中按顺序，逐个取出词元对象
-		 * @return
-		 */
-		private Lexeme pull(){
-			if(!isEmpty()){
-				Lexeme lexeme = lexemeTreeSet.pollFirst();
-				//生成lexeme的词元文本
-				String lexemeText = new String(segmentBuff , lexeme.getBegin() , lexeme.getLength());
-				switch(lexeme.getLexemeType()) {
-				case Lexeme.TYPE_CJK : 
-					lexeme.setLexemeText(lexemeText);
-					break;
-					
-				case Lexeme.TYPE_NC : 
-					lexeme.setLexemeText(lexemeText);
-					break ;
-					
-				case Lexeme.TYPE_LETTER :
-					lexeme.setLexemeText(lexemeText.toLowerCase());
-					break;
-					
-				default : 
-					lexeme.setLexemeText(lexemeText);
-				}
-				return lexeme;
-			}else{
-				return null;
+    /**
+     * 取出词元集合中的下一个词元
+     * @return Lexeme
+     */
+    private Lexeme nextLexeme(TreeSet<Lexeme> lexemePool){
+    	if(!lexemePool.isEmpty()){
+			Lexeme lexeme = lexemePool.pollFirst();
+			//生成lexeme的词元文本
+			String lexemeText = new String(segmentBuff , lexeme.getBegin() , lexeme.getLength());
+			switch(lexeme.getLexemeType()) {
+			case Lexeme.TYPE_CJK : 
+				lexeme.setLexemeText(lexemeText);
+				break;
+				
+			case Lexeme.TYPE_NC : 
+				lexeme.setLexemeText(lexemeText);
+				break ;
+				
+			case Lexeme.TYPE_LETTER :
+				lexeme.setLexemeText(lexemeText.toLowerCase());
+				break;
+				
+			default : 
+				lexeme.setLexemeText(lexemeText);
 			}
-		}		
-		/**
-		 * 
-		 * @return
-		 */
-		private boolean isEmpty(){
-			return lexemeTreeSet.isEmpty();
+			return lexeme;
+		}else{
+			return null;
 		}
-	}
+    }
 
 }
