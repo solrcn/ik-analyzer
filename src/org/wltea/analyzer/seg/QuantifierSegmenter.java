@@ -3,6 +3,9 @@
  */
 package org.wltea.analyzer.seg;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.wltea.analyzer.Lexeme;
 import org.wltea.analyzer.Context;
 import org.wltea.analyzer.dic.Dictionary;
@@ -23,11 +26,25 @@ public class QuantifierSegmenter implements ISegmenter {
 
 	//阿拉伯数词前缀（货币符号）
 	public static String Arabic_Num_Pre = "-+$￥";//Apre
+	private static Set<Character> ArabicNumPreChars = new HashSet<Character>();
+	static{
+		char[] ca = Arabic_Num_Pre.toCharArray();
+		for(char nChar : ca){
+			ArabicNumPreChars.add(nChar);
+		}
+	}
 	public static final int NC_ANP = 01;	
 	//阿拉伯数字0-9
 	public static final int NC_ARABIC = 02;
 	//阿拉伯数词链接符号
 	public static String Arabic_Num_Mid = ",./:Ee";//Amid
+	private static Set<Character> ArabicNumMidChars = new HashSet<Character>();
+	static{
+		char[] ca = Arabic_Num_Mid.toCharArray();
+		for(char nChar : ca){
+			ArabicNumMidChars.add(nChar);
+		}
+	}
 	public static final int NC_ANM = 03;
 	//阿拉伯数词后缀
 	public static String Arabic_Num_End = "%‰";//Aend
@@ -38,21 +55,77 @@ public class QuantifierSegmenter implements ISegmenter {
 	public static final int NC_CNP = 11;
 	//中文数词
 	public static String Chn_Num = "○一二两三四五六七八九十零壹贰叁肆伍陆柒捌玖拾百千万亿拾佰仟萬億兆卅廿";//Cnum
+	private static Set<Character> ChnNumberChars = new HashSet<Character>();
+	static{
+		char[] ca = Chn_Num.toCharArray();
+		for(char nChar : ca){
+			ChnNumberChars.add(nChar);
+		}
+	}
 	public static final int NC_CHINESE = 12;
 	//中文数词连接符
 	public static String Chn_Num_Mid = "点";//Cmid
 	public static final int NC_CNM = 13;
 	//中文约数词（数词结尾）
 	public static String Chn_Num_End = "几多余半";//Cend
+	private static Set<Character> ChnNumEndChars = new HashSet<Character>();
+	static{
+		char[] ca = Chn_Num_End.toCharArray();
+		for(char nChar : ca){
+			ChnNumEndChars.add(nChar);
+		}
+	}
 	public static final int NC_CNE = 14;
 	
 	//GB库中的罗马字符(起始、中间、结束)
 	public static String Rome_Num = "ⅠⅡⅢⅣⅤⅥⅧⅨⅩⅪ"; //Rnum
+	private static Set<Character> RomeNumChars = new HashSet<Character>();
+	static{
+		char[] ca = Rome_Num.toCharArray();
+		for(char nChar : ca){
+			RomeNumChars.add(nChar);
+		}
+	}
 	public static final int NC_ROME = 22;
 
 	//非数词字符
 	public static final int NaN = -99;
 	
+	//所有的可能数词
+	private static Set<Character> AllNumberChars = new HashSet<Character>(256);
+	static{
+		char[] ca = null;
+		
+		AllNumberChars.addAll(ArabicNumPreChars);
+		
+		for(char nChar = '0' ; nChar <='9' ; nChar++ ){
+			AllNumberChars.add(nChar);
+		}
+		
+		AllNumberChars.addAll(ArabicNumMidChars);
+		
+		ca = Arabic_Num_End.toCharArray();
+		for(char nChar : ca){
+			AllNumberChars.add(nChar);
+		}
+		
+		ca = Chn_Num_Pre.toCharArray();
+		for(char nChar : ca){
+			AllNumberChars.add(nChar);
+		}
+		
+		AllNumberChars.addAll(ChnNumberChars);
+		
+		ca = Chn_Num_Mid.toCharArray();
+		for(char nChar : ca){
+			AllNumberChars.add(nChar);
+		}
+
+		AllNumberChars.addAll(ChnNumEndChars);
+		
+		AllNumberChars.addAll(RomeNumChars);
+		
+	}
 	
 	/*
 	 * 词元的开始位置，
@@ -543,20 +616,14 @@ public class QuantifierSegmenter implements ISegmenter {
 		char input = segmentBuff[context.getCursor()];
 		
 		int type = NaN;
+		if(!AllNumberChars.contains(input)){
+			return type;
+		}
 		
 		if(CharacterHelper.isArabicNumber(input)){
-			 type = NC_ARABIC;
+			type = NC_ARABIC;
 			 
-		}else if(Arabic_Num_Pre.indexOf(input) >= 0){
-			type = NC_ANP;
-			
-		}else if(Arabic_Num_Mid.indexOf(input) >= 0){
-			type = NC_ANM;
-			
-		}else if(Arabic_Num_End.indexOf(input) >= 0){
-			type = NC_ANE;
-			
-		}else if(Chn_Num.indexOf(input) >= 0){
+		}else if(ChnNumberChars.contains(input)){
 			type = NC_CHINESE;
 			
 		}else if(Chn_Num_Pre.indexOf(input) >= 0){
@@ -565,10 +632,19 @@ public class QuantifierSegmenter implements ISegmenter {
 		}else if(Chn_Num_Mid.indexOf(input) >= 0){
 			type = NC_CNM;
 			
-		}else if(Chn_Num_End.indexOf(input) >= 0){
+		}else if(ChnNumEndChars.contains(input)){
 			type = NC_CNE;
 			
-		}else if(Rome_Num.indexOf(input) >= 0){
+		}else if(ArabicNumPreChars.contains(input)){
+			type = NC_ANP;
+			
+		}else if(ArabicNumMidChars.contains(input)){
+			type = NC_ANM;
+			
+		}else if(Arabic_Num_End.indexOf(input) >= 0){
+			type = NC_ANE;
+			
+		}else if(RomeNumChars.contains(input)){
 			type = NC_ROME;
 			
 		}
