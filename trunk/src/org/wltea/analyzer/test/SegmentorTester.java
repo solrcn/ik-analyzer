@@ -8,8 +8,10 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.lucene.search.Query;
 import org.wltea.analyzer.IKSegmentation;
 import org.wltea.analyzer.Lexeme;
+import org.wltea.analyzer.lucene.IKQueryParser;
 
 import junit.framework.TestCase;
 
@@ -97,7 +99,7 @@ public class SegmentorTester extends TestCase{
 		testStr.add("陈文平是开睿动力通讯科技有限公司董事长");
 		testStr.add("古田县城关六一四路四百零五号");
 		testStr.add("当结合成分子时");
-		testStr.add("永和服装饰品公司");
+		
 		testStr.add("天福大酒店,陈文平是提拉米苏董事长,达利蛋黄派，家家都喜爱， 福州达利园食品有限公司.");
 		testStr.add("才科夫斯基 伊万诺夫 冶山路 新金党派 树林良益 景城阁老酒楼");
 		
@@ -110,7 +112,15 @@ public class SegmentorTester extends TestCase{
 				"许多影视剧中都有小龙女的扮演，台湾人比较熟悉早期陈玉莲，潘迎紫，新加坡有范文芳，" +
 				"大陆的有刘亦菲，而其中最为经典的还属香港的李若彤，即便以最低标准的吴倩莲来说，" +
 				"以上诸位蔡英文能比哪一个？千万不要亵渎了影迷们心目中的小龙女的光辉形象。");
+		
+		testStr.add("IK-Analyzer是一个开源的，基于java语言开发的轻量级的中文分词工具包。从2006年12月推出1.0版开始， IKAnalyzer已经推出了3个大版本。");
 
+		testStr.add("永和服装饰品有限公司");
+		
+		testStr.add("作者博客：linliangyi2007.javaeye.com  电子邮件地址：linliangyi2005@gmail.com");
+		
+		testStr.add("新字典是一个词吗");
+		
 		for(String t : testStr){
 			System.out.println(t);	
 			IKSegmentation ikSeg = new IKSegmentation(new StringReader(t));
@@ -197,6 +207,17 @@ public class SegmentorTester extends TestCase{
 
 		System.out.println("***************");	
 	
+	}
+	
+	public void testQueryParser(){
+		Query query = null;
+		try {
+			query = IKQueryParser.parse("f", "长春市长春节致辞 带空格的查询测试");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println(query);
 	}
 
 }

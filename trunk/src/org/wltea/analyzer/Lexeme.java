@@ -11,9 +11,9 @@ package org.wltea.analyzer;
  */
 public final class Lexeme implements Comparable<Lexeme>{
 	//lexemeType常量
-	public static final int TYPE_CJK = 0;
-	public static final int TYPE_NC = 1;
-	public static final int TYPE_LETTER = 2;
+//	public static final int TYPE_CJK = 0;
+//	public static final int TYPE_NC = 1;
+//	public static final int TYPE_LETTER = 2;
 	
 	//词元的起始位移
 	private int offset;
@@ -23,8 +23,13 @@ public final class Lexeme implements Comparable<Lexeme>{
     private int length;
     //词元文本
     private String lexemeText;
-    //词元类型 0:中文 1：数量词 2：字母
-    private int lexemeType;
+//    //词元类型 0:中文 1：数量词 2：字母
+//    private int lexemeType;
+    
+    //当前词元的前一个词元
+    private Lexeme prev;
+    //当前词元的后一个词元
+    private Lexeme next;
 	
     public Lexeme(int offset , int begin , int length){
     	this(offset , begin , length , 0);
@@ -37,7 +42,7 @@ public final class Lexeme implements Comparable<Lexeme>{
 			throw new IllegalArgumentException("length < 0");
 		}
 		this.length = length;
-		this.lexemeType = lexemeType;
+//		this.lexemeType = lexemeType;
 	}
 	
     /*
@@ -175,19 +180,35 @@ public final class Lexeme implements Comparable<Lexeme>{
 	 * TYPE_LETTER : 字母符号
 	 * @return int
 	 */
-	public int getLexemeType() {
-		return lexemeType;
-	}
-
-	public void setLexemeType(int lexemeType) {
-		this.lexemeType = lexemeType;
-	}	
+//	public int getLexemeType() {
+//		return lexemeType;
+//	}
+//
+//	public void setLexemeType(int lexemeType) {
+//		this.lexemeType = lexemeType;
+//	}	
 	
 	public String toString(){
 		StringBuffer strbuf = new StringBuffer();
 		strbuf.append(this.getBeginPosition()).append("-").append(this.getEndPosition());
 		strbuf.append(" : ").append(this.lexemeText);
 		return strbuf.toString();
+	}
+
+	Lexeme getPrev() {
+		return prev;
+	}
+
+	void setPrev(Lexeme prev) {
+		this.prev = prev;
+	}
+
+	Lexeme getNext() {
+		return next;
+	}
+
+	void setNext(Lexeme next) {
+		this.next = next;
 	}
 
 	

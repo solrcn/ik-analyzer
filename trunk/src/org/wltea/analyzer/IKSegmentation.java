@@ -6,7 +6,6 @@ package org.wltea.analyzer;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.List;
-import java.util.TreeSet;
 
 import org.wltea.analyzer.cfg.Configuration;
 import org.wltea.analyzer.help.CharacterHelper;
@@ -23,7 +22,7 @@ public final class IKSegmentation{
 	
 	private Reader input;	
 	//默认缓冲区大小
-	private static final int BUFF_SIZE = 1024;
+	private static final int BUFF_SIZE = 4096;
 	//缓冲区耗尽的临界值
 	private static final int BUFF_EXHAUST_CRITICAL = 64;	
     //字符窜读取缓冲
@@ -47,7 +46,7 @@ public final class IKSegmentation{
 	 * @throws IOException
 	 */
 	public Lexeme next() throws IOException {
-		if(context.getLexemeSet().isEmpty()){
+		if(context.getResultSize() == 0){
 			/*
 			 * 从reader中读取数据，填充buffer
 			 * 如果reader是分次读入buffer的，那么buffer要进行移位处理
@@ -63,8 +62,8 @@ public final class IKSegmentation{
         		for( ; buffIndex < available ;  buffIndex++){
         			//移动缓冲区指针
         			context.setCursor(buffIndex);
-        			//进行全角转半角处理
-        			segmentBuff[buffIndex] = CharacterHelper.SBC2DBC(segmentBuff[buffIndex]);
+        			//进行字符规格化（全角转半角，大写转小写处理）
+        			segmentBuff[buffIndex] = CharacterHelper.regularize(segmentBuff[buffIndex]);
         			//遍历子分词器
         			for(ISegmenter segmenter : segmenters){
         				segmenter.nextLexeme(segmentBuff , context);
@@ -93,11 +92,11 @@ public final class IKSegmentation{
             	//同时累计已分析的字符长度
         		context.setBuffOffset(context.getBuffOffset() + buffIndex);
             	//读取词元池中的词元
-            	return nextLexeme(context.getLexemeSet());
+            	return buildLexeme(context.firstLexeme());
             }
 		}else{
 			//读取词元池中的已有词元
-			return nextLexeme(context.getLexemeSet());
+			return buildLexeme(context.firstLexeme());
 		}	
 	}
 	
@@ -131,28 +130,13 @@ public final class IKSegmentation{
      * 取出词元集合中的下一个词元
      * @return Lexeme
      */
-    private Lexeme nextLexeme(TreeSet<Lexeme> lexemePool){
-    	if(!lexemePool.isEmpty()){
-			Lexeme lexeme = lexemePool.pollFirst();
+    private Lexeme buildLexeme(Lexeme lexeme){
+    	if(lexeme != null){
 			//生成lexeme的词元文本
 			String lexemeText = new String(segmentBuff , lexeme.getBegin() , lexeme.getLength());
-			switch(lexeme.getLexemeType()) {
-			case Lexeme.TYPE_CJK : 
-				lexeme.setLexemeText(lexemeText);
-				break;
-				
-			case Lexeme.TYPE_NC : 
-				lexeme.setLexemeText(lexemeText);
-				break ;
-				
-			case Lexeme.TYPE_LETTER :
-				lexeme.setLexemeText(lexemeText.toLowerCase());
-				break;
-				
-			default : 
-				lexeme.setLexemeText(lexemeText);
-			}
+			lexeme.setLexemeText(lexemeText);
 			return lexeme;
+			
 		}else{
 			return null;
 		}

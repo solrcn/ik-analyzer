@@ -504,7 +504,7 @@ public class QuantifierSegmenter implements ISegmenter {
 	private void outputNumLexeme(Context context){
 		if(nStart > -1 && nEnd > -1){
 			//生成已切分的词元
-			Lexeme newLexeme = new Lexeme(context.getBuffOffset() ,nStart , nEnd - nStart + 1 , Lexeme.TYPE_NC);
+			Lexeme newLexeme = new Lexeme(context.getBuffOffset() ,nStart , nEnd - nStart + 1 );
 			context.addLexeme(newLexeme);
 			fCaN = true;
 		}
@@ -517,7 +517,7 @@ public class QuantifierSegmenter implements ISegmenter {
 	private void outputCountLexeme(Context context){
 		if(countStart > -1 && countEnd > -1){
 			//生成已切分的词元
-			Lexeme countLexeme = new Lexeme(context.getBuffOffset() ,countStart , countEnd - countStart + 1 , Lexeme.TYPE_NC);
+			Lexeme countLexeme = new Lexeme(context.getBuffOffset() ,countStart , countEnd - countStart + 1 );
 			context.addLexeme(countLexeme);
 		}
 
