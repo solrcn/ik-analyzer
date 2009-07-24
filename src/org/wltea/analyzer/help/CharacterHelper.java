@@ -31,17 +31,21 @@ public class CharacterHelper {
 	}
 	
 	/**
-	 * 全角字符转半角字符
-	 * @return char 半角字符
-	 * 
+	 * 进行字符规格化（全角转半角，大写转小写处理）
+	 * @param input
+	 * @return char
 	 */
-	public static char SBC2DBC(char input){
+	public static char regularize(char input){
         if (input == 12288) {
             input = (char) 32;
-        }
-        if (input > 65280 && input < 65375) {
+            
+        }else if (input > 65280 && input < 65375) {
             input = (char) (input - 65248);
-        }
+            
+        }else if (input >= 'A' && input <= 'Z') {
+        	input += 32;
+		}
+        
         return input;
 	}
 

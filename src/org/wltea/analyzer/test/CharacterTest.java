@@ -18,8 +18,8 @@ public class CharacterTest extends TestCase{
 //		char a = 'Ｏ';
 //		char a = '○';
 		System.out.println((int)a);
-		System.out.println(CharacterHelper.SBC2DBC(a));
-		System.out.println((int)CharacterHelper.SBC2DBC(a));
+		System.out.println(CharacterHelper.regularize(a));
+		System.out.println((int)CharacterHelper.regularize(a));
 		
 		String sss  = "智灵通乳酸钙冲剂(5g\14袋)-1244466518522.txt";
 		System.out.println(sss.replaceAll("[\\\\]", "每"));

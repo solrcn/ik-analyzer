@@ -239,7 +239,8 @@ public class DictionaryTester extends TestCase {
 	
 	public void testStopDicEncoding(){
 		int count = 0;
-        InputStream is = DictionaryTester.class.getResourceAsStream(Dictionary.PATH_DIC_STOP);
+        //InputStream is = DictionaryTester.class.getResourceAsStream(Dictionary.PATH_DIC_STOP);
+        InputStream is = DictionaryTester.class.getResourceAsStream("/mydict.dic");
 		try {
 			
 			String theWord = null;

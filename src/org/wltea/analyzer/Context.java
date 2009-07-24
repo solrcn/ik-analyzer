@@ -2,7 +2,6 @@ package org.wltea.analyzer;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.TreeSet;
 
 import org.wltea.analyzer.seg.ISegmenter;
 
@@ -30,12 +29,12 @@ public class Context{
     /*
      * 词元结果集，为每次游标的移动，存储切分出来的词元
      */
-	private TreeSet<Lexeme> lexemeSet;
+	private IKSortedLinkSet lexemeSet;
 
     
     Context(){
     	buffLocker = new HashSet<ISegmenter>(4);
-    	lexemeSet = new TreeSet<Lexeme>();
+    	lexemeSet = new IKSortedLinkSet();
 	}
 
 	public int getBuffOffset() {
@@ -91,11 +90,153 @@ public class Context{
 		this.available = available;
 	}
 
-	public TreeSet<Lexeme> getLexemeSet() {
-		return lexemeSet;
+	/**
+	 * 取出分词结果集中的首个词元
+	 * @return
+	 */
+	public Lexeme firstLexeme() {
+		return this.lexemeSet.pollFirst();
 	}
 	
+	/**
+	 * 取出分词结果集中的最后一个词元
+	 * @return
+	 */
+	public Lexeme lastLexeme() {
+		return this.lexemeSet.pollLast();
+	}
+	
+	/**
+	 * 向分词结果集添加词元
+	 * @param lexeme
+	 */
 	public void addLexeme(Lexeme lexeme){
-		lexemeSet.add(lexeme);
+		this.lexemeSet.addLexeme(lexeme);
+	}
+	
+	/**
+	 * 获取分词结果集大小
+	 * @return
+	 */
+	public int getResultSize(){
+		return this.lexemeSet.size();
+	}
+	
+	/**
+	 * 
+	 * @author linly
+	 *
+	 */
+	private class IKSortedLinkSet{
+		//链表头
+		private Lexeme head;
+		//链表尾
+		private Lexeme tail;
+		//链表的实际大小
+		private int size;
+		
+		private IKSortedLinkSet(){
+			this.size = 0;
+		}
+		/**
+		 * 向链表集合添加词元
+		 * @param lexeme
+		 */
+		private void addLexeme(Lexeme lexeme){
+			if(this.size == 0){
+				this.head = lexeme;
+				this.tail = lexeme;
+				this.size++;
+				return;
+				
+			}else{
+				if(this.tail.compareTo(lexeme) == 0){//词元与尾部词元相同，不放入集合
+					return;
+					
+				}else if(this.tail.compareTo(lexeme) < 0){//词元接入链表尾部
+					this.tail.setNext(lexeme);
+					lexeme.setPrev(this.tail);
+					this.tail = lexeme;
+					this.size++;
+					return;
+					
+				}else if(this.head.compareTo(lexeme) > 0){//词元接入链表头部
+					this.head.setPrev(lexeme);
+					lexeme.setNext(this.head);
+					this.head = lexeme;
+					this.size++;
+					return;
+					
+				}else{					
+					//从尾部上逆
+					Lexeme l = this.tail;
+					while(l != null && l.compareTo(lexeme) > 0){
+						l = l.getPrev();
+					}
+					if(l.compareTo(lexeme) == 0){//词元与集合中的词元重复，不放入集合
+						return;
+						
+					}else if(l.compareTo(lexeme) < 0){//词元插入链表中的某个位置
+						lexeme.setPrev(l);
+						lexeme.setNext(l.getNext());
+						l.getNext().setPrev(lexeme);
+						l.setNext(lexeme);
+						this.size++;
+						return;
+						
+					}
+				}
+			}
+			
+		}
+		/**
+		 * 取出链表集合的第一个元素
+		 * @return Lexeme
+		 */
+		private Lexeme pollFirst(){
+			if(this.size == 1){
+				Lexeme first = this.head;
+				this.head = null;
+				this.tail = null;
+				this.size--;
+				return first;
+			}else if(this.size > 1){
+				Lexeme first = this.head;
+				this.head = first.getNext();
+				first.setNext(null);
+				this.size --;
+				return first;
+			}else{
+				return null;
+			}
+		}
+		
+		/**
+		 * 取出链表集合的最后一个元素
+		 * @return Lexeme
+		 */
+		private Lexeme pollLast(){
+			if(this.size == 1){
+				Lexeme last = this.head;
+				this.head = null;
+				this.tail = null;
+				this.size--;
+				return last;
+				
+			}else if(this.size > 1){
+				Lexeme last = this.tail;
+				this.tail = last.getPrev();
+				last.setPrev(null);
+				this.size--;
+				return last;
+				
+			}else{
+				return null;
+			}
+		}		
+		
+		private int size(){
+			return this.size;
+		}
 	}
 }
