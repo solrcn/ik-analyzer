@@ -390,7 +390,7 @@ public class DictionaryTester extends TestCase {
 	 * 量词排序
 	 */
 	public void testSortCount(){
-		InputStream is = DictionaryTester.class.getResourceAsStream(Dictionary.PATH_DIC_STOP);
+		InputStream is = DictionaryTester.class.getResourceAsStream(Dictionary.PATH_DIC_QUANTIFIER);
 		TreeSet<String> allWords = new TreeSet<String>();
 	        
 		try {
@@ -420,7 +420,7 @@ public class DictionaryTester extends TestCase {
 		
 		FileOutputStream fos = null;
 		try {
-			fos = new FileOutputStream("E:/stopword.dic");
+			fos = new FileOutputStream("E:/quantifier.dic");
 			String w = null;
 			for(w = allWords.pollFirst(); w != null ; w = allWords.pollFirst()){
 				//System.out.println(w);
