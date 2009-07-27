@@ -327,17 +327,15 @@ public class QuantifierSegmenter implements ISegmenter {
 	 * @param context
 	 */
 	private void onANPStatus(int inputStatus ,  Context context){
-		if(NC_ANP == inputStatus){//阿拉伯数字前缀
-			//忽略先前的字串，重新记录起始位置
-			nStart = context.getCursor();
-			
-		}else if(NC_ARABIC == inputStatus){//阿拉伯数字
+		if(NC_ARABIC == inputStatus){//阿拉伯数字
 			//记录当前的字符状态
 			nStatus = inputStatus;
 			//记录可能的结束位置
 			nEnd = context.getCursor();
 			
 		}else{
+			//输出可能的数词
+			outputNumLexeme(context);
 			//重置数词状态
 			nReset();
 			//进入初始态进行处理
@@ -685,8 +683,6 @@ public class QuantifierSegmenter implements ISegmenter {
 			
 			if(hit.isUnmatch()){
 				if(countStart != -1){
-					//输出可能存在的量词
-					outputCountLexeme(context);
 					//重置量词状态
 					countStart = -1;
 					countEnd = -1;
@@ -697,8 +693,6 @@ public class QuantifierSegmenter implements ISegmenter {
 		//读到缓冲区最后一个字符，还有尚未输出的量词
 		if(context.getCursor() == context.getAvailable() - 1
 				&& countStart != -1 && countEnd != -1){
-			//输出可能存在的量词
-			outputCountLexeme(context);
 			//重置量词状态
 			countStart = -1;
 			countEnd = -1;
