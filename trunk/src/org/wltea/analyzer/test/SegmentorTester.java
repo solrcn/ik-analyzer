@@ -50,7 +50,10 @@ public class SegmentorTester extends TestCase{
 	
 	public void testNumberCount(){
 		List<String> testStr = new ArrayList<String>();
+		testStr.add("12.第");
 		testStr.add("一九九五年12月31日,");
+		testStr.add("1/++ ￥+400 ");
+		testStr.add("-2e-12 xxxx1E++300/++"); 
 		testStr.add("1500名常用的数量和人名的匹配 超过22万个");
 		testStr.add("据路透社报道，印度尼西亚社会事务部一官员星期二(29日)表示，" 
 				+ "日惹市附近当地时间27日晨5时53分发生的里氏6.2级地震已经造成至少5427人死亡，" 
