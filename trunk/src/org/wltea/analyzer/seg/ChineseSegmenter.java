@@ -58,7 +58,7 @@ public class ChineseSegmenter implements ISegmenter {
 							processUnknown(segmentBuff , context , doneIndex + 1 , seg.start - 1);
 						}
 						//输出当前的词
-						Lexeme newLexeme = new Lexeme(context.getBuffOffset() , seg.start , context.getCursor() - seg.start + 1);
+						Lexeme newLexeme = new Lexeme(context.getBuffOffset() , seg.start , context.getCursor() - seg.start + 1 , Lexeme.TYPE_CJK_NORMAL);
 						context.addLexeme(newLexeme);
 						//更新goneIndex，标识已处理
 						if(doneIndex < context.getCursor()){
@@ -96,7 +96,7 @@ public class ChineseSegmenter implements ISegmenter {
 					processUnknown(segmentBuff , context , doneIndex + 1 , context.getCursor()- 1);
 				}
 				//输出当前的词
-				Lexeme newLexeme = new Lexeme(context.getBuffOffset() , context.getCursor() , 1);
+				Lexeme newLexeme = new Lexeme(context.getBuffOffset() , context.getCursor() , 1 , Lexeme.TYPE_CJK_NORMAL);
 				context.addLexeme(newLexeme);
 				//更新doneIndex，标识已处理
 				if(doneIndex < context.getCursor()){
@@ -182,7 +182,7 @@ public class ChineseSegmenter implements ISegmenter {
 				hit = Dictionary.matchInSurnameDict(segmentBuff, uStart - 1 , 1);
 				if(hit.isMatch()){
 					//输出姓氏
-					newLexeme = new Lexeme(context.getBuffOffset() , uStart - 1 , 1);
+					newLexeme = new Lexeme(context.getBuffOffset() , uStart - 1 , 1 , Lexeme.TYPE_CJK_SN);
 					context.addLexeme(newLexeme);		
 				}
 			}
@@ -190,8 +190,7 @@ public class ChineseSegmenter implements ISegmenter {
 		
 		//以单字输出未知词段
 		for(int i = uStart ; i <= uEnd ; i++){
-			//输出姓氏
-			newLexeme = new Lexeme(context.getBuffOffset() , i , 1);
+			newLexeme = new Lexeme(context.getBuffOffset() , i , 1  , Lexeme.TYPE_CJK_NORMAL);
 			context.addLexeme(newLexeme);		
 		}
 		
@@ -202,7 +201,7 @@ public class ChineseSegmenter implements ISegmenter {
 				hit = Dictionary.matchInSuffixDict(segmentBuff, uEnd + 1 , length);
 				if(hit.isMatch()){
 					//输出后缀
-					newLexeme = new Lexeme(context.getBuffOffset() , uEnd + 1  , length);
+					newLexeme = new Lexeme(context.getBuffOffset() , uEnd + 1  , length , Lexeme.TYPE_CJK_SF);
 					context.addLexeme(newLexeme);
 					break;
 				}

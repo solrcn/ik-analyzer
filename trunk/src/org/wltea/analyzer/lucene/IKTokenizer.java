@@ -26,9 +26,9 @@ final class IKTokenizer extends Tokenizer {
 	private IKSegmentation _IKImplement;
 	
 	
-	IKTokenizer(Reader in) {
+	IKTokenizer(Reader in , boolean isMaxWordLength) {
 		 super(in);
-		_IKImplement = new IKSegmentation(in);
+		_IKImplement = new IKSegmentation(in , isMaxWordLength);
 	}	
 	
     /* (non-Javadoc)

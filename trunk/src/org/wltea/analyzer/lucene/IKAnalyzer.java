@@ -17,8 +17,15 @@ import org.apache.lucene.analysis.TokenStream;
  */
 public final class IKAnalyzer extends Analyzer {
 	
+	private boolean isMaxWordLength = false;
+	
 	public IKAnalyzer(){
+		this(false);
+	}
+	
+	public IKAnalyzer(boolean isMaxWordLength){
 		super();
+		this.isMaxWordLength = isMaxWordLength;
 	}
 
 	/* (non-Javadoc)
@@ -26,7 +33,7 @@ public final class IKAnalyzer extends Analyzer {
 	 */
 	@Override
 	public TokenStream tokenStream(String fieldName, Reader reader) {
-		return new IKTokenizer(reader);
+		return new IKTokenizer(reader , isMaxWordLength);
 	}
 
 }

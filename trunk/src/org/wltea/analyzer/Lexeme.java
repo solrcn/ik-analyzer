@@ -11,9 +11,18 @@ package org.wltea.analyzer;
  */
 public final class Lexeme implements Comparable<Lexeme>{
 	//lexemeType常量
-//	public static final int TYPE_CJK = 0;
-//	public static final int TYPE_NC = 1;
-//	public static final int TYPE_LETTER = 2;
+	//普通词元
+	public static final int TYPE_CJK_NORMAL = 0;
+	//姓氏
+	public static final int TYPE_CJK_SN = 1;
+	//尾缀
+	public static final int TYPE_CJK_SF = 2;
+	//数词
+	public static final int TYPE_NUM = 10;
+	//量词
+	public static final int TYPE_NUMCOUNT = 11;
+	//英文
+	public static final int TYPE_LETTER = 20;
 	
 	//词元的起始位移
 	private int offset;
@@ -23,17 +32,13 @@ public final class Lexeme implements Comparable<Lexeme>{
     private int length;
     //词元文本
     private String lexemeText;
-//    //词元类型 0:中文 1：数量词 2：字母
-//    private int lexemeType;
+    //词元类型
+    private int lexemeType;
     
     //当前词元的前一个词元
     private Lexeme prev;
     //当前词元的后一个词元
     private Lexeme next;
-	
-    public Lexeme(int offset , int begin , int length){
-    	this(offset , begin , length , 0);
-    }
     
 	public Lexeme(int offset , int begin , int length , int lexemeType){
 		this.offset = offset;
@@ -42,7 +47,7 @@ public final class Lexeme implements Comparable<Lexeme>{
 			throw new IllegalArgumentException("length < 0");
 		}
 		this.length = length;
-//		this.lexemeType = lexemeType;
+		this.lexemeType = lexemeType;
 	}
 	
     /*
@@ -104,6 +109,24 @@ public final class Lexeme implements Comparable<Lexeme>{
         }else{//this.begin > other.getBegin()
         	return 1;
         }
+	}
+	
+	/**
+	 * 判断词元是否彼此包含
+	 * @param other
+	 * @return boolean true 完全包含 ， false 可能不相交 或者 相交但不包含
+	 */
+	public boolean isOverlap(Lexeme other){
+		if(other != null){
+			if(this.begin <= other.begin && this.getEndPosition() >= other.getEndPosition()){
+				return true;
+			}else if(this.begin >= other.begin && this.getEndPosition() <= other.getEndPosition()){
+				return true;
+			}else {
+				return false;
+			}
+		}
+		return false;
 	}
 
 	public int getOffset() {
@@ -175,23 +198,40 @@ public final class Lexeme implements Comparable<Lexeme>{
 
 	/**
 	 * 获取词元类型
-	 * TYPE_CJK : 中文
-	 * TYPE_NC : 数量词
-	 * TYPE_LETTER : 字母符号
 	 * @return int
 	 */
-//	public int getLexemeType() {
-//		return lexemeType;
-//	}
-//
-//	public void setLexemeType(int lexemeType) {
-//		this.lexemeType = lexemeType;
-//	}	
+	public int getLexemeType() {
+		return lexemeType;
+	}
+
+	public void setLexemeType(int lexemeType) {
+		this.lexemeType = lexemeType;
+	}	
 	
 	public String toString(){
 		StringBuffer strbuf = new StringBuffer();
 		strbuf.append(this.getBeginPosition()).append("-").append(this.getEndPosition());
-		strbuf.append(" : ").append(this.lexemeText);
+		strbuf.append(" : ").append(this.lexemeText).append(" : \t");
+		switch(lexemeType) {
+			case TYPE_CJK_NORMAL : 
+				strbuf.append("CJK_NORMAL");
+				break;
+			case TYPE_CJK_SF :
+				strbuf.append("CJK_SUFFIX");
+				break;
+			case TYPE_CJK_SN :
+				strbuf.append("CJK_NAME");
+				break;
+			case TYPE_NUM : 
+				strbuf.append("NUMEBER");
+				break;
+			case TYPE_NUMCOUNT :
+				strbuf.append("COUNT");
+				break;
+			case TYPE_LETTER :
+				strbuf.append("LETTER");
+				break;
+		}
 		return strbuf.toString();
 	}
 

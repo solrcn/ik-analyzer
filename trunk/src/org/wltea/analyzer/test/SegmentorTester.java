@@ -34,7 +34,7 @@ public class SegmentorTester extends TestCase{
 //			e.printStackTrace();
 //		}
 		System.out.println(t);	
-		IKSegmentation ikSeg = new IKSegmentation(new StringReader(t));
+		IKSegmentation ikSeg = new IKSegmentation(new StringReader(t) ,true);
 		try {
 			Lexeme l = null;
 			while( (l = ikSeg.next()) != null){
@@ -67,7 +67,7 @@ public class SegmentorTester extends TestCase{
 		
 		for(String t : testStr){
 			System.out.println(t);	
-			IKSegmentation ikSeg = new IKSegmentation(new StringReader(t));
+			IKSegmentation ikSeg = new IKSegmentation(new StringReader(t) , true);
 			try {
 				Lexeme l = null;
 				while( (l = ikSeg.next()) != null){
@@ -126,7 +126,7 @@ public class SegmentorTester extends TestCase{
 		
 		for(String t : testStr){
 			System.out.println(t);	
-			IKSegmentation ikSeg = new IKSegmentation(new StringReader(t));
+			IKSegmentation ikSeg = new IKSegmentation(new StringReader(t) , true);
 			try {
 				Lexeme l = null;
 				while( (l = ikSeg.next()) != null){
@@ -184,7 +184,7 @@ public class SegmentorTester extends TestCase{
  +"我不为所动。 但是我知道，总有一天，我会老去，且没有人会再听我说话。";
 		}
 		System.out.println("Length = " + testString.length());
-		IKSegmentation ikSeg = new IKSegmentation(new StringReader(testString));
+		IKSegmentation ikSeg = new IKSegmentation(new StringReader(testString) , true);
 		
 		try {
 			Thread.sleep(5000);

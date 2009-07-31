@@ -123,6 +123,14 @@ public class Context{
 	}
 	
 	/**
+	 * 排除结果集中完全交叠（彼此包含）的词元
+	 * 进行最大切分的时候，过滤长度较小的交叠词元
+	 */
+	public void excludeOverlap(){
+		 this.lexemeSet.excludeOverlap();
+	}
+	
+	/**
 	 * 
 	 * @author linly
 	 *
@@ -233,10 +241,39 @@ public class Context{
 			}else{
 				return null;
 			}
-		}		
+		}
+		
+		/**
+		 * 剔除集合汇总相邻的切完全包含的lexeme
+		 * 进行最大切分的时候，过滤长度较小的交叠词元
+		 */
+		private void excludeOverlap(){
+			if(this.size > 1){
+				Lexeme one = this.head;
+				Lexeme another = one.getNext();
+				do{
+					if(one.isOverlap(another) && 
+							Lexeme.TYPE_CJK_NORMAL == another.getLexemeType()){//邻近的两个词元完全交叠
+						another = another.getNext();
+						//从链表中断开交叠的词元
+						one.setNext(another);
+						if(another != null){
+							another.setPrev(one);
+						}
+						this.size--;
+						
+					}else{//词元不完全交叠
+						one = another;
+						another = another.getNext();
+					}
+				}while(another != null);
+			}
+		}
 		
 		private int size(){
 			return this.size;
 		}
+		
+		
 	}
 }
