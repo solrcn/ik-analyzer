@@ -34,10 +34,20 @@ public final class IKSegmentation{
 	//分词处理器列表
 	private List<ISegmenter> segmenters;
     
+	/**
+	 * IK主分词器构造函数
+	 * 默认最细粒度切分
+	 * @param input
+	 */
 	public IKSegmentation(Reader input){
 		this(input , false);
 	}
     
+	/**
+	 * IK主分词器构造函数
+	 * @param input
+	 * @param isMaxWordLength 当为true时，分词器进行最大词长切分
+	 */
 	public IKSegmentation(Reader input , boolean isMaxWordLength){
 		this.input = input ;
 		this.isMaxWordLength = isMaxWordLength;
