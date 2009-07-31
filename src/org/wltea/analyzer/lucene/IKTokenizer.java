@@ -25,7 +25,11 @@ final class IKTokenizer extends Tokenizer {
 	//IK分词器实现
 	private IKSegmentation _IKImplement;
 	
-	
+	/**
+	 * Lucene Tokenizer适配器类构造函数
+	 * @param in
+	 * @param isMaxWordLength 当为true时，分词器进行最大词长切分；当为false是，采用最细粒度切分
+	 */
 	IKTokenizer(Reader in , boolean isMaxWordLength) {
 		 super(in);
 		_IKImplement = new IKSegmentation(in , isMaxWordLength);

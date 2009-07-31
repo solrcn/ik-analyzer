@@ -19,10 +19,19 @@ public final class IKAnalyzer extends Analyzer {
 	
 	private boolean isMaxWordLength = false;
 	
+	/**
+	 * IK分词器Lucene Analyzer接口实现类
+	 * 默认最细粒度切分算法
+	 */
 	public IKAnalyzer(){
 		this(false);
 	}
 	
+	/**
+	 * IK分词器Lucene Analyzer接口实现类
+	 * 
+	 * @param isMaxWordLength 当为true时，分词器进行最大词长切分
+	 */
 	public IKAnalyzer(boolean isMaxWordLength){
 		super();
 		this.isMaxWordLength = isMaxWordLength;
