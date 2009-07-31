@@ -60,7 +60,7 @@ public class LetterSegmenter implements ISegmenter {
 				}
 			}else{
 				//生成已切分的词元
-				Lexeme newLexeme = new Lexeme(context.getBuffOffset() , start , end - start + 1 );
+				Lexeme newLexeme = new Lexeme(context.getBuffOffset() , start , end - start + 1 , Lexeme.TYPE_LETTER);
 				if(!Dictionary.isStopWord(segmentBuff , newLexeme.getBegin() , newLexeme.getLength())){
 					context.addLexeme(newLexeme);
 				}
@@ -75,7 +75,7 @@ public class LetterSegmenter implements ISegmenter {
 		if(context.getCursor() == context.getAvailable() - 1
 				&& start != -1 && end != -1){
 			//生成已切分的词元
-			Lexeme newLexeme = new Lexeme(context.getBuffOffset() , start , end - start + 1 );
+			Lexeme newLexeme = new Lexeme(context.getBuffOffset() , start , end - start + 1 , Lexeme.TYPE_LETTER);
 			if(!Dictionary.isStopWord(segmentBuff , newLexeme.getBegin() , newLexeme.getLength())){
 				context.addLexeme(newLexeme);
 			}

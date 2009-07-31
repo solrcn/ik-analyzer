@@ -19,6 +19,8 @@ import org.wltea.analyzer.seg.ISegmenter;
  *
  */
 public final class IKSegmentation{
+	//是否使用最大词长切分（粗粒度）
+	private boolean isMaxWordLength = false;
 	
 	private Reader input;	
 	//默认缓冲区大小
@@ -32,9 +34,13 @@ public final class IKSegmentation{
 	//分词处理器列表
 	private List<ISegmenter> segmenters;
     
-    
 	public IKSegmentation(Reader input){
+		this(input , false);
+	}
+    
+	public IKSegmentation(Reader input , boolean isMaxWordLength){
 		this.input = input ;
+		this.isMaxWordLength = isMaxWordLength;
 		segmentBuff = new char[BUFF_SIZE];
 		context = new Context();
 		segmenters = Configuration.loadSegmenter();
@@ -91,6 +97,10 @@ public final class IKSegmentation{
         		context.setLastAnalyzed(buffIndex);
             	//同时累计已分析的字符长度
         		context.setBuffOffset(context.getBuffOffset() + buffIndex);
+        		//如果使用最大切分，则过滤交叠的短词元
+        		if(isMaxWordLength){
+        			context.excludeOverlap();
+        		}
             	//读取词元池中的词元
             	return buildLexeme(context.firstLexeme());
             }
@@ -133,8 +143,7 @@ public final class IKSegmentation{
     private Lexeme buildLexeme(Lexeme lexeme){
     	if(lexeme != null){
 			//生成lexeme的词元文本
-			String lexemeText = new String(segmentBuff , lexeme.getBegin() , lexeme.getLength());
-			lexeme.setLexemeText(lexemeText);
+			lexeme.setLexemeText(String.valueOf(segmentBuff , lexeme.getBegin() , lexeme.getLength()));
 			return lexeme;
 			
 		}else{
