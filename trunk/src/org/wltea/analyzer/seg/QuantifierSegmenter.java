@@ -253,10 +253,11 @@ public class QuantifierSegmenter implements ISegmenter {
 		}
 		
 		//读到缓冲区最后一个字符，还有尚未输出的数词
-		if(context.getCursor() == context.getAvailable() - 1
-				&& nStart != -1 && nEnd != -1){
-			//输出数词
-			outputNumLexeme(context);
+		if(context.getCursor() == context.getAvailable() - 1){
+			if(nStart != -1 && nEnd != -1){
+				//输出数词
+				outputNumLexeme(context);
+			}
 			//重置数词状态
 			nReset();
 		}				
@@ -691,8 +692,7 @@ public class QuantifierSegmenter implements ISegmenter {
 		}
 		
 		//读到缓冲区最后一个字符，还有尚未输出的量词
-		if(context.getCursor() == context.getAvailable() - 1
-				&& countStart != -1 && countEnd != -1){
+		if(context.getCursor() == context.getAvailable() - 1){
 			//重置量词状态
 			countStart = -1;
 			countEnd = -1;

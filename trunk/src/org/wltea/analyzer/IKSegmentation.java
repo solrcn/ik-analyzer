@@ -26,7 +26,7 @@ public final class IKSegmentation{
 	//默认缓冲区大小
 	private static final int BUFF_SIZE = 4096;
 	//缓冲区耗尽的临界值
-	private static final int BUFF_EXHAUST_CRITICAL = 64;	
+	private static final int BUFF_EXHAUST_CRITICAL = 100;	
     //字符窜读取缓冲
     private char[] segmentBuff;
 	//分词器上下文
@@ -95,13 +95,14 @@ public final class IKSegmentation{
         					&& available - buffIndex > 1
         					&& available - buffIndex < BUFF_EXHAUST_CRITICAL
         					&& !context.isBufferLocked()){
-        				
-        				for(ISegmenter segmenter : segmenters){
-        					segmenter.reset();
-        				}
+
         				break;
         			}
         		}
+				
+				for(ISegmenter segmenter : segmenters){
+					segmenter.reset();
+				}
         		//System.out.println(available + " : " +  buffIndex);
             	//记录最近一次分析的字符长度
         		context.setLastAnalyzed(buffIndex);
