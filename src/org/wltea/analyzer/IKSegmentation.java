@@ -87,13 +87,13 @@ public final class IKSegmentation{
         			/*
         			 * 满足一下条件时，
         			 * 1.available == BUFF_SIZE 表示buffer满载
-        			 * 2.available - buffIndex > 1 && available - buffIndex < BUFF_EXHAUST_CRITICAL 表示当前指针处于临界区内
+        			 * 2.buffIndex < available - 1 && buffIndex > available - BUFF_EXHAUST_CRITICAL表示当前指针处于临界区内
         			 * 3.!context.isBufferLocked()表示没有segmenter在占用buffer
         			 * 要中断当前循环（buffer要进行移位，并再读取数据的操作）
         			 */        			
         			if(available == BUFF_SIZE
-        					&& available - buffIndex > 1
-        					&& available - buffIndex < BUFF_EXHAUST_CRITICAL
+        					&& buffIndex < available - 1   
+        					&& buffIndex > available - BUFF_EXHAUST_CRITICAL
         					&& !context.isBufferLocked()){
 
         				break;
