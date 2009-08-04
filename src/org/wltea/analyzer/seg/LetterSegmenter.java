@@ -72,12 +72,13 @@ public class LetterSegmenter implements ISegmenter {
 		}
 		
 		//context.getCursor() == context.getAvailable() - 1读取缓冲区最后一个字符，直接输出
-		if(context.getCursor() == context.getAvailable() - 1
-				&& start != -1 && end != -1){
-			//生成已切分的词元
-			Lexeme newLexeme = new Lexeme(context.getBuffOffset() , start , end - start + 1 , Lexeme.TYPE_LETTER);
-			if(!Dictionary.isStopWord(segmentBuff , newLexeme.getBegin() , newLexeme.getLength())){
-				context.addLexeme(newLexeme);
+		if(context.getCursor() == context.getAvailable() - 1){
+			if(start != -1 && end != -1){
+				//生成已切分的词元
+				Lexeme newLexeme = new Lexeme(context.getBuffOffset() , start , end - start + 1 , Lexeme.TYPE_LETTER);
+				if(!Dictionary.isStopWord(segmentBuff , newLexeme.getBegin() , newLexeme.getLength())){
+					context.addLexeme(newLexeme);
+				}
 			}
 			//设置当前分词器状态为“待处理”
 			start = -1;
