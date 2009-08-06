@@ -122,11 +122,12 @@ public class SegmentorTester extends TestCase{
 		
 		testStr.add("作者博客：linliangyi2007.javaeye.com  电子邮件地址：linliangyi2005@gmail.com");
 		
-		testStr.add("新字典是一个词吗");
+		testStr.add("中国人民银行");
+		testStr.add("航班车行李票");
 		
 		for(String t : testStr){
 			System.out.println(t);	
-			IKSegmentation ikSeg = new IKSegmentation(new StringReader(t) , true);
+			IKSegmentation ikSeg = new IKSegmentation(new StringReader(t) , false);
 			try {
 				Lexeme l = null;
 				while( (l = ikSeg.next()) != null){
@@ -215,7 +216,7 @@ public class SegmentorTester extends TestCase{
 	public void testQueryParser(){
 		Query query = null;
 		try {
-			query = IKQueryParser.parse("f", "长春市长春节致辞 带空格的查询测试");
+			query = IKQueryParser.parse("f", "永和服装饰品有限公司");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

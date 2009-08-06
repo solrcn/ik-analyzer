@@ -190,7 +190,7 @@ public class ChineseSegmenter implements ISegmenter {
 		
 		//以单字输出未知词段
 		for(int i = uStart ; i <= uEnd ; i++){
-			newLexeme = new Lexeme(context.getBuffOffset() , i , 1  , Lexeme.TYPE_CJK_NORMAL);
+			newLexeme = new Lexeme(context.getBuffOffset() , i , 1  , Lexeme.TYPE_CJK_UNKNOWN);
 			context.addLexeme(newLexeme);		
 		}
 		
