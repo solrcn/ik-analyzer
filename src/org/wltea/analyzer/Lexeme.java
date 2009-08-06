@@ -17,6 +17,8 @@ public final class Lexeme implements Comparable<Lexeme>{
 	public static final int TYPE_CJK_SN = 1;
 	//尾缀
 	public static final int TYPE_CJK_SF = 2;
+	//未知的
+	public static final int TYPE_CJK_UNKNOWN = 3;
 	//数词
 	public static final int TYPE_NUM = 10;
 	//量词
@@ -222,6 +224,9 @@ public final class Lexeme implements Comparable<Lexeme>{
 			case TYPE_CJK_SN :
 				strbuf.append("CJK_NAME");
 				break;
+			case TYPE_CJK_UNKNOWN :
+				strbuf.append("UNKNOWN");
+				break;
 			case TYPE_NUM : 
 				strbuf.append("NUMEBER");
 				break;
@@ -231,6 +236,7 @@ public final class Lexeme implements Comparable<Lexeme>{
 			case TYPE_LETTER :
 				strbuf.append("LETTER");
 				break;
+
 		}
 		return strbuf.toString();
 	}
