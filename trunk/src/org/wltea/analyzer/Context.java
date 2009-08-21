@@ -36,6 +36,18 @@ public class Context{
     	buffLocker = new HashSet<ISegmenter>(4);
     	lexemeSet = new IKSortedLinkSet();
 	}
+    
+    /**
+     * 重置上下文
+     */
+    public void resetContext(){
+    	buffLocker.clear();
+    	lexemeSet = new IKSortedLinkSet();
+    	buffOffset = 0;
+    	available = 0;
+    	lastAnalyzed = 0;
+    	cursor = 0;
+    }
 
 	public int getBuffOffset() {
 		return buffOffset;

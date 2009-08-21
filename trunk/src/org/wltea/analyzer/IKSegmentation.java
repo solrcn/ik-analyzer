@@ -24,9 +24,9 @@ public final class IKSegmentation{
 	
 	private Reader input;	
 	//默认缓冲区大小
-	private static final int BUFF_SIZE = 4096;
+	private static final int BUFF_SIZE = 3072;
 	//缓冲区耗尽的临界值
-	private static final int BUFF_EXHAUST_CRITICAL = 100;	
+	private static final int BUFF_EXHAUST_CRITICAL = 48;	
     //字符窜读取缓冲
     private char[] segmentBuff;
 	//分词器上下文
@@ -71,6 +71,7 @@ public final class IKSegmentation{
 			int available = fillBuffer(input);
 			
             if(available <= 0){
+            	context.resetContext();
                 return null;
             }else{
             	//分词处理
