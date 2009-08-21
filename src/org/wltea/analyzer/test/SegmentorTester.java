@@ -127,7 +127,7 @@ public class SegmentorTester extends TestCase{
 		
 		for(String t : testStr){
 			System.out.println(t);	
-			IKSegmentation ikSeg = new IKSegmentation(new StringReader(t) , false);
+			IKSegmentation ikSeg = new IKSegmentation(new StringReader(t) , true);
 			try {
 				Lexeme l = null;
 				while( (l = ikSeg.next()) != null){
@@ -146,7 +146,7 @@ public class SegmentorTester extends TestCase{
 		
 		String testString = "";
       
-		for (int i = 0; i <300; i++) {
+		for (int i = 0; i <1; i++) {
 			testString += "18岁那年，有个自称算命先生看了我的手相后说，此生你将注定与男人纠缠不清。我说怎么可能，我不漂亮，也无贪欲。我不想要太多，一生只想爱一次，只要一个爱我的丈夫，然后我是他的好妻子。为他做饭、洗衣带孩子。我要和他相伴到老。 " 
              +"算命先生还说我曾有快乐的童年，但这说明不了什么，未来每一天都在变，没有长久的苦难，当然也没有长久的幸福。听到这话的时候，我感觉自己从里到外开始发冷。" 
              +"那么多年，我一直企图摆脱这个咒语一样的预言，却总是徒劳无功。我碰到过很多男人，不是他爱我我不爱他就是我爱他而他不爱我，还有就是我们彼此相爱却因为有缘无份而不得不分开。他们都说我是好姑娘，结果是我至今仍孑然一身。" 
@@ -196,11 +196,11 @@ public class SegmentorTester extends TestCase{
 		
 		long begin = System.currentTimeMillis();   
 		try {
-//			Lexeme l = null;
-//			while( (l = ikSeg.next()) != null){
-//				System.out.println(l);
-//			}
-			while( ikSeg.next()!= null);
+			Lexeme l = null;
+			while( (l = ikSeg.next()) != null){
+				System.out.println(l);
+			}
+//			while( ikSeg.next()!= null);
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -216,7 +216,7 @@ public class SegmentorTester extends TestCase{
 	public void testQueryParser(){
 		Query query = null;
 		try {
-			query = IKQueryParser.parse("f", "永和服装饰品有限公司");
+			query = IKQueryParser.parse("f", "title:评测");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
