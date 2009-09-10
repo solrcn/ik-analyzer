@@ -19,8 +19,7 @@ import org.wltea.analyzer.seg.ISegmenter;
  *
  */
 public final class IKSegmentation{
-	//是否使用最大词长切分（粗粒度）
-	private boolean isMaxWordLength = false;
+
 	
 	private Reader input;	
 	//默认缓冲区大小
@@ -50,9 +49,8 @@ public final class IKSegmentation{
 	 */
 	public IKSegmentation(Reader input , boolean isMaxWordLength){
 		this.input = input ;
-		this.isMaxWordLength = isMaxWordLength;
 		segmentBuff = new char[BUFF_SIZE];
-		context = new Context();
+		context = new Context(isMaxWordLength);
 		segmenters = Configuration.loadSegmenter();
 	}
 	
@@ -110,7 +108,7 @@ public final class IKSegmentation{
             	//同时累计已分析的字符长度
         		context.setBuffOffset(context.getBuffOffset() + buffIndex);
         		//如果使用最大切分，则过滤交叠的短词元
-        		if(isMaxWordLength){
+        		if(context.isMaxWordLength()){
         			context.excludeOverlap();
         		}
             	//读取词元池中的词元

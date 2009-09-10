@@ -12,6 +12,8 @@ import org.wltea.analyzer.seg.ISegmenter;
  */
 public class Context{
 	
+	//是否使用最大词长切分（粗粒度）
+	private boolean isMaxWordLength = false;	
     //记录Reader内已分析的字串总长度
     //在分多段分析词元时，该变量累计当前的segmentBuff相对于reader的位移
 	private int buffOffset;	
@@ -32,9 +34,10 @@ public class Context{
 	private IKSortedLinkSet lexemeSet;
 
     
-    Context(){
-    	buffLocker = new HashSet<ISegmenter>(4);
-    	lexemeSet = new IKSortedLinkSet();
+    Context(boolean isMaxWordLength){
+    	this.isMaxWordLength = isMaxWordLength;
+    	this.buffLocker = new HashSet<ISegmenter>(4);
+    	this.lexemeSet = new IKSortedLinkSet();
 	}
     
     /**
@@ -49,6 +52,14 @@ public class Context{
     	cursor = 0;
     }
 
+	public boolean isMaxWordLength() {
+		return isMaxWordLength;
+	}
+
+	public void setMaxWordLength(boolean isMaxWordLength) {
+		this.isMaxWordLength = isMaxWordLength;
+	}
+    
 	public int getBuffOffset() {
 		return buffOffset;
 	}
@@ -101,6 +112,8 @@ public class Context{
 	public void setAvailable(int available) {
 		this.available = available;
 	}
+	
+	
 
 	/**
 	 * 取出分词结果集中的首个词元
@@ -288,4 +301,5 @@ public class Context{
 		
 		
 	}
+
 }

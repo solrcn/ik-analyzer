@@ -27,10 +27,18 @@ public class LetterSegmenter implements ISegmenter {
 	 */
 	private int start;
 	/*
+	 * 字母起始位置
+	 */
+	private int letterStart;
+	/*
 	 * 记录词元结束位置
 	 * end记录的是在词元中最后一个出现的Letter但非Sign_Connector的字符的位置
 	 */
 	private int end;
+	/*
+	 * 字母结束位置
+	 */
+	private int letterEnd;
 	
 	public LetterSegmenter(){
 		start = -1;
@@ -50,12 +58,33 @@ public class LetterSegmenter implements ISegmenter {
 				//记录起始指针的位置,标明分词器进入处理状态
 				start = context.getCursor();
 				end = start;
+				if(CharacterHelper.isEnglishLetter(input)){
+					letterStart =  context.getCursor();
+					letterEnd = letterStart;
+				}
 			}
 			
 		}else{//当前的分词器正在处理字符			
 			if(isAcceptedChar(input)){
-				//记录下可能的结束位置，如果是连接符结尾，则忽略
-				if(!isLetterConnector(input)){
+				if(isLetterConnector(input)){
+					//遇到分割符，如果存在有英文单词则切分,但不重置start ，end
+					if(letterStart > -1 && letterEnd > -1){
+						//生成已切分的词元
+						Lexeme newLexeme = new Lexeme(context.getBuffOffset() , letterStart , letterEnd - letterStart + 1 , Lexeme.TYPE_LETTER);
+						if(!Dictionary.isStopWord(segmentBuff , newLexeme.getBegin() , newLexeme.getLength())){
+							context.addLexeme(newLexeme);
+						}
+						letterStart = -1;
+						letterEnd = -1;
+					}					
+				}else{
+					if(CharacterHelper.isEnglishLetter(input)){
+						if(letterStart == -1){//设置英文单词起始位置
+							letterStart = context.getCursor();
+						}
+						letterEnd = context.getCursor();
+					}
+					//记录下可能的结束位置，如果是连接符结尾，则忽略
 					end = context.getCursor();
 				}
 			}else{
@@ -67,7 +96,17 @@ public class LetterSegmenter implements ISegmenter {
 				//设置当前分词器状态为“待处理”
 				start = -1;
 				end = -1;
-
+				
+				//输出英文单词
+				if(letterStart > -1 && letterEnd > -1){
+					//生成已切分的词元
+					Lexeme engLexeme = new Lexeme(context.getBuffOffset() , letterStart , letterEnd - letterStart + 1 , Lexeme.TYPE_LETTER);
+					if(!Dictionary.isStopWord(segmentBuff , engLexeme.getBegin() , engLexeme.getLength())){
+						context.addLexeme(engLexeme);
+					}
+					letterStart = -1;
+					letterEnd = -1;
+				}	
 			}			
 		}
 		
@@ -83,6 +122,17 @@ public class LetterSegmenter implements ISegmenter {
 			//设置当前分词器状态为“待处理”
 			start = -1;
 			end = -1;
+			
+			//输出英文单词
+			if(letterStart > -1 && letterEnd > -1){
+				//生成已切分的词元
+				Lexeme engLexeme = new Lexeme(context.getBuffOffset() , letterStart , letterEnd - letterStart + 1 , Lexeme.TYPE_LETTER);
+				if(!Dictionary.isStopWord(segmentBuff , engLexeme.getBegin() , engLexeme.getLength())){
+					context.addLexeme(engLexeme);
+				}
+				letterStart = -1;
+				letterEnd = -1;
+			}			
 		}
 		
 		//判断是否锁定缓冲区
