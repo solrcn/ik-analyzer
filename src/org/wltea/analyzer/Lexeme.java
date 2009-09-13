@@ -120,10 +120,14 @@ public final class Lexeme implements Comparable<Lexeme>{
 	 */
 	public boolean isOverlap(Lexeme other){
 		if(other != null){
-			if(this.begin <= other.begin && this.getEndPosition() >= other.getEndPosition()){
+			if(this.getBeginPosition() <= other.getBeginPosition() 
+					&& this.getEndPosition() >= other.getEndPosition()){
 				return true;
-			}else if(this.begin >= other.begin && this.getEndPosition() <= other.getEndPosition()){
+				
+			}else if(this.getBeginPosition() >= other.getBeginPosition() 
+					&& this.getEndPosition() <= other.getEndPosition()){
 				return true;
+				
 			}else {
 				return false;
 			}
