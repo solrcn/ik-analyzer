@@ -28,6 +28,8 @@ public class Configuration {
 	private static final String FILE_NAME = "/IKAnalyzer.cfg.xml";
 	//配置属性——扩展字典
 	private static final String EXT_DICT = "ext_dict";
+	//配置属性——扩展停止词典
+	private static final String EXT_STOP = "ext_stopwords";
 	
 	private static final Configuration CFG = new Configuration();
 	
@@ -75,16 +77,39 @@ public class Configuration {
 	}
 	
 	/**
+	 * 获取扩展停止词典配置路径
+	 * @return List<String> 相对类加载器的路径
+	 */
+	public static List<String> getExtStopWordDictionarys(){
+		List<String> extStopWordDictFiles = new ArrayList<String>(2);
+		String extStopWordDictCfg = CFG.props.getProperty(EXT_STOP);
+		if(extStopWordDictCfg != null){
+			//使用;分割多个扩展字典配置
+			String[] filePaths = extStopWordDictCfg.split(";");
+			if(filePaths != null){
+				for(String filePath : filePaths){
+					if(filePath != null && !"".equals(filePath.trim())){
+						extStopWordDictFiles.add(filePath.trim());
+						//System.out.println(filePath.trim());
+					}
+				}
+			}
+		}		
+		return extStopWordDictFiles;		
+	}
+		
+	
+	/**
 	 * 初始化子分词器实现
 	 * （目前暂时不考虑配置扩展）
 	 * @return List<ISegmenter>
 	 */
 	public static List<ISegmenter> loadSegmenter(){
 		List<ISegmenter> segmenters = new ArrayList<ISegmenter>(4);
-		//处理字母的子分词器
-		segmenters.add(new LetterSegmenter()); 
 		//处理数量词的子分词器
 		segmenters.add(new QuantifierSegmenter());
+		//处理字母的子分词器
+		segmenters.add(new LetterSegmenter()); 
 		//处理中文词的子分词器
 		segmenters.add(new ChineseSegmenter());
 		return segmenters;
