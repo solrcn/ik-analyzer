@@ -79,7 +79,7 @@ public final class IKQueryParser {
 	 * 单条件,单Field查询分析
 	 * @param field -- Document field name
 	 * @param query -- keyword
-	 * @return
+	 * @return Query 查询逻辑对象
 	 * @throws IOException
 	 */
 	public static Query parse(String field , String query) throws IOException{
@@ -106,7 +106,7 @@ public final class IKQueryParser {
 	 * 多Field,单条件查询分析
 	 * @param fields -- Document fields name
 	 * @param query	-- keyword
-	 * @return
+	 * @return Query 查询逻辑对象
 	 * @throws IOException
 	 */
 	public static Query parseMultiField(String[] fields , String query) throws IOException{
@@ -131,7 +131,7 @@ public final class IKQueryParser {
 	 * @param fields -- Document fields name
 	 * @param query	-- keyword
 	 * @param flags -- BooleanClause
-	 * @return
+	 * @return Query 查询逻辑对象
 	 * @throws IOException
 	 */
 	public static Query parseMultiField(String[] fields , String query ,  BooleanClause.Occur[] flags) throws IOException{
@@ -163,7 +163,7 @@ public final class IKQueryParser {
 	 * 多Field多条件查询分析
 	 * @param fields
 	 * @param queries
-	 * @return
+	 * @return Query 查询逻辑对象
 	 * @throws IOException 
 	 */
 	public static Query parseMultiField(String[] fields , String[] queries) throws IOException{
@@ -194,7 +194,7 @@ public final class IKQueryParser {
 	 * @param fields
 	 * @param queries
 	 * @param flags
-	 * @return
+	 * @return Query 查询逻辑对象
 	 * @throws IOException
 	 */
 	public static Query parseMultiField(String[] fields , String[] queries , BooleanClause.Occur[] flags) throws IOException{

@@ -103,7 +103,7 @@ public class Context{
 	/**
 	 * 只要buffLocker中存在ISegmenter对象
 	 * 则buffer被锁定
-	 * @return
+	 * @return boolean 缓冲去是否被锁定
 	 */
 	public boolean isBufferLocked(){
 		return this.buffLocker.size() > 0;
@@ -121,7 +121,7 @@ public class Context{
 
 	/**
 	 * 取出分词结果集中的首个词元
-	 * @return
+	 * @return Lexeme 集合的第一个词元
 	 */
 	public Lexeme firstLexeme() {
 		return this.lexemeSet.pollFirst();
@@ -129,7 +129,7 @@ public class Context{
 	
 	/**
 	 * 取出分词结果集中的最后一个词元
-	 * @return
+	 * @return Lexeme 集合的最后一个词元
 	 */
 	public Lexeme lastLexeme() {
 		return this.lexemeSet.pollLast();
@@ -147,7 +147,7 @@ public class Context{
 	
 	/**
 	 * 获取分词结果集大小
-	 * @return
+	 * @return int 分词结果集大小
 	 */
 	public int getResultSize(){
 		return this.lexemeSet.size();
