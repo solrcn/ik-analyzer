@@ -5,7 +5,6 @@ package org.wltea.analyzer.seg;
 
 import org.wltea.analyzer.Lexeme;
 import org.wltea.analyzer.Context;
-import org.wltea.analyzer.dic.Dictionary;
 import org.wltea.analyzer.help.CharacterHelper;
 
 /**
@@ -43,6 +42,8 @@ public class LetterSegmenter implements ISegmenter {
 	public LetterSegmenter(){
 		start = -1;
 		end = -1;
+		letterStart = -1;
+		letterEnd = -1;
 	}
 	
 	/* (non-Javadoc)
@@ -70,10 +71,10 @@ public class LetterSegmenter implements ISegmenter {
 					//遇到分割符，如果存在有英文单词则切分,但不重置start ，end
 					if(letterStart > -1 && letterEnd > -1){
 						//生成已切分的词元
-						Lexeme newLexeme = new Lexeme(context.getBuffOffset() , letterStart , letterEnd - letterStart + 1 , Lexeme.TYPE_LETTER);
-						if(!Dictionary.isStopWord(segmentBuff , newLexeme.getBegin() , newLexeme.getLength())){
-							context.addLexeme(newLexeme);
-						}
+						Lexeme engLexeme = new Lexeme(context.getBuffOffset() , letterStart , letterEnd - letterStart + 1 , Lexeme.TYPE_LETTER);
+//						if(!Dictionary.isStopWord(segmentBuff , engLexeme.getBegin() , engLexeme.getLength())){
+						context.addLexeme(engLexeme);
+//						}
 						letterStart = -1;
 						letterEnd = -1;
 					}					
@@ -90,9 +91,9 @@ public class LetterSegmenter implements ISegmenter {
 			}else{
 				//生成已切分的词元
 				Lexeme newLexeme = new Lexeme(context.getBuffOffset() , start , end - start + 1 , Lexeme.TYPE_LETTER);
-				if(!Dictionary.isStopWord(segmentBuff , newLexeme.getBegin() , newLexeme.getLength())){
-					context.addLexeme(newLexeme);
-				}
+//				if(!Dictionary.isStopWord(segmentBuff , newLexeme.getBegin() , newLexeme.getLength())){
+				context.addLexeme(newLexeme);
+//				}
 				//设置当前分词器状态为“待处理”
 				start = -1;
 				end = -1;
@@ -101,9 +102,9 @@ public class LetterSegmenter implements ISegmenter {
 				if(letterStart > -1 && letterEnd > -1){
 					//生成已切分的词元
 					Lexeme engLexeme = new Lexeme(context.getBuffOffset() , letterStart , letterEnd - letterStart + 1 , Lexeme.TYPE_LETTER);
-					if(!Dictionary.isStopWord(segmentBuff , engLexeme.getBegin() , engLexeme.getLength())){
-						context.addLexeme(engLexeme);
-					}
+//					if(!Dictionary.isStopWord(segmentBuff , engLexeme.getBegin() , engLexeme.getLength())){
+					context.addLexeme(engLexeme);
+//					}
 					letterStart = -1;
 					letterEnd = -1;
 				}	
@@ -115,9 +116,9 @@ public class LetterSegmenter implements ISegmenter {
 			if(start != -1 && end != -1){
 				//生成已切分的词元
 				Lexeme newLexeme = new Lexeme(context.getBuffOffset() , start , end - start + 1 , Lexeme.TYPE_LETTER);
-				if(!Dictionary.isStopWord(segmentBuff , newLexeme.getBegin() , newLexeme.getLength())){
-					context.addLexeme(newLexeme);
-				}
+//				if(!Dictionary.isStopWord(segmentBuff , newLexeme.getBegin() , newLexeme.getLength())){
+				context.addLexeme(newLexeme);
+//				}
 			}
 			//设置当前分词器状态为“待处理”
 			start = -1;
@@ -127,9 +128,9 @@ public class LetterSegmenter implements ISegmenter {
 			if(letterStart > -1 && letterEnd > -1){
 				//生成已切分的词元
 				Lexeme engLexeme = new Lexeme(context.getBuffOffset() , letterStart , letterEnd - letterStart + 1 , Lexeme.TYPE_LETTER);
-				if(!Dictionary.isStopWord(segmentBuff , engLexeme.getBegin() , engLexeme.getLength())){
-					context.addLexeme(engLexeme);
-				}
+//				if(!Dictionary.isStopWord(segmentBuff , engLexeme.getBegin() , engLexeme.getLength())){
+				context.addLexeme(engLexeme);
+//				}
 				letterStart = -1;
 				letterEnd = -1;
 			}			

@@ -3,6 +3,7 @@ package org.wltea.analyzer;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.wltea.analyzer.dic.Dictionary;
 import org.wltea.analyzer.seg.ISegmenter;
 
 /**
@@ -23,6 +24,8 @@ public class Context{
     private int lastAnalyzed;	
     //当前缓冲区位置指针
     private int cursor; 
+    //字符窜读取缓冲
+    private char[] segmentBuff;
     /*
      * 记录正在使用buffer的分词器对象
      * 如果set中存在有分词器对象，则buffer不能进行位移操作（处于locked状态）
@@ -34,8 +37,9 @@ public class Context{
 	private IKSortedLinkSet lexemeSet;
 
     
-    Context(boolean isMaxWordLength){
+    Context(char[] segmentBuff , boolean isMaxWordLength){
     	this.isMaxWordLength = isMaxWordLength;
+    	this.segmentBuff = segmentBuff;
     	this.buffLocker = new HashSet<ISegmenter>(4);
     	this.lexemeSet = new IKSortedLinkSet();
 	}
@@ -136,7 +140,9 @@ public class Context{
 	 * @param lexeme
 	 */
 	public void addLexeme(Lexeme lexeme){
-		this.lexemeSet.addLexeme(lexeme);
+		if(!Dictionary.isStopWord(segmentBuff , lexeme.getBegin() , lexeme.getLength())){
+			this.lexemeSet.addLexeme(lexeme);
+		}
 	}
 	
 	/**

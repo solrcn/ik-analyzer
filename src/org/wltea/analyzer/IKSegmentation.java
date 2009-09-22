@@ -50,7 +50,7 @@ public final class IKSegmentation{
 	public IKSegmentation(Reader input , boolean isMaxWordLength){
 		this.input = input ;
 		segmentBuff = new char[BUFF_SIZE];
-		context = new Context(isMaxWordLength);
+		context = new Context(segmentBuff , isMaxWordLength);
 		segmenters = Configuration.loadSegmenter();
 	}
 	

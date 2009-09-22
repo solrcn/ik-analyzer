@@ -260,6 +260,7 @@ public class Dictionary {
 			do {
 				theWord = br.readLine();
 				if (theWord != null) {
+					//System.out.println(theWord);
 					_PrepDict.fillSegment(theWord.trim().toCharArray());
 				}
 			} while (theWord != null);
@@ -312,6 +313,42 @@ public class Dictionary {
 				e.printStackTrace();
 			}
 		}
+		
+		//加载扩展停止词典
+		List<String> extStopWordDictFiles  = Configuration.getExtStopWordDictionarys();
+		if(extStopWordDictFiles != null){
+			for(String extStopWordDictName : extStopWordDictFiles){
+				//读取扩展词典文件
+				is = Dictionary.class.getResourceAsStream(extStopWordDictName);
+				try {
+					BufferedReader br = new BufferedReader(new InputStreamReader(is , "UTF-8"), 512);
+					String theWord = null;
+					do {
+						theWord = br.readLine();
+						if (theWord != null) {
+							//System.out.println(theWord);
+							//加载扩展停止词典数据到内存中
+							_StopWords.fillSegment(theWord.trim().toCharArray());
+						}
+					} while (theWord != null);
+					
+				} catch (IOException ioe) {
+					System.err.println("Extension Stop word Dictionary loading exception.");
+					ioe.printStackTrace();
+					
+				}finally{
+					try {
+						if(is != null){
+		                    is.close();
+		                    is = null;
+						}
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}		
+		
 	}			
 	
 	/**
@@ -337,6 +374,21 @@ public class Dictionary {
 				if (extWord != null) {
 					//加载扩展词条到主内存词典中
 					singleton._MainDict.fillSegment(extWord.trim().toCharArray());
+				}
+			}
+		}
+	}
+	
+	/**
+	 * 加载扩展的停止词条
+	 * @param extStopWords List<String>词条列表
+	 */
+	public static void loadExtendStopWords(List<String> extStopWords){
+		if(extStopWords != null){
+			for(String extStopWord : extStopWords){
+				if (extStopWord != null) {
+					//加载扩展的停止词条
+					singleton._StopWords.fillSegment(extStopWord.trim().toCharArray());
 				}
 			}
 		}
