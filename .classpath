@@ -4,5 +4,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="junit.jar"/>
 	<classpathentry kind="lib" path="lucene-core-2.4.1.jar"/>
+	<classpathentry kind="lib" path="apache-solr-core-1.3.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

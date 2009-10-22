@@ -22,7 +22,7 @@ import junit.framework.TestCase;
 public class SegmentorTester extends TestCase{
 	
 	public void testLetter(){
-		String t = "AT&T and I.B.M Corp mail : 1.12.34.33 -1-2003%123*111-11+12 2009A17B10 10:10:23wo!r+d.1{}0.16-8AAAA_B$BB@0.1.12.34.33.10.18ok?hello.txt";
+		String t = "AT&T and I.B.M Corp mail : 1.12.34.33 -1-2003%123*111-11+12 2009A17B10 10:10:23wo!r+d.1{}0.16-8AAAA_B$BB@0.1.12.34.33.10.18ok?hello001a.txt";
 //		Token ruToken = new Token();
 //		StandardTokenizer st = new StandardTokenizer(new StringReader(t));
 //		try {
@@ -60,7 +60,7 @@ public class SegmentorTester extends TestCase{
 				+ "20000余人受伤，近20万人无家可归。");
 		testStr.add("古田县城关六一四路四百零五号");
 		testStr.add("欢迎使用阿江统计2.01版");
-		testStr.add("51千克五十一千克五万一千克两千克拉");
+		testStr.add("51千克五十一千克五万一千克两千克拉 五十一");
 		testStr.add("十一点半下班十一点下班");
 		testStr.add("福州第一中学福州一中福州第三十六中赐进士及第");
 		
@@ -124,6 +124,7 @@ public class SegmentorTester extends TestCase{
 		
 		testStr.add("中国人民银行");
 		testStr.add("航班车行李票");
+		testStr.add("打索埕");
 		
 		for(String t : testStr){
 			System.out.println(t);	

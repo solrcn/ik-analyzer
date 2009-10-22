@@ -283,8 +283,10 @@ public class Context{
 				Lexeme one = this.head;
 				Lexeme another = one.getNext();
 				do{
-					if(one.isOverlap(another) && 
-							Lexeme.TYPE_CJK_NORMAL == another.getLexemeType()){//邻近的两个词元完全交叠
+					if(one.isOverlap(another) 
+							&& Lexeme.TYPE_CJK_NORMAL == one.getLexemeType()
+							&& Lexeme.TYPE_CJK_NORMAL == another.getLexemeType()){
+						//邻近的两个词元完全交叠,且均为词典内的词语
 						another = another.getNext();
 						//从链表中断开交叠的词元
 						one.setNext(another);

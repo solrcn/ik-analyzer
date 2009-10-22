@@ -161,4 +161,12 @@ public final class IKSegmentation{
 		}
     }
 
+	public Reader getInput() {
+		return input;
+	}
+
+	public void setInput(Reader input) {
+		this.input = input;
+	}
+
 }

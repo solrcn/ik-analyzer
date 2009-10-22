@@ -178,7 +178,6 @@ public class LetterSegmenter implements ISegmenter {
 				|| CharacterHelper.isArabicNumber(input);
 	}
 
-	@Override
 	public void reset() {
 		//do nothing
 		

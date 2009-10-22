@@ -34,7 +34,7 @@ public final class IKAnalyzer extends Analyzer {
 	 */
 	public IKAnalyzer(boolean isMaxWordLength){
 		super();
-		this.isMaxWordLength = isMaxWordLength;
+		this.setMaxWordLength(isMaxWordLength);
 	}
 
 	/* (non-Javadoc)
@@ -42,7 +42,15 @@ public final class IKAnalyzer extends Analyzer {
 	 */
 	@Override
 	public TokenStream tokenStream(String fieldName, Reader reader) {
-		return new IKTokenizer(reader , isMaxWordLength);
+		return new IKTokenizer(reader , isMaxWordLength());
+	}
+
+	public void setMaxWordLength(boolean isMaxWordLength) {
+		this.isMaxWordLength = isMaxWordLength;
+	}
+
+	public boolean isMaxWordLength() {
+		return isMaxWordLength;
 	}
 
 }
