@@ -699,7 +699,6 @@ public class QuantifierSegmenter implements ISegmenter {
 		}
 	}
 
-	@Override
 	public void reset() {
 		// do nothing
 		

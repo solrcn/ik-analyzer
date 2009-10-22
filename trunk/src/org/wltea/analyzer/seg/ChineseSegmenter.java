@@ -120,7 +120,12 @@ public class ChineseSegmenter implements ISegmenter {
 				//newCSeg.type = CSeg.TYPE_PRE;
 				_CSegList.add(newCSeg);
 				
-			}		
+			}else if(hit.isUnmatch()){//不匹配，当前的input不是词，也不是词前缀，将其视为分割性的字符
+				//输出从doneIndex到当前字符（含当前字符）之间的未知词
+				processUnknown(segmentBuff , context , doneIndex + 1 , context.getCursor());
+				//更新doneIndex，标识已处理
+				doneIndex = context.getCursor();
+			}
 			
 		}else {//输入的不是中文(CJK)字符
 			if(_CSegList.size() > 0
@@ -241,7 +246,6 @@ public class ChineseSegmenter implements ISegmenter {
 		//private String type;
 	}
 
-	@Override
 	public void reset() {
 		//重置已处理标识
 		doneIndex = -1;

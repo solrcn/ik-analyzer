@@ -20,7 +20,7 @@ import org.wltea.analyzer.Lexeme;
  * @author 林良益
  *
  */
-final class IKTokenizer extends Tokenizer {
+public final class IKTokenizer extends Tokenizer {
 	
 	//IK分词器实现
 	private IKSegmentation _IKImplement;
@@ -30,7 +30,7 @@ final class IKTokenizer extends Tokenizer {
 	 * @param in
 	 * @param isMaxWordLength 当为true时，分词器进行最大词长切分；当为false是，采用最细粒度切分
 	 */
-	IKTokenizer(Reader in , boolean isMaxWordLength) {
+	public IKTokenizer(Reader in , boolean isMaxWordLength) {
 		 super(in);
 		_IKImplement = new IKSegmentation(in , isMaxWordLength);
 	}	
@@ -42,6 +42,14 @@ final class IKTokenizer extends Tokenizer {
 		return toToken(_IKImplement.next());
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see org.apache.lucene.analysis.Tokenizer#reset(java.io.Reader)
+	 */
+	public void reset(Reader input) throws IOException {
+		super.reset(input);
+		_IKImplement.setInput(input);
+	}	
 	/**
 	 * 转化Lexeme语义单元为lucene的Token对象
 	 * @param lexeme
@@ -57,4 +65,5 @@ final class IKTokenizer extends Tokenizer {
 		token.setTermBuffer(lexeme.getLexemeText());
 		return token;
 	}
+	
 }
