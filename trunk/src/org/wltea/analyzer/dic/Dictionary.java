@@ -84,6 +84,10 @@ public class Dictionary {
 		_MainDict = new DictSegment((char)0);
 		//读取主词典文件
         InputStream is = Dictionary.class.getResourceAsStream(Dictionary.PATH_DIC_MAIN);
+        if(is == null){
+        	throw new RuntimeException("Main Dictionary not found!!!");
+        }
+        
 		try {
 			BufferedReader br = new BufferedReader(new InputStreamReader(is , "UTF-8"), 512);
 			String theWord = null;
@@ -115,6 +119,10 @@ public class Dictionary {
 			for(String extDictName : extDictFiles){
 				//读取扩展词典文件
 				is = Dictionary.class.getResourceAsStream(extDictName);
+				//如果找不到扩展的字典，则忽略
+				if(is == null){
+					continue;
+				}
 				try {
 					BufferedReader br = new BufferedReader(new InputStreamReader(is , "UTF-8"), 512);
 					String theWord = null;
@@ -122,6 +130,7 @@ public class Dictionary {
 						theWord = br.readLine();
 						if (theWord != null) {
 							//加载扩展词典数据到主内存词典中
+							//System.out.println(theWord);
 							_MainDict.fillSegment(theWord.trim().toCharArray());
 						}
 					} while (theWord != null);
@@ -152,6 +161,9 @@ public class Dictionary {
 		_SurnameDict = new DictSegment((char)0);
 		//读取姓氏词典文件
         InputStream is = Dictionary.class.getResourceAsStream(Dictionary.PATH_DIC_SURNAME);
+        if(is == null){
+        	throw new RuntimeException("Surname Dictionary not found!!!");
+        }
 		try {
 			BufferedReader br = new BufferedReader(new InputStreamReader(is , "UTF-8"), 512);
 			String theWord = null;
@@ -186,6 +198,9 @@ public class Dictionary {
 		_QuantifierDict = new DictSegment((char)0);
 		//读取量词词典文件
         InputStream is = Dictionary.class.getResourceAsStream(Dictionary.PATH_DIC_QUANTIFIER);
+        if(is == null){
+        	throw new RuntimeException("Quantifier Dictionary not found!!!");
+        }
 		try {
 			BufferedReader br = new BufferedReader(new InputStreamReader(is , "UTF-8"), 512);
 			String theWord = null;
@@ -220,6 +235,9 @@ public class Dictionary {
 		_SuffixDict = new DictSegment((char)0);
 		//读取量词词典文件
         InputStream is = Dictionary.class.getResourceAsStream(Dictionary.PATH_DIC_SUFFIX);
+        if(is == null){
+        	throw new RuntimeException("Suffix Dictionary not found!!!");
+        }
 		try {
 			BufferedReader br = new BufferedReader(new InputStreamReader(is , "UTF-8"), 512);
 			String theWord = null;
@@ -254,6 +272,9 @@ public class Dictionary {
 		_PrepDict = new DictSegment((char)0);
 		//读取量词词典文件
         InputStream is = Dictionary.class.getResourceAsStream(Dictionary.PATH_DIC_PREP);
+        if(is == null){
+        	throw new RuntimeException("Preposition Dictionary not found!!!");
+        }
 		try {
 			BufferedReader br = new BufferedReader(new InputStreamReader(is , "UTF-8"), 512);
 			String theWord = null;
@@ -266,7 +287,7 @@ public class Dictionary {
 			} while (theWord != null);
 			
 		} catch (IOException ioe) {
-			System.err.println("preposition Dictionary loading exception.");
+			System.err.println("Preposition Dictionary loading exception.");
 			ioe.printStackTrace();
 			
 		}finally{
@@ -289,6 +310,9 @@ public class Dictionary {
 		_StopWords = new DictSegment((char)0);
 		//读取量词词典文件
         InputStream is = Dictionary.class.getResourceAsStream(Dictionary.PATH_DIC_STOP);
+        if(is == null){
+        	throw new RuntimeException("Stopword Dictionary not found!!!");
+        }
 		try {
 			BufferedReader br = new BufferedReader(new InputStreamReader(is , "UTF-8"), 512);
 			String theWord = null;
@@ -300,7 +324,7 @@ public class Dictionary {
 			} while (theWord != null);
 			
 		} catch (IOException ioe) {
-			System.err.println("Stop word Dictionary loading exception.");
+			System.err.println("Stopword Dictionary loading exception.");
 			ioe.printStackTrace();
 			
 		}finally{
@@ -320,6 +344,10 @@ public class Dictionary {
 			for(String extStopWordDictName : extStopWordDictFiles){
 				//读取扩展词典文件
 				is = Dictionary.class.getResourceAsStream(extStopWordDictName);
+				//如果找不到扩展的字典，则忽略
+				if(is == null){
+					continue;
+				}
 				try {
 					BufferedReader br = new BufferedReader(new InputStreamReader(is , "UTF-8"), 512);
 					String theWord = null;
