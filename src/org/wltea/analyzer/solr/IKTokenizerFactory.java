@@ -6,15 +6,15 @@ package org.wltea.analyzer.solr;
 import java.io.Reader;
 import java.util.Map;
 
-import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.Tokenizer;
 import org.apache.solr.analysis.BaseTokenizerFactory;
 import org.wltea.analyzer.lucene.IKTokenizer;
 
 /**
- * 实现Solr分词器接口
+ * 实现Solr1.4分词器接口
  * 基于IKTokenizer的实现
  * 
- * @author 林良益
+ * @author 李良杰
  *
  */
 public final class IKTokenizerFactory extends BaseTokenizerFactory{
@@ -41,7 +41,7 @@ public final class IKTokenizerFactory extends BaseTokenizerFactory{
 	 * (non-Javadoc)
 	 * @see org.apache.solr.analysis.TokenizerFactory#create(java.io.Reader)
 	 */
-	public TokenStream create(Reader reader) {
+	public Tokenizer create(Reader reader) {
 		return new IKTokenizer(reader , isMaxWordLength());
 	}
 
