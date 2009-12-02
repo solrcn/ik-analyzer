@@ -12,7 +12,7 @@ import java.util.List;
 import org.wltea.analyzer.cfg.Configuration;
 
 /**
- * IK Analyzer v3.0
+ * IK Analyzer v3.2
  * 词典管理类,单子模式
  * @author 林良益
  *

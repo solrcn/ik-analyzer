@@ -16,7 +16,7 @@ import org.wltea.analyzer.seg.LetterSegmenter;
 import org.wltea.analyzer.seg.QuantifierSegmenter;
 
 /**
- * IK Analyzer v3.0
+ * IK Analyzer v3.2
  * 简单的配置管理类,单子模式
  * @author 林良益
  *

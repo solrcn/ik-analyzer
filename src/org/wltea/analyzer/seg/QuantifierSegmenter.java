@@ -700,8 +700,13 @@ public class QuantifierSegmenter implements ISegmenter {
 	}
 
 	public void reset() {
-		// do nothing
+		nStart = -1;
+		nEnd = -1;
+		nStatus = NaN;
+		fCaN = false;
 		
+		countStart = -1;
+		countEnd = -1;
 	}
 
 }

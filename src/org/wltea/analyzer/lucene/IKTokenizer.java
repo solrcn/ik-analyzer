@@ -14,8 +14,8 @@ import org.wltea.analyzer.Lexeme;
 
 
 /**
- * IK Analyzer v3.0
- * Lucene Tokenizer适配器类
+ * IK Analyzer v3.2
+ * Lucene3.0 Tokenizer适配器类
  * 它封装了IKSegmentation实现
  * 
  * @author 林良益
@@ -72,7 +72,7 @@ public final class IKTokenizer extends Tokenizer {
 	 */
 	public void reset(Reader input) throws IOException {
 		super.reset(input);
-		_IKImplement.setInput(input);
+		_IKImplement.reset(input);
 	}	
 	
 	@Override

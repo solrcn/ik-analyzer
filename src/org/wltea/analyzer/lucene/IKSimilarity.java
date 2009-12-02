@@ -6,7 +6,7 @@ package org.wltea.analyzer.lucene;
 import org.apache.lucene.search.DefaultSimilarity;
 
 /**
- * IK Analyzer v3.0
+ * IK Analyzer v3.2
  * 相似度评估器
  * 重载了DefaultSimilarity的coord方法
  * 提高词元命中个数在相似度比较中的权重影响，即，当有多个词元得到匹配时，文档的相似度将提高

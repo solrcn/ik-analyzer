@@ -12,7 +12,7 @@ import org.wltea.analyzer.help.CharacterHelper;
 import org.wltea.analyzer.seg.ISegmenter;
 
 /**
- * IK Analyzer v3.0
+ * IK Analyzer v3.2
  * IK主分词器
  * 注：IKSegmentation是一个lucene无关的通用分词器
  * @author 林良益
@@ -59,7 +59,7 @@ public final class IKSegmentation{
 	 * @return 没有更多的词元，则返回null
 	 * @throws IOException
 	 */
-	public Lexeme next() throws IOException {
+	public synchronized Lexeme next() throws IOException {
 		if(context.getResultSize() == 0){
 			/*
 			 * 从reader中读取数据，填充buffer
@@ -161,12 +161,16 @@ public final class IKSegmentation{
 		}
     }
 
-	public Reader getInput() {
-		return input;
-	}
-
-	public void setInput(Reader input) {
+    /**
+     * 重置分词器到初始状态
+     * @param input
+     */
+	public synchronized void reset(Reader input) {
 		this.input = input;
+		context.resetContext();
+		for(ISegmenter segmenter : segmenters){
+			segmenter.reset();
+		}
 	}
 
 }
