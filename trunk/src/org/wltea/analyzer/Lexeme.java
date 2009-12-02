@@ -4,7 +4,7 @@
 package org.wltea.analyzer;
 
 /**
- * IK Analyzer v3.0
+ * IK Analyzer v3.2
  * 语义单元（词元） * 
  * @author 林良益
  *

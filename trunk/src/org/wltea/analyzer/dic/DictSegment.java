@@ -8,7 +8,7 @@ import java.util.Map;
 
 
 /**
- * IK Analyzer v3.0
+ * IK Analyzer v3.2
  * 字典子片断 字典匹配核心类
  * 该类采用 数组 结合 HashMap，实现词典存储，词语匹配
  * 

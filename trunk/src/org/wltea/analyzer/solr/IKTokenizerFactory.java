@@ -14,7 +14,7 @@ import org.wltea.analyzer.lucene.IKTokenizer;
  * 实现Solr1.4分词器接口
  * 基于IKTokenizer的实现
  * 
- * @author 李良杰
+ * @author 林良益、李良杰
  *
  */
 public final class IKTokenizerFactory extends BaseTokenizerFactory{

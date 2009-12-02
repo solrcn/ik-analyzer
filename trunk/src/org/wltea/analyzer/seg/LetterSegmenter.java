@@ -179,8 +179,10 @@ public class LetterSegmenter implements ISegmenter {
 	}
 
 	public void reset() {
-		//do nothing
-		
+		start = -1;
+		end = -1;
+		letterStart = -1;
+		letterEnd = -1;
 	}
 	
 

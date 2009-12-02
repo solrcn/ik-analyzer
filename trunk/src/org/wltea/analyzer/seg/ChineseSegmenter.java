@@ -249,6 +249,6 @@ public class ChineseSegmenter implements ISegmenter {
 	public void reset() {
 		//重置已处理标识
 		doneIndex = -1;
-		
+		_CSegList.clear();
 	}
 }
