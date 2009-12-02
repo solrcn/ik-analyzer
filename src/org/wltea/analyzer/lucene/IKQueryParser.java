@@ -6,7 +6,9 @@ package org.wltea.analyzer.lucene;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
@@ -28,6 +30,10 @@ import org.wltea.analyzer.Lexeme;
  *
  */
 public final class IKQueryParser {
+	
+	//查询关键字解析缓存线程本地变量
+	private static ThreadLocal<Map<String , TokenBranch>> keywordCacheThreadLocal 
+			= new ThreadLocal<Map<String , TokenBranch>>();
 	
 	/**
 	 * 优化query队列
@@ -51,6 +57,40 @@ public final class IKQueryParser {
 	}
 	
 	/**
+	 * 获取线程本地的解析缓存
+	 * @return
+	 */
+	private static Map<String , TokenBranch> getTheadLocalCache(){
+		Map<String , TokenBranch> keywordCache = keywordCacheThreadLocal.get();
+		if(keywordCache == null){
+			 keywordCache = new HashMap<String , TokenBranch>(4);
+			 keywordCacheThreadLocal.set(keywordCache);
+		}
+		return keywordCache;
+	}
+	
+	/**
+	 * 缓存解析结果的博弈树
+	 * @param query
+	 * @return
+	 */
+	private static TokenBranch getCachedTokenBranch(String query){
+		Map<String , TokenBranch> keywordCache = getTheadLocalCache();
+		return keywordCache.get(query);
+	}
+	
+	/**
+	 * 缓存解析结果的博弈树
+	 * @param query
+	 * @return
+	 */
+	private static void cachedTokenBranch(String query , TokenBranch tb){
+		Map<String , TokenBranch> keywordCache = getTheadLocalCache();
+		keywordCache.put(query, tb);
+	}
+		
+	
+	/**
 	 * 单连续字窜（不带空格符）单Field查询分析
 	 * @param field
 	 * @param query
@@ -61,18 +101,29 @@ public final class IKQueryParser {
 		if(field == null){
 			throw new IllegalArgumentException("parameter \"field\" is null");
 		}
+
 		if(query == null || "".equals(query.trim())){
 			return new TermQuery(new Term(field));
 		}
-		TokenBranch root = new TokenBranch(null);		
-		//对查询条件q进行分词
-		StringReader input = new StringReader(query.trim());
-		IKSegmentation ikSeg = new IKSegmentation(input);
-		for(Lexeme lexeme = ikSeg.next() ; lexeme != null ; lexeme = ikSeg.next()){
-			//处理词元分支
-			root.accept(lexeme);
+		
+		//从缓存中取出已经解析的query生产的TokenBranch
+		TokenBranch root = getCachedTokenBranch(query);
+		if(root != null){
+			return optimizeQueries(root.toQueries(field)); 
+		}else{
+			System.out.println(System.currentTimeMillis());
+			root = new TokenBranch(null);		
+			//对查询条件q进行分词
+			StringReader input = new StringReader(query.trim());
+			IKSegmentation ikSeg = new IKSegmentation(input);
+			for(Lexeme lexeme = ikSeg.next() ; lexeme != null ; lexeme = ikSeg.next()){
+				//处理词元分支
+				root.accept(lexeme);
+			}
+			//缓存解析结果的博弈树
+			cachedTokenBranch(query , root);
+			return optimizeQueries(root.toQueries(field));
 		}
-		return optimizeQueries(root.toQueries(field));	 
 	}
 	
 	/**
@@ -89,7 +140,11 @@ public final class IKQueryParser {
 		String[] qParts = query.split("\\s");
 		if(qParts.length > 1){			
 			BooleanQuery resultQuery = new BooleanQuery();
-			for(String q : qParts){		
+			for(String q : qParts){
+				//过滤掉由于连续空格造成的空字串
+				if("".equals(q)){
+					continue;
+				}
 				Query partQuery = _parse(field , q);
 				if(partQuery != null && 
 				          (!(partQuery instanceof BooleanQuery) || ((BooleanQuery)partQuery).getClauses().length>0)){

@@ -127,7 +127,7 @@ public class SegmentorTester extends TestCase{
 //		testStr.add("航班车行李票");
 //		testStr.add("打索埕");
 //		testStr.add("曙光天阔 I620r-G /A950r-F 夏普SH9020C");
-		testStr.add("IKAnalyzer是一个开源的，10块，100平方米基 java 语言开发的轻量级的中文分词工具包。从2006年12月推出1.0版开始， IKAnalyzer 已经推出了 3 个大版本。");
+		testStr.add("IKAnalyzer是一个开源的，10块，100平方米基于java 语言开发的轻量级的中文分词工具包。从2006年12月推出1.0版开始， IKAnalyzer 已经推出了 3 个版本。");
 		
 		for(String t : testStr){
 			System.out.println(t);	
@@ -227,7 +227,8 @@ public class SegmentorTester extends TestCase{
 	public void testQueryParser(){
 		Query query = null;
 		try {
-			query = IKQueryParser.parse("f", "title:评测");
+			String[] fields = new String[]{"f1" , "f3" , "f5"};
+			query = IKQueryParser.parseMultiField(fields,  "title:评测");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
