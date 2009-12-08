@@ -111,7 +111,7 @@ public final class IKQueryParser {
 		if(root != null){
 			return optimizeQueries(root.toQueries(field)); 
 		}else{
-			System.out.println(System.currentTimeMillis());
+			//System.out.println(System.currentTimeMillis());
 			root = new TokenBranch(null);		
 			//对查询条件q进行分词
 			StringReader input = new StringReader(query.trim());
