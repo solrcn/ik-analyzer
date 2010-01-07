@@ -12,7 +12,7 @@ import org.apache.lucene.search.Query;
 import org.wltea.analyzer.IKSegmentation;
 import org.wltea.analyzer.Lexeme;
 import org.wltea.analyzer.dic.Dictionary;
-import org.wltea.analyzer.help.CharacterHelper;
+//import org.wltea.analyzer.help.CharacterHelper;
 import org.wltea.analyzer.lucene.IKQueryParser;
 
 import junit.framework.TestCase;
