@@ -13,15 +13,16 @@ import org.wltea.analyzer.dic.Hit;
 import org.wltea.analyzer.help.CharacterHelper;
 
 /**
- * 中文词元处理子分词器，涵盖一下范围
+ * 中文（CJK）词元处理子分词器，涵盖一下范围
  * 1.中文词语
  * 2.姓名
  * 3.地名
- * 4.未知词
- * @author 林良益
- *
+ * 4.未知词（单字切分）
+ * 5.日文/韩文（单字切分）
+ * @author 林良益 
+ * @version 3.2  
  */
-public class ChineseSegmenter implements ISegmenter {
+public class CJKSegmenter implements ISegmenter {
 	/*
 	 * 已完成处理的位置
 	 */
@@ -31,7 +32,7 @@ public class ChineseSegmenter implements ISegmenter {
 	 */
 	List<CSeg> _CSegList;
 	
-	public ChineseSegmenter(){
+	public CJKSegmenter(){
 		doneIndex = -1;
 		_CSegList = new ArrayList<CSeg>();
 		Dictionary.getInstance();
@@ -45,7 +46,7 @@ public class ChineseSegmenter implements ISegmenter {
 		//读取当前位置的char	
 		char input = segmentBuff[context.getCursor()];
 		Hit hit = null;
-		if(CharacterHelper.isCJKCharacter(input)){//是中文（CJK）字符，则进行处理
+		if(CharacterHelper.isCJKCharacter(input)){//是（CJK）字符，则进行处理
 			if(_CSegList.size() > 0){
 				//处理词段队列
 				List<CSeg> tmpList = new ArrayList<CSeg>(_CSegList);

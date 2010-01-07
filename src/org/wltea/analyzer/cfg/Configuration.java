@@ -10,7 +10,7 @@ import java.util.InvalidPropertiesFormatException;
 import java.util.List;
 import java.util.Properties;
 
-import org.wltea.analyzer.seg.ChineseSegmenter;
+import org.wltea.analyzer.seg.CJKSegmenter;
 import org.wltea.analyzer.seg.ISegmenter;
 import org.wltea.analyzer.seg.LetterSegmenter;
 import org.wltea.analyzer.seg.QuantifierSegmenter;
@@ -111,7 +111,7 @@ public class Configuration {
 		//处理字母的子分词器
 		segmenters.add(new LetterSegmenter()); 
 		//处理中文词的子分词器
-		segmenters.add(new ChineseSegmenter());
+		segmenters.add(new CJKSegmenter());
 		return segmenters;
 	}
 }

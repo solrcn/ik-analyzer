@@ -26,9 +26,28 @@ public class CharacterHelper {
 	}
 	
 	public static boolean isCJKCharacter(char input){
-		return Character.UnicodeBlock.of(input) 
-					== Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS;
+		Character.UnicodeBlock ub = Character.UnicodeBlock.of(input);
+		if (ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS  
+				|| ub == Character.UnicodeBlock.CJK_COMPATIBILITY_IDEOGRAPHS  
+				|| ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS_EXTENSION_A  
+				|| ub == Character.UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION
+				|| ub == Character.UnicodeBlock.GENERAL_PUNCTUATION  
+				|| ub == Character.UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS
+				//韩文字符集
+				|| ub == Character.UnicodeBlock.HANGUL_SYLLABLES 
+				|| ub == Character.UnicodeBlock.HANGUL_JAMO
+				|| ub == Character.UnicodeBlock.HANGUL_COMPATIBILITY_JAMO
+				//日文字符集
+				|| ub == Character.UnicodeBlock.HIRAGANA //平假名
+				|| ub == Character.UnicodeBlock.KATAKANA //片假名
+				|| ub == Character.UnicodeBlock.KATAKANA_PHONETIC_EXTENSIONS
+				) {  
+			return true;
+		}else{
+			return false;
+		}
 	}
+	
 	
 	/**
 	 * 进行字符规格化（全角转半角，大写转小写处理）
