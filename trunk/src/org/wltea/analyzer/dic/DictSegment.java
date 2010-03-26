@@ -65,7 +65,7 @@ public class DictSegment {
 	 * @return Hit
 	 */
 	public Hit match(char[] charArray){
-		return this.match(charArray , 0 , charArray.length);
+		return this.match(charArray , 0 , charArray.length , null);
 	}
 	
 	/**
@@ -76,6 +76,31 @@ public class DictSegment {
 	 * @return Hit 
 	 */
 	public Hit match(char[] charArray , int begin , int length){
+		return this.match(charArray , begin , length , null);
+	}
+	
+	/**
+	 * 匹配词段
+	 * @param charArray
+	 * @param begin
+	 * @param length
+	 * @param searchHit
+	 * @return Hit 
+	 */
+	public Hit match(char[] charArray , int begin , int length , Hit searchHit){
+		
+		if(searchHit == null){
+			//如果hit为空，新建
+			searchHit= new Hit();
+			//设置hit的其实文本位置
+			searchHit.setBegin(begin);
+		}else{
+			//否则要将HIT状态重置
+			searchHit.setUnmatch();
+		}
+		//设置hit的当前处理位置
+		searchHit.setEnd(begin);
+		
 		Character keyChar = new Character(charArray[begin]);
 		DictSegment ds = null;
 		
@@ -96,13 +121,14 @@ public class DictSegment {
 			//在map中查找
 			ds = (DictSegment)segmentMap.get(keyChar);
 		}
+		
 		//STEP2 找到DictSegment，判断词的匹配状态，是否继续递归，还是返回结果
 		if(ds != null){			
 			if(length > 1){
 				//词未匹配完，继续往下搜索
-				return ds.match(charArray, begin + 1 , length - 1);
+				return ds.match(charArray, begin + 1 , length - 1 , searchHit);
 			}else if (length == 1){
-				Hit searchHit= new Hit();
+				
 				//搜索最后一个char
 				if(ds.nodeState == 1){
 					//添加HIT状态为完全匹配
@@ -111,13 +137,15 @@ public class DictSegment {
 				if(ds.hasNextNode()){
 					//添加HIT状态为前缀匹配
 					searchHit.setPrefix();
+					//记录当前位置的DictSegment
+					searchHit.setMatchedDictSegment(ds);
 				}
 				return searchHit;
 			}
 			
-		}		
+		}
 		//STEP3 没有找到DictSegment， 将HIT设置为不匹配
-		return new Hit();		
+		return searchHit;		
 	}
 
 	/**
@@ -184,6 +212,8 @@ public class DictSegment {
 				if(this.storeSize < ARRAY_LENGTH_LIMIT){
 					//数组容量未满，使用数组存储
 					segmentArray[this.storeSize] = ds;
+					//segment数目+1
+					this.storeSize++;
 				}else{
 					//数组容量已满，切换Map存储
 					//获取Map容器，如果Map未创建,则创建Map
@@ -192,11 +222,12 @@ public class DictSegment {
 					migrate(segmentArray ,  segmentMap);
 					//存储新的segment
 					segmentMap.put(keyChar, ds);
+					//segment数目+1 ，  必须在释放数组前执行storeSize++ ， 确保极端情况下，不会取到空的数组
+					this.storeSize++;
 					//释放当前的数组引用
 					this.childrenArray = null;
 				}
-				//segment数目+1
-				this.storeSize++;
+
 			}			
 			
 		}else{

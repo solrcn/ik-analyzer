@@ -18,7 +18,7 @@ import junit.framework.TestCase;
 public class IKTokenerTest extends TestCase {
 	
 	public void testLucene3Tokenizer(){
-		String t = "IK分词器Lucene Analyzer接口实现类";
+		String t = "IK分词器Lucene Analyzer接口实现类 民生银行";
 		IKTokenizer tokenizer = new IKTokenizer(new StringReader(t) , false);
 		try {
 			while(tokenizer.incrementToken()){

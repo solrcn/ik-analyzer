@@ -4,12 +4,12 @@
 package org.wltea.analyzer.test;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
+//import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+//import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -418,31 +418,31 @@ public class DictionaryTester extends TestCase {
 			}
 		}
 		
-		FileOutputStream fos = null;
-		try {
-			fos = new FileOutputStream("E:/quantifier.dic");
-			String w = null;
-			for(w = allWords.pollFirst(); w != null ; w = allWords.pollFirst()){
-				//System.out.println(w);
-				fos.write(w.getBytes("UTF-8"));
-				fos.write("\r\n".getBytes("UTF-8"));
-			}
-			fos.flush();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}finally{
-			try {
-				fos.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+//		FileOutputStream fos = null;
+//		try {
+//			fos = new FileOutputStream("E:/quantifier.dic");
+//			String w = null;
+//			for(w = allWords.pollFirst(); w != null ; w = allWords.pollFirst()){
+//				//System.out.println(w);
+//				fos.write(w.getBytes("UTF-8"));
+//				fos.write("\r\n".getBytes("UTF-8"));
+//			}
+//			fos.flush();
+//		} catch (FileNotFoundException e) {
+//			e.printStackTrace();
+//		} catch (UnsupportedEncodingException e) {
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}finally{
+//			try {
+//				fos.close();
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
 	}
 	
 //	public void testEndsWithSurnameDict(){
