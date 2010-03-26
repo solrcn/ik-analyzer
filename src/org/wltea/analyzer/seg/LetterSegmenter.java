@@ -67,27 +67,35 @@ public class LetterSegmenter implements ISegmenter {
 			
 		}else{//当前的分词器正在处理字符			
 			if(isAcceptedChar(input)){
-				if(isLetterConnector(input)){
-					//遇到分割符，如果存在有英文单词则切分,但不重置start ，end
+				//输入是英文字符
+				if(CharacterHelper.isEnglishLetter(input)){
+					if(letterStart == -1){//设置英文单词起始位置
+						letterStart = context.getCursor();
+					}
+					letterEnd = context.getCursor();
+					
+				}else if(letterStart > -1 && letterEnd > -1){
+					//遇到非英文字符，如果先前存在有英文单词，则切分,重置letterStart ，letterEnd 但不重置start ，end
 					if(letterStart > -1 && letterEnd > -1){
 						//生成已切分的词元
 						Lexeme engLexeme = new Lexeme(context.getBuffOffset() , letterStart , letterEnd - letterStart + 1 , Lexeme.TYPE_LETTER);
-//						if(!Dictionary.isStopWord(segmentBuff , engLexeme.getBegin() , engLexeme.getLength())){
 						context.addLexeme(engLexeme);
-//						}
 						letterStart = -1;
 						letterEnd = -1;
-					}					
-				}else{
-					if(CharacterHelper.isEnglishLetter(input)){
-						if(letterStart == -1){//设置英文单词起始位置
-							letterStart = context.getCursor();
-						}
-						letterEnd = context.getCursor();
 					}
+				}
+				
+				//输入连接符
+				if(isLetterConnector(input)){
+					//遇到分割符，输出词元，但不重置start ，end
+					Lexeme newLexeme = new Lexeme(context.getBuffOffset() , start , end - start + 1 , Lexeme.TYPE_LETTER);
+					context.addLexeme(newLexeme);
+					
+				}else{
 					//记录下可能的结束位置，如果是连接符结尾，则忽略
 					end = context.getCursor();
 				}
+				
 			}else{
 				//生成已切分的词元
 				Lexeme newLexeme = new Lexeme(context.getBuffOffset() , start , end - start + 1 , Lexeme.TYPE_LETTER);

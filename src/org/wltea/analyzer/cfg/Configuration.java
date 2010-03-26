@@ -10,6 +10,7 @@ import java.util.InvalidPropertiesFormatException;
 import java.util.List;
 import java.util.Properties;
 
+import org.wltea.analyzer.dic.Dictionary;
 import org.wltea.analyzer.seg.CJKSegmenter;
 import org.wltea.analyzer.seg.ISegmenter;
 import org.wltea.analyzer.seg.LetterSegmenter;
@@ -105,6 +106,8 @@ public class Configuration {
 	 * @return List<ISegmenter>
 	 */
 	public static List<ISegmenter> loadSegmenter(){
+		//初始化词典单例
+		Dictionary.getInstance();
 		List<ISegmenter> segmenters = new ArrayList<ISegmenter>(4);
 		//处理数量词的子分词器
 		segmenters.add(new QuantifierSegmenter());

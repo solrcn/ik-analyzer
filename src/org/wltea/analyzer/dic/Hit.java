@@ -21,6 +21,17 @@ public class Hit {
 	//该HIT当前状态，默认未匹配
 	private int hitState = UNMATCH;
 	
+	//记录词典匹配过程中，当前匹配到的词典分支节点
+	private DictSegment matchedDictSegment; 
+	/*
+	 * 词段开始位置
+	 */
+	private int begin;
+	/*
+	 * 词段的结束位置
+	 */
+	private int end;
+	
 	
 	/**
 	 * 判断是否完全匹配
@@ -34,12 +45,7 @@ public class Hit {
 	public void setMatch() {
 		this.hitState = this.hitState | MATCH;
 	}
-//	/**
-//	 * 判断是否完全匹配，且是另一个词的前缀
-//	 */
-//	public boolean isMatchAndPrefix() {
-//		return ((this.hitState & MATCH) > 0) &&  ((this.hitState & PREFIX) > 0);
-//	}
+
 	/**
 	 * 判断是否是词的前缀
 	 */
@@ -63,6 +69,30 @@ public class Hit {
 	 */
 	public void setUnmatch() {
 		this.hitState = UNMATCH;
+	}
+	
+	public DictSegment getMatchedDictSegment() {
+		return matchedDictSegment;
+	}
+	
+	public void setMatchedDictSegment(DictSegment matchedDictSegment) {
+		this.matchedDictSegment = matchedDictSegment;
+	}
+	
+	public int getBegin() {
+		return begin;
+	}
+	
+	public void setBegin(int begin) {
+		this.begin = begin;
+	}
+	
+	public int getEnd() {
+		return end;
+	}
+	
+	public void setEnd(int end) {
+		this.end = end;
 	}	
 	
 }

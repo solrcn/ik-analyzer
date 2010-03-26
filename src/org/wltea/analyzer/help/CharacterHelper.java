@@ -10,11 +10,11 @@ package org.wltea.analyzer.help;
  */
 public class CharacterHelper {
 
-//	public static boolean isSpaceLetter(char input){
-//		return input == 8 || input == 9 
-//				|| input == 10 || input == 13 
-//				|| input == 32 || input == 160;
-//	}
+	public static boolean isSpaceLetter(char input){
+		return input == 8 || input == 9 
+				|| input == 10 || input == 13 
+				|| input == 32 || input == 160;
+	}
 	
 	public static boolean isEnglishLetter(char input){
 		return (input >= 'a' && input <= 'z') 
@@ -29,9 +29,8 @@ public class CharacterHelper {
 		Character.UnicodeBlock ub = Character.UnicodeBlock.of(input);
 		if (ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS  
 				|| ub == Character.UnicodeBlock.CJK_COMPATIBILITY_IDEOGRAPHS  
-				|| ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS_EXTENSION_A  
-				|| ub == Character.UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION
-				|| ub == Character.UnicodeBlock.GENERAL_PUNCTUATION  
+				|| ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS_EXTENSION_A
+				//全角数字字符和日韩字符
 				|| ub == Character.UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS
 				//韩文字符集
 				|| ub == Character.UnicodeBlock.HANGUL_SYLLABLES 
@@ -46,6 +45,9 @@ public class CharacterHelper {
 		}else{
 			return false;
 		}
+		//其他的CJK标点符号，可以不做处理
+		//|| ub == Character.UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION
+		//|| ub == Character.UnicodeBlock.GENERAL_PUNCTUATION  
 	}
 	
 	

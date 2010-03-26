@@ -443,6 +443,19 @@ public class Dictionary {
 	}
 	
 	/**
+	 * 检索匹配主词典,
+	 * 从已匹配的Hit中直接取出DictSegment，继续向下匹配
+	 * @param charArray
+	 * @param currentIndex
+	 * @param matchedHit
+	 * @return
+	 */
+	public static Hit matchInMainDictWithHit(char[] charArray , int currentIndex , Hit matchedHit){
+		DictSegment ds = matchedHit.getMatchedDictSegment();
+		return ds.match(charArray, currentIndex, 1 , matchedHit);
+	}
+
+	/**
 	 * 检索匹配姓氏词典
 	 * @param charArray
 	 * @param begin
