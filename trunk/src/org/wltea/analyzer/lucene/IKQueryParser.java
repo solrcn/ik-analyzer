@@ -31,9 +31,23 @@ import org.wltea.analyzer.Lexeme;
  */
 public final class IKQueryParser {
 	
+	
 	//查询关键字解析缓存线程本地变量
 	private static ThreadLocal<Map<String , TokenBranch>> keywordCacheThreadLocal 
 			= new ThreadLocal<Map<String , TokenBranch>>();
+	
+	
+	//是否采用最大词长分词
+	private static boolean isMaxWordLength = false;
+
+	/**
+	 * 设置分词策略
+	 * isMaxWordLength = true 采用最大词长分词
+	 * @param isMaxWordLength
+	 */
+	public static void setMaxWordLength(boolean isMaxWordLength) {
+		IKQueryParser.isMaxWordLength = isMaxWordLength ;
+	}
 	
 	/**
 	 * 优化query队列
@@ -115,7 +129,7 @@ public final class IKQueryParser {
 			root = new TokenBranch(null);		
 			//对查询条件q进行分词
 			StringReader input = new StringReader(query.trim());
-			IKSegmentation ikSeg = new IKSegmentation(input);
+			IKSegmentation ikSeg = new IKSegmentation(input , isMaxWordLength);
 			for(Lexeme lexeme = ikSeg.next() ; lexeme != null ; lexeme = ikSeg.next()){
 				//处理词元分支
 				root.accept(lexeme);
