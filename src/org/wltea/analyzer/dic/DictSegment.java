@@ -203,6 +203,7 @@ public class DictSegment {
 				if(segment != null && segment.nodeChar.equals(keyChar)){
 					//在数组中找到与keyChar对应的segment
 					ds =  segment;
+					break;
 				}
 			}			
 			//遍历数组后没有找到对应的segment
