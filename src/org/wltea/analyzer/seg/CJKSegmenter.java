@@ -108,6 +108,11 @@ public class CJKSegmenter implements ISegmenter {
 				hitList.add(hit);
 				
 			}else if(hit.isUnmatch()){//不匹配，当前的input不是词，也不是词前缀，将其视为分割性的字符
+				if(doneIndex >= context.getCursor()){
+					//当前不匹配的字符已经被处理过了，不需要再processUnknown
+					return;
+				}
+				
 				//输出从doneIndex到当前字符（含当前字符）之间的未知词
 				processUnknown(segmentBuff , context , doneIndex + 1 , context.getCursor());
 				//更新doneIndex，标识已处理
