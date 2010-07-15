@@ -448,7 +448,7 @@ public class Dictionary {
 	 * @param charArray
 	 * @param currentIndex
 	 * @param matchedHit
-	 * @return
+	 * @return Hit
 	 */
 	public static Hit matchInMainDictWithHit(char[] charArray , int currentIndex , Hit matchedHit){
 		DictSegment ds = matchedHit.getMatchedDictSegment();
