@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Collection;
 import java.util.List;
 
 import org.wltea.analyzer.cfg.Configuration;
@@ -396,7 +397,7 @@ public class Dictionary {
 	 * 加载扩展的词条
 	 * @param extWords List<String>词条列表
 	 */
-	public static void loadExtendWords(List<String> extWords){
+	public static void loadExtendWords(Collection<String> extWords){
 		if(extWords != null){
 			for(String extWord : extWords){
 				if (extWord != null) {
@@ -411,7 +412,7 @@ public class Dictionary {
 	 * 加载扩展的停止词条
 	 * @param extStopWords List<String>词条列表
 	 */
-	public static void loadExtendStopWords(List<String> extStopWords){
+	public static void loadExtendStopWords(Collection<String> extStopWords){
 		if(extStopWords != null){
 			for(String extStopWord : extStopWords){
 				if (extStopWord != null) {
