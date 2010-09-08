@@ -283,6 +283,8 @@ public class LetterSegmenter implements ISegmenter {
 		end = -1;
 		letterStart = -1;
 		letterEnd = -1;
+		numberStart = -1;
+		numberEnd = -1;		
 	}
 	
 
