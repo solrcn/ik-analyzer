@@ -395,7 +395,7 @@ public class Dictionary {
 	
 	/**
 	 * 加载扩展的词条
-	 * @param extWords List<String>词条列表
+	 * @param extWords Collection<String>词条列表
 	 */
 	public static void loadExtendWords(Collection<String> extWords){
 		if(extWords != null){
@@ -410,7 +410,7 @@ public class Dictionary {
 	
 	/**
 	 * 加载扩展的停止词条
-	 * @param extStopWords List<String>词条列表
+	 * @param extStopWords Collection<String>词条列表
 	 */
 	public static void loadExtendStopWords(Collection<String> extStopWords){
 		if(extStopWords != null){
