@@ -3,7 +3,7 @@
  */
 package org.wltea.analyzer.seg;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.wltea.analyzer.Context;
@@ -34,7 +34,8 @@ public class CJKSegmenter implements ISegmenter {
 	
 	public CJKSegmenter(){
 		doneIndex = -1;
-		hitList = new ArrayList<Hit>();
+		//hitList = new ArrayList<Hit>();
+		hitList = new LinkedList<Hit>();
 	}
 	
 	/* (non-Javadoc)
