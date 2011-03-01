@@ -79,10 +79,10 @@ public class LetterSegmenter implements ISegmenter {
 		
 		//判断是否锁定缓冲区
 		if(bufferLockFlag){
+			context.lockBuffer(this);
+		}else{
 			//对缓冲区解锁
 			context.unlockBuffer(this);
-		}else{
-			context.lockBuffer(this);
 		}
 	}
 	
