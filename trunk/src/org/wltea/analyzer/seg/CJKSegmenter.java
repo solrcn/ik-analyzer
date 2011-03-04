@@ -51,7 +51,7 @@ public class CJKSegmenter implements ISegmenter {
 				//处理词段队列
 				Hit[] tmpArray = hitList.toArray(new Hit[hitList.size()]);
 				for(Hit hit : tmpArray){
-					hit = Dictionary.matchInMainDictWithHit(segmentBuff, context.getCursor() , hit);
+					hit = Dictionary.matchWithHit(segmentBuff, context.getCursor() , hit);
 					
 					if(hit.isMatch()){//匹配成词
 						//判断是否有不可识别的词段

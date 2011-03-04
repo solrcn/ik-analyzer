@@ -18,7 +18,7 @@ import org.wltea.analyzer.help.CharacterHelper;
 public class LetterSegmenter implements ISegmenter {
 	
 	//链接符号
-	public static final char[] Sign_Connector = new char[]{'-','_','.','@','&'};
+	public static final char[] Sign_Connector = new char[]{'-','_','.','@','&','/','\\'};
 	/*
 	 * 词元的开始位置，
 	 * 同时作为子分词器状态标识

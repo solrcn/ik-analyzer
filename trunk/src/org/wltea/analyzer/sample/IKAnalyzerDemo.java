@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.wltea.analyzer.test;
+package org.wltea.analyzer.sample;
 
 import java.io.IOException;
 
@@ -10,7 +10,6 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.Term;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
@@ -46,10 +45,9 @@ public class IKAnalyzerDemo {
 			directory = new RAMDirectory();	 
 			iwriter = new IndexWriter(directory, analyzer, true , IndexWriter.MaxFieldLength.LIMITED);
 			Document doc = new Document();
-			doc.add(new Field("ID", "1111", Field.Store.YES, Field.Index.NOT_ANALYZED));
+			doc.add(new Field("ID", "10000", Field.Store.YES, Field.Index.NOT_ANALYZED));
 			doc.add(new Field(fieldName, text, Field.Store.YES, Field.Index.ANALYZED));
 			iwriter.addDocument(doc);
-			//iwriter.updateDocument(new Term("ID", "1111"), doc);
 			iwriter.close();
 			
 		    //实例化搜索器   
