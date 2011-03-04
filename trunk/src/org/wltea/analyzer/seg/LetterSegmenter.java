@@ -41,15 +41,15 @@ public class LetterSegmenter implements ISegmenter {
 	 */
 	private int letterEnd;
 	
-	/*
-	 * 阿拉伯数字起始位置
-	 */
-	private int numberStart;
-	
-	/*
-	 * 阿拉伯数字结束位置
-	 */
-	private int numberEnd;
+//	/*
+//	 * 阿拉伯数字起始位置
+//	 */
+//	private int numberStart;
+//	
+//	/*
+//	 * 阿拉伯数字结束位置
+//	 */
+//	private int numberEnd;
 
 	
 	public LetterSegmenter(){
@@ -57,8 +57,8 @@ public class LetterSegmenter implements ISegmenter {
 		end = -1;
 		letterStart = -1;
 		letterEnd = -1;
-		numberStart = -1;
-		numberEnd = -1;
+//		numberStart = -1;
+//		numberEnd = -1;
 	}
 	
 	/* (non-Javadoc)
@@ -74,8 +74,8 @@ public class LetterSegmenter implements ISegmenter {
 		bufferLockFlag = this.processMixLetter(input, context) || bufferLockFlag;
 		//处理英文字母
 		bufferLockFlag = this.processEnglishLetter(input, context) || bufferLockFlag;
-		//处理阿拉伯字母
-		bufferLockFlag = this.processPureArabic(input, context) || bufferLockFlag;
+//		//处理阿拉伯字母
+//		bufferLockFlag = this.processPureArabic(input, context) || bufferLockFlag;
 		
 		//判断是否锁定缓冲区
 		if(bufferLockFlag){
@@ -143,56 +143,56 @@ public class LetterSegmenter implements ISegmenter {
 		return needLock;
 	}
 	
-	/**
-	 * 处理纯阿拉伯字符输出
-	 * @param input
-	 * @param context
-	 * @return
-	 */
-	private boolean processPureArabic(char input , Context context){
-		boolean needLock = false;
-		
-		if(numberStart == -1){//当前的分词器尚未开始处理数字字符	
-			if(CharacterHelper.isArabicNumber(input)){
-				//记录起始指针的位置,标明分词器进入处理状态
-				numberStart = context.getCursor();
-				numberEnd = numberStart;
-			}
-		}else {//当前的分词器正在处理数字字符	
-			if(CharacterHelper.isArabicNumber(input)){
-				//记录当前指针位置为结束位置
-				numberEnd =  context.getCursor();
-			}else{
-				//生成已切分的词元
-				Lexeme newLexeme = new Lexeme(context.getBuffOffset() , numberStart , numberEnd - numberStart + 1 , Lexeme.TYPE_LETTER);
-				context.addLexeme(newLexeme);
-				//设置当前分词器状态为“待处理”
-				numberStart = -1;
-				numberEnd = -1;
-			}
-		}
-		
-		//context.getCursor() == context.getAvailable() - 1读取缓冲区最后一个字符，直接输出
-		if(context.getCursor() == context.getAvailable() - 1){
-			if(numberStart != -1 && numberEnd != -1){
-				//生成已切分的词元
-				Lexeme newLexeme = new Lexeme(context.getBuffOffset() , numberStart , numberEnd - numberStart + 1 , Lexeme.TYPE_LETTER);
-				context.addLexeme(newLexeme);
-			}
-			//设置当前分词器状态为“待处理”
-			numberStart = -1;
-			numberEnd = -1;
-		}
-		
-		//判断是否锁定缓冲区
-		if(numberStart == -1 && numberEnd == -1){
-			//对缓冲区解锁
-			needLock = false;
-		}else{
-			needLock = true;
-		}
-		return needLock;		
-	}
+//	/**
+//	 * 处理纯阿拉伯字符输出
+//	 * @param input
+//	 * @param context
+//	 * @return
+//	 */
+//	private boolean processPureArabic(char input , Context context){
+//		boolean needLock = false;
+//		
+//		if(numberStart == -1){//当前的分词器尚未开始处理数字字符	
+//			if(CharacterHelper.isArabicNumber(input)){
+//				//记录起始指针的位置,标明分词器进入处理状态
+//				numberStart = context.getCursor();
+//				numberEnd = numberStart;
+//			}
+//		}else {//当前的分词器正在处理数字字符	
+//			if(CharacterHelper.isArabicNumber(input)){
+//				//记录当前指针位置为结束位置
+//				numberEnd =  context.getCursor();
+//			}else{
+//				//生成已切分的词元
+//				Lexeme newLexeme = new Lexeme(context.getBuffOffset() , numberStart , numberEnd - numberStart + 1 , Lexeme.TYPE_LETTER);
+//				context.addLexeme(newLexeme);
+//				//设置当前分词器状态为“待处理”
+//				numberStart = -1;
+//				numberEnd = -1;
+//			}
+//		}
+//		
+//		//context.getCursor() == context.getAvailable() - 1读取缓冲区最后一个字符，直接输出
+//		if(context.getCursor() == context.getAvailable() - 1){
+//			if(numberStart != -1 && numberEnd != -1){
+//				//生成已切分的词元
+//				Lexeme newLexeme = new Lexeme(context.getBuffOffset() , numberStart , numberEnd - numberStart + 1 , Lexeme.TYPE_LETTER);
+//				context.addLexeme(newLexeme);
+//			}
+//			//设置当前分词器状态为“待处理”
+//			numberStart = -1;
+//			numberEnd = -1;
+//		}
+//		
+//		//判断是否锁定缓冲区
+//		if(numberStart == -1 && numberEnd == -1){
+//			//对缓冲区解锁
+//			needLock = false;
+//		}else{
+//			needLock = true;
+//		}
+//		return needLock;		
+//	}
 	
 	/**
 	 * 处理纯英文字母输出
@@ -283,8 +283,8 @@ public class LetterSegmenter implements ISegmenter {
 		end = -1;
 		letterStart = -1;
 		letterEnd = -1;
-		numberStart = -1;
-		numberEnd = -1;		
+//		numberStart = -1;
+//		numberEnd = -1;		
 	}
 	
 

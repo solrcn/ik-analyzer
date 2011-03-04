@@ -144,7 +144,7 @@ public final class IKQueryParser {
 	/**
 	 * 解析IK简易查询表达式
 	 * @param ikQueryExp
-	 * @return
+	 * @return Query 查询逻辑对象
 	 */
 	public static Query parse(String ikQueryExp){
 		ExpressionParser ikExpParser = new ExpressionParser();
