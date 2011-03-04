@@ -4,12 +4,12 @@
 package org.wltea.analyzer.test;
 
 import java.io.BufferedReader;
-//import java.io.FileNotFoundException;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-//import java.io.UnsupportedEncodingException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,11 +18,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import junit.framework.TestCase;
+
 import org.wltea.analyzer.dic.DictSegment;
 import org.wltea.analyzer.dic.Dictionary;
 import org.wltea.analyzer.dic.Hit;
-
-import junit.framework.TestCase;
 
 /**
  * 主词典统计分析工具类
@@ -318,8 +318,9 @@ public class DictionaryTester extends TestCase {
 		Hit hit = null;
 		int umCount = 0;
 		int mCount = 0;
-		for(String word : allWords){			
-			hit = _root_.match(word.toCharArray());
+		for(String word : allWords){
+			char[] chars = word.toCharArray();
+			hit = _root_.match(chars , 0, chars.length);
 			if(hit.isUnmatch()){
 				//System.out.println(word);
 				umCount++;
@@ -482,5 +483,65 @@ public class DictionaryTester extends TestCase {
 //			char[] charArray = t.toCharArray();
 //			System.out.println(Dictionary.startsWithSuffixDict(charArray, 0, charArray.length));
 //		}
-//	}	
+//	}
+	
+	public void testSortAndClear(){
+		//int count = 0;
+        InputStream is = DictionaryTester.class.getResourceAsStream(Dictionary.PATH_DIC_PREP);
+        TreeSet<String> ts = new  TreeSet<String>();
+		try {
+			
+			String theWord = null;
+			BufferedReader br = new BufferedReader(new InputStreamReader(is,"UTF-8"), 512);
+			do {
+				theWord = br.readLine();
+				if (theWord != null) {
+					theWord = theWord.trim();
+                    /*Test Logging*/
+					ts.add(theWord);
+                    System.out.println(theWord);
+				}
+				//count++;
+			} while (theWord != null);
+			
+			
+			
+			FileOutputStream fos = null;
+			try {
+				fos = new FileOutputStream("E:/preposition.dic");
+				String w = null;
+				for(w = ts.pollFirst(); w != null ; w = ts.pollFirst()){
+					//System.out.println(w);
+					fos.write(w.getBytes("UTF-8"));
+					fos.write("\r\n".getBytes("UTF-8"));
+				}
+				fos.flush();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}finally{
+				try {
+					fos.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}			
+			
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		}finally{
+			try {
+				if(is != null){
+                    is.close();
+                    is = null;
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+		
 }
