@@ -141,7 +141,7 @@ public class SegmentorTester extends TestCase{
 //		testStr.add("浙江省长兴县城管在光天化日之下明抢东东");
 		for(String t : testStr){
 			System.out.println(t);	
-			IKSegmentation ikSeg = new IKSegmentation(new StringReader(t) , true);
+			IKSegmentation ikSeg = new IKSegmentation(new StringReader(t) , false);
 			try {
 				Lexeme l = null;
 				while( (l = ikSeg.next()) != null){

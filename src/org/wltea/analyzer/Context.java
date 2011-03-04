@@ -283,8 +283,10 @@ public class Context{
 				Lexeme one = this.head;
 				Lexeme another = one.getNext();
 				do{
-					if( (Lexeme.TYPE_LETTER != one.getLexemeType() && Lexeme.TYPE_LETTER != another.getLexemeType())
-							&& one.isOverlap(another)){
+					if( one.isOverlap(another)
+//							&& Lexeme.TYPE_LETTER != one.getLexemeType()
+//							&& Lexeme.TYPE_LETTER != another.getLexemeType()
+							){
 						
 						//邻近的两个词元完全交叠
 						another = another.getNext();
