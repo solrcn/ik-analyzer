@@ -18,7 +18,7 @@ import org.wltea.analyzer.help.CharacterHelper;
 public class LetterSegmenter implements ISegmenter {
 	
 	//链接符号
-	public static final char[] Sign_Connector = new char[]{'-','_','.','@','&','/','\\'};
+	public static final char[] Sign_Connector = new char[]{'+','-','_','.','@','&','/','\\'};
 	/*
 	 * 词元的开始位置，
 	 * 同时作为子分词器状态标识
@@ -106,10 +106,12 @@ public class LetterSegmenter implements ISegmenter {
 		}else{//当前的分词器正在处理字符			
 			if(isAcceptedChar(input)){
 				//输入不是连接符
-				if(!isLetterConnector(input)){
+//				if(!isLetterConnector(input)){
 					//记录下可能的结束位置，如果是连接符结尾，则忽略
-					end = context.getCursor();					
-				}
+//					end = context.getCursor();					
+//				}
+				//不在忽略尾部的链接字符
+				end = context.getCursor();					
 				
 			}else{
 				//生成已切分的词元
