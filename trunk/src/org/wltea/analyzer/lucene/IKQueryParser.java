@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
@@ -16,8 +17,8 @@ import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.TermRangeQuery;
 import org.apache.lucene.search.BooleanClause.Occur;
-
 import org.wltea.analyzer.IKSegmentation;
 import org.wltea.analyzer.Lexeme;
 
@@ -530,7 +531,7 @@ public final class IKQueryParser {
 	 */
 	static class ExpressionParser {
 		
-		//public static final String LUCENE_SPECIAL_CHAR = "&&||-()':=";
+		//public static final String LUCENE_SPECIAL_CHAR = "&&||-()':={}[],";
 		
 		private List<Element> elements = new ArrayList<Element>();
 		
@@ -728,6 +729,88 @@ public final class IKQueryParser {
 					}
 					break;
 					
+				case '[':
+					if(curretElement != null){
+						if(curretElement.type == '\''){
+							curretElement.append(expChars[i]);
+							continue;
+						}else{
+							this.elements.add(curretElement);
+						}
+					}
+					curretElement = new Element();
+					curretElement.type = '[';
+					curretElement.append(expChars[i]);
+					this.elements.add(curretElement);
+					curretElement = null;					
+					break;
+					
+				case ']':
+					if(curretElement != null){
+						if(curretElement.type == '\''){
+							curretElement.append(expChars[i]);
+							continue;
+						}else{
+							this.elements.add(curretElement);
+						}
+					}
+					curretElement = new Element();
+					curretElement.type = ']';
+					curretElement.append(expChars[i]);
+					this.elements.add(curretElement);
+					curretElement = null;
+					
+					break;
+					
+				case '{':
+					if(curretElement != null){
+						if(curretElement.type == '\''){
+							curretElement.append(expChars[i]);
+							continue;
+						}else{
+							this.elements.add(curretElement);
+						}
+					}
+					curretElement = new Element();
+					curretElement.type = '{';
+					curretElement.append(expChars[i]);
+					this.elements.add(curretElement);
+					curretElement = null;					
+					break;
+					
+				case '}':
+					if(curretElement != null){
+						if(curretElement.type == '\''){
+							curretElement.append(expChars[i]);
+							continue;
+						}else{
+							this.elements.add(curretElement);
+						}
+					}
+					curretElement = new Element();
+					curretElement.type = '}';
+					curretElement.append(expChars[i]);
+					this.elements.add(curretElement);
+					curretElement = null;
+					
+					break;
+				case ',':
+					if(curretElement != null){
+						if(curretElement.type == '\''){
+							curretElement.append(expChars[i]);
+							continue;
+						}else{
+							this.elements.add(curretElement);
+						}
+					}
+					curretElement = new Element();
+					curretElement.type = ',';
+					curretElement.append(expChars[i]);
+					this.elements.add(curretElement);
+					curretElement = null;
+					
+					break;
+					
 				default :
 					if(curretElement == null){
 						curretElement = new Element();
@@ -768,20 +851,38 @@ public final class IKQueryParser {
 						throw new IllegalStateException("表达式异常： = 或 ： 号丢失");
 					}
 					Element e3 = this.elements.get(i + 2);
-					if('\'' != e3.type){
-						throw new IllegalStateException("表达式异常：匹配值丢失");
-					}
-					i+=2;
-					if('=' == e2.type){
-						TermQuery tQuery = new TermQuery(new Term(e.toString() , e3.toString()));
-						this.querys.push(tQuery);
-					}else if(':' == e2.type){					
-						try {
-							Query tQuery = IKQueryParser.parse(e.toString(), e3.toString());
+					//处理 = 和 ： 运算
+					if('\'' == e3.type){
+						i+=2;
+						if('=' == e2.type){
+							TermQuery tQuery = new TermQuery(new Term(e.toString() , e3.toString()));
 							this.querys.push(tQuery);
-						} catch (IOException e1) {
-							e1.printStackTrace();
+						}else if(':' == e2.type){					
+							try {
+								Query tQuery = IKQueryParser.parse(e.toString(), e3.toString());
+								this.querys.push(tQuery);
+							} catch (IOException e1) {
+								e1.printStackTrace();
+							}
 						}
+						
+					}else if('[' == e3.type || '{' == e3.type){
+						i+=2;
+						//处理 [] 和 {}
+						LinkedList<Element> eQueue = new LinkedList<Element>();
+						eQueue.add(e3);
+						for( i++ ; i < this.elements.size() ; i++){							
+							Element eN = this.elements.get(i);
+							eQueue.add(eN);
+							if(']' == eN.type || '}' == eN.type){
+								break;
+							}
+						}
+						//翻译RangeQuery
+						Query rangeQuery = this.toTermRangeQuery(e , eQueue);
+						this.querys.push(rangeQuery);
+					}else{
+						throw new IllegalStateException("表达式异常：匹配值丢失");
 					}
 					
 				}else if('(' == e.type){
@@ -851,7 +952,7 @@ public final class IKQueryParser {
 			Query q2 = this.querys.pop();
 			Query q1 = this.querys.pop();
 			if('&' == op.type){
-				if(q1 instanceof TermQuery){
+				if(q1 instanceof TermQuery || q1 instanceof TermRangeQuery){
 					resultQuery.add(q1,Occur.MUST);
 				}else{
 					BooleanClause[] clauses = ((BooleanQuery)q1).getClauses();
@@ -865,7 +966,7 @@ public final class IKQueryParser {
 
 				}
 				
-				if(q2 instanceof TermQuery){
+				if(q2 instanceof TermQuery || q2 instanceof TermRangeQuery){
 					resultQuery.add(q2,Occur.MUST);
 				}else{
 					BooleanClause[] clauses = ((BooleanQuery)q2).getClauses();
@@ -880,7 +981,7 @@ public final class IKQueryParser {
 				}
 				
 			}else if('|' == op.type){
-				if(q1 instanceof TermQuery){
+				if(q1 instanceof TermQuery || q1 instanceof TermRangeQuery){
 					resultQuery.add(q1,Occur.SHOULD);
 				}else{
 					BooleanClause[] clauses = ((BooleanQuery)q1).getClauses();
@@ -894,7 +995,7 @@ public final class IKQueryParser {
 
 				}
 				
-				if(q2 instanceof TermQuery){
+				if(q2 instanceof TermQuery || q2 instanceof TermRangeQuery){
 					resultQuery.add(q2,Occur.SHOULD);
 				}else{
 					BooleanClause[] clauses = ((BooleanQuery)q2).getClauses();
@@ -909,7 +1010,7 @@ public final class IKQueryParser {
 				
 			}else if('-' == op.type){
 				
-				if(q1 instanceof TermQuery){
+				if(q1 instanceof TermQuery ||  q1 instanceof TermRangeQuery){
 					resultQuery.add(q1,Occur.MUST);
 				}else{
 					BooleanClause[] clauses = ((BooleanQuery)q1).getClauses();
@@ -923,6 +1024,70 @@ public final class IKQueryParser {
 			return resultQuery;
 		}
 		
+		/**
+		 * 组装TermRangeQuery
+		 * @param elements
+		 * @return
+		 */
+		private TermRangeQuery toTermRangeQuery(Element fieldNameEle , LinkedList<Element> elements){
+
+			boolean includeFirst = false;
+			boolean includeLast = false;
+			String firstValue = null;
+			String lastValue = null;
+			//检查第一个元素是否是[或者{
+			Element first = elements.getFirst();
+			if('[' == first.type){
+				includeFirst = true;
+			}else if('{' == first.type){
+				includeFirst = false;
+			}else {
+				throw new IllegalStateException("表达式异常");
+			}
+			//检查最后一个元素是否是]或者}
+			Element last = elements.getLast();
+			if(']' == last.type){
+				includeLast = true;
+			}else if('}' == last.type){
+				includeLast = false;
+			}else {
+				throw new IllegalStateException("表达式异常, RangeQuery缺少结束括号");
+			}
+			if(elements.size() < 4 || elements.size() > 5){
+				throw new IllegalStateException("表达式异常, RangeQuery 错误");
+			}			
+			//读出中间部分
+			Element e2 = elements.get(1);
+			if('\'' == e2.type){
+				firstValue = e2.toString();
+				//
+				Element e3 = elements.get(2);
+				if(',' != e3.type){
+					throw new IllegalStateException("表达式异常, RangeQuery缺少逗号分隔");
+				}
+				//
+				Element e4 = elements.get(3);
+				if('\'' == e4.type){
+					lastValue = e4.toString();
+				}else if(e4 != last){
+					throw new IllegalStateException("表达式异常，RangeQuery格式错误");
+				}				
+			}else if(',' == e2.type){
+				firstValue = null;
+				//
+				Element e3 = elements.get(2);
+				if('\'' == e3.type){
+					lastValue = e3.toString();
+				}else{
+					throw new IllegalStateException("表达式异常，RangeQuery格式错误");
+				}
+				
+			}else {
+				throw new IllegalStateException("表达式异常, RangeQuery格式错误");
+			}
+			
+			return new TermRangeQuery(fieldNameEle.toString() , firstValue , lastValue , includeFirst , includeLast);
+		}
 		/**
 		 * 比较操作符优先级
 		 * @param e1
@@ -978,7 +1143,7 @@ public final class IKQueryParser {
 		}
 	}
 	public static void main(String[] args){
-		String ikQueryExp = "(id='1231231' && title:'MYNAMEmonkey') || (content:'你好吗'  || ulr='www.ik.com') - name:'林良益'";
+		String ikQueryExp = "(id='1231231' && date:{'20010101','20110101'}) || (content:'你好吗'  || ulr='www.ik.com') - name:'林良益'";
 		Query result = IKQueryParser.parse(ikQueryExp);
 		System.out.println(result);
 
