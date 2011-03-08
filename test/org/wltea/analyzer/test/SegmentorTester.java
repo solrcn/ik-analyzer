@@ -24,7 +24,7 @@ import junit.framework.TestCase;
 public class SegmentorTester extends TestCase{
 	
 	public void testLetter(){
-		String t = "S43-LC10 AT&T and I.B.M Corp mail : 1.12.34.33 -1-2003%123*111-11+12 2009A17B10 10:10:23wo!r+d.1{}0.16-8AAAA_B$BB@0.1.12.34.33.10.18ok?hello001.txt";
+		String t = "C++ S43-LC10 AT&T and I.B.M Corp mail : 1.12.34.33 -1-2003%123*111-11+12 2009A17B10 10:10:23wo!r+d.1{}0.16-8AAAA_B$BB@0.1.12.34.33.10.18ok?hello001.txt";
 //		Token ruToken = new Token();
 //		StandardTokenizer st = new StandardTokenizer(new StringReader(t));
 //		try {
