@@ -874,7 +874,7 @@ public final class IKQueryParser {
 						}else if(':' == e2.type){
 							String keyword = e3.toString();
 							if(keyword.startsWith("^") && keyword.endsWith("$")){
-								Query pQuery = this.toPhraseQuery(e.toString(), keyword);
+								Query pQuery = this.luceneQueryParse(e.toString(), keyword);
 								this.querys.push(pQuery);
 							}else{
 								Query tQuery = IKQueryParser.parse(e.toString(), e3.toString());
@@ -1116,18 +1116,19 @@ public final class IKQueryParser {
 		}
 		
 		/**
-		 * 组装PhraseQuery
+		 * 组装Lucene Query
+		 * 处理关键字紧凑搜索
 		 * @param elements
 		 * @return
 		 */
-		private PhraseQuery toPhraseQuery(String fieldName , String keyword){
+		private Query luceneQueryParse(String fieldName , String keyword){
 			//截取头部^尾部$
 			keyword = keyword.substring(1 , keyword.length() - 1);
 			String luceneExp = fieldName + ":\"" + keyword + "\"";
 			QueryParser luceneQueryParser = new QueryParser(Version.LUCENE_30 , "" ,new IKAnalyzer());
 			try {
 				Query lucenceQuery = luceneQueryParser.parse(luceneExp);
-				return (PhraseQuery)lucenceQuery;
+				return lucenceQuery;
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}								

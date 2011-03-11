@@ -234,14 +234,9 @@ public class SegmentorTester extends TestCase{
 	
 	public void testQueryParser(){
 		Query query = null;
-		try {
 //			String[] fields = new String[]{"f1" , "f3" , "f5"};
 //			query = IKQueryParser.parseMultiField(fields,  "title:评测");
 			query = IKQueryParser.parse("F",  "中华人民共和国");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		System.out.println(query);
 	}
 
