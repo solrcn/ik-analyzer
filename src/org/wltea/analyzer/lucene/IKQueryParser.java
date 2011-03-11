@@ -13,12 +13,16 @@ import java.util.Map;
 import java.util.Stack;
 
 import org.apache.lucene.index.Term;
+import org.apache.lucene.queryParser.ParseException;
+import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TermRangeQuery;
 import org.apache.lucene.search.BooleanClause.Occur;
+import org.apache.lucene.util.Version;
 import org.wltea.analyzer.IKSegmentation;
 import org.wltea.analyzer.Lexeme;
 
@@ -159,7 +163,7 @@ public final class IKQueryParser {
 	 * @return Query 查询逻辑对象
 	 * @throws IOException
 	 */
-	public static Query parse(String field , String query) throws IOException{
+	public static Query parse(String field , String query){
 		if(field == null){
 			throw new IllegalArgumentException("parameter \"field\" is null");
 		}
@@ -171,16 +175,26 @@ public final class IKQueryParser {
 				if("".equals(q)){
 					continue;
 				}
-				Query partQuery = _parse(field , q);
-				if(partQuery != null && 
-				          (!(partQuery instanceof BooleanQuery) || ((BooleanQuery)partQuery).getClauses().length>0)){
-					resultQuery.add(partQuery, Occur.SHOULD); 
+				Query partQuery;
+				try {
+					partQuery = _parse(field , q);
+					if(partQuery != null && 
+					          (!(partQuery instanceof BooleanQuery) || ((BooleanQuery)partQuery).getClauses().length>0)){
+						resultQuery.add(partQuery, Occur.SHOULD); 
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
 			}
 			return resultQuery;
 		}else{
-			return _parse(field , query);
+			try {
+				return _parse(field , query);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
+		return null;
 	}
 	
 	/**
@@ -857,12 +871,14 @@ public final class IKQueryParser {
 						if('=' == e2.type){
 							TermQuery tQuery = new TermQuery(new Term(e.toString() , e3.toString()));
 							this.querys.push(tQuery);
-						}else if(':' == e2.type){					
-							try {
+						}else if(':' == e2.type){
+							String keyword = e3.toString();
+							if(keyword.startsWith("^") && keyword.endsWith("$")){
+								Query pQuery = this.toPhraseQuery(e.toString(), keyword);
+								this.querys.push(pQuery);
+							}else{
 								Query tQuery = IKQueryParser.parse(e.toString(), e3.toString());
 								this.querys.push(tQuery);
-							} catch (IOException e1) {
-								e1.printStackTrace();
 							}
 						}
 						
@@ -952,7 +968,9 @@ public final class IKQueryParser {
 			Query q2 = this.querys.pop();
 			Query q1 = this.querys.pop();
 			if('&' == op.type){
-				if(q1 instanceof TermQuery || q1 instanceof TermRangeQuery){
+				if(q1 instanceof TermQuery 
+						|| q1 instanceof TermRangeQuery 
+						|| q1 instanceof PhraseQuery){
 					resultQuery.add(q1,Occur.MUST);
 				}else{
 					BooleanClause[] clauses = ((BooleanQuery)q1).getClauses();
@@ -966,7 +984,9 @@ public final class IKQueryParser {
 
 				}
 				
-				if(q2 instanceof TermQuery || q2 instanceof TermRangeQuery){
+				if(q2 instanceof TermQuery 
+						|| q2 instanceof TermRangeQuery
+						|| q2 instanceof PhraseQuery){
 					resultQuery.add(q2,Occur.MUST);
 				}else{
 					BooleanClause[] clauses = ((BooleanQuery)q2).getClauses();
@@ -981,7 +1001,9 @@ public final class IKQueryParser {
 				}
 				
 			}else if('|' == op.type){
-				if(q1 instanceof TermQuery || q1 instanceof TermRangeQuery){
+				if(q1 instanceof TermQuery 
+						|| q1 instanceof TermRangeQuery
+						|| q1 instanceof PhraseQuery){
 					resultQuery.add(q1,Occur.SHOULD);
 				}else{
 					BooleanClause[] clauses = ((BooleanQuery)q1).getClauses();
@@ -995,7 +1017,9 @@ public final class IKQueryParser {
 
 				}
 				
-				if(q2 instanceof TermQuery || q2 instanceof TermRangeQuery){
+				if(q2 instanceof TermQuery 
+						|| q2 instanceof TermRangeQuery
+						|| q2 instanceof PhraseQuery){
 					resultQuery.add(q2,Occur.SHOULD);
 				}else{
 					BooleanClause[] clauses = ((BooleanQuery)q2).getClauses();
@@ -1010,7 +1034,9 @@ public final class IKQueryParser {
 				
 			}else if('-' == op.type){
 				
-				if(q1 instanceof TermQuery ||  q1 instanceof TermRangeQuery){
+				if(q1 instanceof TermQuery 
+						|| q1 instanceof TermRangeQuery
+						|| q1 instanceof PhraseQuery){
 					resultQuery.add(q1,Occur.MUST);
 				}else{
 					BooleanClause[] clauses = ((BooleanQuery)q1).getClauses();
@@ -1088,6 +1114,27 @@ public final class IKQueryParser {
 			
 			return new TermRangeQuery(fieldNameEle.toString() , firstValue , lastValue , includeFirst , includeLast);
 		}
+		
+		/**
+		 * 组装PhraseQuery
+		 * @param elements
+		 * @return
+		 */
+		private PhraseQuery toPhraseQuery(String fieldName , String keyword){
+			//截取头部^尾部$
+			keyword = keyword.substring(1 , keyword.length() - 1);
+			String luceneExp = fieldName + ":\"" + keyword + "\"";
+			QueryParser luceneQueryParser = new QueryParser(Version.LUCENE_30 , "" ,new IKAnalyzer());
+			try {
+				Query lucenceQuery = luceneQueryParser.parse(luceneExp);
+				return (PhraseQuery)lucenceQuery;
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}								
+			return null;			
+		}
+		
+		
 		/**
 		 * 比较操作符优先级
 		 * @param e1
@@ -1143,7 +1190,7 @@ public final class IKQueryParser {
 		}
 	}
 	public static void main(String[] args){
-		String ikQueryExp = "(id='1231231' && date:{'20010101','20110101'}) || (content:'你好吗'  || ulr='www.ik.com') - name:'林良益'";
+		String ikQueryExp = "(id='1231231' && date:{'20010101','20110101'} && keyword:'^关键词$') || (content:'你好吗'  || ulr='www.ik.com') - name:'林良益'";
 		Query result = IKQueryParser.parse(ikQueryExp);
 		System.out.println(result);
 
