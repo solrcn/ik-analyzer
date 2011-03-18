@@ -133,7 +133,7 @@ public class SegmentorTester extends TestCase{
 //		
 //		testStr.add("中国人民银行");
 
-//		testStr.add("打索埕");
+		testStr.add("法新社消息，日本自卫队直升机飞临福岛第一核电站3号和4号堆上方，每架倾倒了超过7吨水来给反应堆降温。行动从上午日本时间九点五十四分开始。");
 		testStr.add("曙光天阔 I620r-G /A950r-F 夏普SH9020C");
 //		testStr.add("神话电视连续剧  20092008년을 마무리 할까 합니다  右のテキストエリアに訳文が  にちほん");
 //
@@ -236,7 +236,7 @@ public class SegmentorTester extends TestCase{
 		Query query = null;
 //			String[] fields = new String[]{"f1" , "f3" , "f5"};
 //			query = IKQueryParser.parseMultiField(fields,  "title:评测");
-			query = IKQueryParser.parse("F",  "中华人民共和国");
+			query = IKQueryParser.parse("F",  "龙与地下城");
 		System.out.println(query);
 	}
 

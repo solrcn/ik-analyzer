@@ -115,9 +115,8 @@ public final class IKQueryParser {
 	 * @param field
 	 * @param query
 	 * @return
-	 * @throws IOException
 	 */
-	private static Query _parse(String field , String query) throws IOException{
+	public static Query parse(String field , String query){
 		if(field == null){
 			throw new IllegalArgumentException("parameter \"field\" is null");
 		}
@@ -136,9 +135,13 @@ public final class IKQueryParser {
 			//对查询条件q进行分词
 			StringReader input = new StringReader(query.trim());
 			IKSegmentation ikSeg = new IKSegmentation(input , isMaxWordLength);
-			for(Lexeme lexeme = ikSeg.next() ; lexeme != null ; lexeme = ikSeg.next()){
-				//处理词元分支
-				root.accept(lexeme);
+			try {
+				for(Lexeme lexeme = ikSeg.next() ; lexeme != null ; lexeme = ikSeg.next()){
+					//处理词元分支
+					root.accept(lexeme);
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 			//缓存解析结果的博弈树
 			cachedTokenBranch(query , root);
@@ -163,39 +166,39 @@ public final class IKQueryParser {
 	 * @return Query 查询逻辑对象
 	 * @throws IOException
 	 */
-	public static Query parse(String field , String query){
-		if(field == null){
-			throw new IllegalArgumentException("parameter \"field\" is null");
-		}
-		String[] qParts = query.split("\\s");
-		if(qParts.length > 1){			
-			BooleanQuery resultQuery = new BooleanQuery();
-			for(String q : qParts){
-				//过滤掉由于连续空格造成的空字串
-				if("".equals(q)){
-					continue;
-				}
-				Query partQuery;
-				try {
-					partQuery = _parse(field , q);
-					if(partQuery != null && 
-					          (!(partQuery instanceof BooleanQuery) || ((BooleanQuery)partQuery).getClauses().length>0)){
-						resultQuery.add(partQuery, Occur.SHOULD); 
-					}
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			return resultQuery;
-		}else{
-			try {
-				return _parse(field , query);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		return null;
-	}
+//	public static Query parse(String field , String query){
+//		if(field == null){
+//			throw new IllegalArgumentException("parameter \"field\" is null");
+//		}
+//		String[] qParts = query.split("\\s");
+//		if(qParts.length > 1){			
+//			BooleanQuery resultQuery = new BooleanQuery();
+//			for(String q : qParts){
+//				//过滤掉由于连续空格造成的空字串
+//				if("".equals(q)){
+//					continue;
+//				}
+//				Query partQuery;
+//				try {
+//					partQuery = _parse(field , q);
+//					if(partQuery != null && 
+//					          (!(partQuery instanceof BooleanQuery) || ((BooleanQuery)partQuery).getClauses().length>0)){
+//						resultQuery.add(partQuery, Occur.MUST); 
+//					}
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//				}
+//			}
+//			return resultQuery;
+//		}else{
+//			try {
+//				return _parse(field , query);
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		}
+//		return null;
+//	}
 	
 	/**
 	 * 多Field,单条件查询分析
@@ -1191,7 +1194,7 @@ public final class IKQueryParser {
 		}
 	}
 	public static void main(String[] args){
-		String ikQueryExp = "(id='1231231' && date:{'20010101','20110101'} && keyword:'^关键词$') || (content:'你好吗'  || ulr='www.ik.com') - name:'林良益'";
+		String ikQueryExp = "(id='1231231' && date:{'20010101','20110101'} && keyword:'^魔兽中国$') || (content:'魔兽 中国'  || ulr='www.ik.com') - name:'林良益'";
 		Query result = IKQueryParser.parse(ikQueryExp);
 		System.out.println(result);
 
