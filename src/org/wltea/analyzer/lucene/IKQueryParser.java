@@ -574,7 +574,7 @@ public final class IKQueryParser {
 				if(this.querys.size() == 1){
 					lucenceQuery = this.querys.pop();
 				}else{
-					throw new IllegalStateException("表达式异常： 缺少逻辑操作符");
+					throw new IllegalStateException("表达式异常： 缺少逻辑操作符 或 括号缺失");
 				}
 			}finally{
 				elements.clear();
@@ -963,93 +963,108 @@ public final class IKQueryParser {
 		 * @return
 		 */
 		private Query toQuery(Element op){
-			BooleanQuery resultQuery = new BooleanQuery();
-			if(this.querys.size() < 2){
-				throw new IllegalStateException("表达式异常：SubQuery 个数不匹配");
+			if(this.querys.size() == 0){
+				return null;
 			}
+			
+			BooleanQuery resultQuery = new BooleanQuery();
+
+			if(this.querys.size() == 1){
+				return this.querys.get(0);
+			}
+			
 			Query q2 = this.querys.pop();
 			Query q1 = this.querys.pop();
 			if('&' == op.type){
-				if(q1 instanceof BooleanQuery){
-					BooleanClause[] clauses = ((BooleanQuery)q1).getClauses();
-					if(clauses.length > 0 
-							&& clauses[0].getOccur() == Occur.MUST){
-						for(BooleanClause c : clauses){
-							resultQuery.add(c);
-						}					
+				if(q1 != null){
+					if(q1 instanceof BooleanQuery){
+						BooleanClause[] clauses = ((BooleanQuery)q1).getClauses();
+						if(clauses.length > 0 
+								&& clauses[0].getOccur() == Occur.MUST){
+							for(BooleanClause c : clauses){
+								resultQuery.add(c);
+							}					
+						}else{
+							resultQuery.add(q1,Occur.MUST);
+						}
+
 					}else{
+						//q1 instanceof TermQuery 
+						//q1 instanceof TermRangeQuery 
+						//q1 instanceof PhraseQuery
+						//others
 						resultQuery.add(q1,Occur.MUST);
 					}
-
-				}else{
-					//q1 instanceof TermQuery 
-					//q1 instanceof TermRangeQuery 
-					//q1 instanceof PhraseQuery
-					//others
-					resultQuery.add(q1,Occur.MUST);
 				}
 				
-				
-				if(q2 instanceof BooleanQuery){
-					BooleanClause[] clauses = ((BooleanQuery)q2).getClauses();
-					if(clauses.length > 0 
-							&& clauses[0].getOccur() == Occur.MUST){
-						for(BooleanClause c : clauses){
-							resultQuery.add(c);
-						}					
+				if(q2 != null){
+					if(q2 instanceof BooleanQuery){
+						BooleanClause[] clauses = ((BooleanQuery)q2).getClauses();
+						if(clauses.length > 0 
+								&& clauses[0].getOccur() == Occur.MUST){
+							for(BooleanClause c : clauses){
+								resultQuery.add(c);
+							}					
+						}else{
+							resultQuery.add(q2,Occur.MUST);
+						}
+						
 					}else{
+						//q1 instanceof TermQuery 
+						//q1 instanceof TermRangeQuery 
+						//q1 instanceof PhraseQuery
+						//others
 						resultQuery.add(q2,Occur.MUST);
 					}
-					
-				}else{
-					//q1 instanceof TermQuery 
-					//q1 instanceof TermRangeQuery 
-					//q1 instanceof PhraseQuery
-					//others
-					resultQuery.add(q2,Occur.MUST);
 				}
 				
 			}else if('|' == op.type){
-				
-				if(q1 instanceof BooleanQuery){
-					BooleanClause[] clauses = ((BooleanQuery)q1).getClauses();
-					if(clauses.length > 0 
-							&& clauses[0].getOccur() == Occur.SHOULD){
-						for(BooleanClause c : clauses){
-							resultQuery.add(c);
-						}					
+				if(q1 != null){
+					if(q1 instanceof BooleanQuery){
+						BooleanClause[] clauses = ((BooleanQuery)q1).getClauses();
+						if(clauses.length > 0 
+								&& clauses[0].getOccur() == Occur.SHOULD){
+							for(BooleanClause c : clauses){
+								resultQuery.add(c);
+							}					
+						}else{
+							resultQuery.add(q1,Occur.SHOULD);
+						}
+						
 					}else{
+						//q1 instanceof TermQuery 
+						//q1 instanceof TermRangeQuery 
+						//q1 instanceof PhraseQuery
+						//others
 						resultQuery.add(q1,Occur.SHOULD);
 					}
-					
-				}else{
-					//q1 instanceof TermQuery 
-					//q1 instanceof TermRangeQuery 
-					//q1 instanceof PhraseQuery
-					//others
-					resultQuery.add(q1,Occur.SHOULD);
 				}
 				
-				if(q2 instanceof BooleanQuery){
-					BooleanClause[] clauses = ((BooleanQuery)q2).getClauses();
-					if(clauses.length > 0 
-							&& clauses[0].getOccur() == Occur.SHOULD){
-						for(BooleanClause c : clauses){
-							resultQuery.add(c);
-						}					
+				if(q2 != null){
+					if(q2 instanceof BooleanQuery){
+						BooleanClause[] clauses = ((BooleanQuery)q2).getClauses();
+						if(clauses.length > 0 
+								&& clauses[0].getOccur() == Occur.SHOULD){
+							for(BooleanClause c : clauses){
+								resultQuery.add(c);
+							}					
+						}else{
+							resultQuery.add(q2,Occur.SHOULD);
+						}
 					}else{
+						//q2 instanceof TermQuery 
+						//q2 instanceof TermRangeQuery 
+						//q2 instanceof PhraseQuery
+						//others
 						resultQuery.add(q2,Occur.SHOULD);
+						
 					}
-				}else{
-					//q2 instanceof TermQuery 
-					//q2 instanceof TermRangeQuery 
-					//q2 instanceof PhraseQuery
-					//others
-					resultQuery.add(q2,Occur.SHOULD);
-					
 				}
 				
 			}else if('-' == op.type){
+				if(q1 == null || q2 == null){
+					throw new IllegalStateException("表达式异常：SubQuery 个数不匹配");
+				}
 				
 				if(q1 instanceof BooleanQuery){
 					BooleanClause[] clauses = ((BooleanQuery)q1).getClauses();
@@ -1215,8 +1230,10 @@ public final class IKQueryParser {
 		}
 	}
 	public static void main(String[] args){
-		String ikQueryExp = "(id='1231231' && date:{'20010101','20110101'} && keyword:'^魔兽中国$') || (content:'魔兽 中国'  || ulr='www.ik.com') - name:'林良益'";
+//		String ikQueryExp = "(id='1231231' && date:{'20010101','20110101'} && keyword:'^魔兽中国$') || (content:'魔兽 中国'  || ulr='www.ik.com') - name:'林良益'";
+		String ikQueryExp = "content:'----'  || title:'----' - name:'林良益'";
 		Query result = IKQueryParser.parse(ikQueryExp);
+//		Query result = IKQueryParser.parse("(newsKeyword='---' || newsTitle:'---' || newsContent:'---') && newsClass='1'");
 		System.out.println(result);
 
 	}	
