@@ -125,7 +125,7 @@ public class SegmentorTester extends TestCase{
 //		
 		testStr.add("IKAnalyzer是一个开源的，基于java语言开发的轻量级的中文分词工具包。从2006年12月推出1.0版开始， IKAnalyzer已经推出了3个大版本。");
 //
-		testStr.add("永和服装饰品有限公司");//		
+		testStr.add("永和服装饰品");//		
 		testStr.add("作者博客：linliangyi2007.javaeye.com  电子邮件地址：linliangyi2005@gmail.com");
 		testStr.add("古田县城关六一四路四百零五号");
 		testStr.add("广州市越秀区广州大道中131-133号信龙大厦");
@@ -236,7 +236,7 @@ public class SegmentorTester extends TestCase{
 		Query query = null;
 //			String[] fields = new String[]{"f1" , "f3" , "f5"};
 //			query = IKQueryParser.parseMultiField(fields,  "title:评测");
-			query = IKQueryParser.parse("F",  "龙与地下城");
+			query = IKQueryParser.parse("t",  "和服装饰品");
 		System.out.println(query);
 	}
 

@@ -17,7 +17,6 @@ import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
-import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TermRangeQuery;
@@ -971,13 +970,10 @@ public final class IKQueryParser {
 			Query q2 = this.querys.pop();
 			Query q1 = this.querys.pop();
 			if('&' == op.type){
-				if(q1 instanceof TermQuery 
-						|| q1 instanceof TermRangeQuery 
-						|| q1 instanceof PhraseQuery){
-					resultQuery.add(q1,Occur.MUST);
-				}else{
+				if(q1 instanceof BooleanQuery){
 					BooleanClause[] clauses = ((BooleanQuery)q1).getClauses();
-					if(clauses[0].getOccur() == Occur.MUST){
+					if(clauses.length > 0 
+							&& clauses[0].getOccur() == Occur.MUST){
 						for(BooleanClause c : clauses){
 							resultQuery.add(c);
 						}					
@@ -985,68 +981,93 @@ public final class IKQueryParser {
 						resultQuery.add(q1,Occur.MUST);
 					}
 
+				}else{
+					//q1 instanceof TermQuery 
+					//q1 instanceof TermRangeQuery 
+					//q1 instanceof PhraseQuery
+					//others
+					resultQuery.add(q1,Occur.MUST);
 				}
 				
-				if(q2 instanceof TermQuery 
-						|| q2 instanceof TermRangeQuery
-						|| q2 instanceof PhraseQuery){
-					resultQuery.add(q2,Occur.MUST);
-				}else{
+				
+				if(q2 instanceof BooleanQuery){
 					BooleanClause[] clauses = ((BooleanQuery)q2).getClauses();
-					if(clauses[0].getOccur() == Occur.MUST){
+					if(clauses.length > 0 
+							&& clauses[0].getOccur() == Occur.MUST){
 						for(BooleanClause c : clauses){
 							resultQuery.add(c);
 						}					
 					}else{
 						resultQuery.add(q2,Occur.MUST);
 					}
-
+					
+				}else{
+					//q1 instanceof TermQuery 
+					//q1 instanceof TermRangeQuery 
+					//q1 instanceof PhraseQuery
+					//others
+					resultQuery.add(q2,Occur.MUST);
 				}
 				
 			}else if('|' == op.type){
-				if(q1 instanceof TermQuery 
-						|| q1 instanceof TermRangeQuery
-						|| q1 instanceof PhraseQuery){
-					resultQuery.add(q1,Occur.SHOULD);
-				}else{
+				
+				if(q1 instanceof BooleanQuery){
 					BooleanClause[] clauses = ((BooleanQuery)q1).getClauses();
-					if(clauses[0].getOccur() == Occur.SHOULD){
+					if(clauses.length > 0 
+							&& clauses[0].getOccur() == Occur.SHOULD){
 						for(BooleanClause c : clauses){
 							resultQuery.add(c);
 						}					
 					}else{
 						resultQuery.add(q1,Occur.SHOULD);
 					}
-
+					
+				}else{
+					//q1 instanceof TermQuery 
+					//q1 instanceof TermRangeQuery 
+					//q1 instanceof PhraseQuery
+					//others
+					resultQuery.add(q1,Occur.SHOULD);
 				}
 				
-				if(q2 instanceof TermQuery 
-						|| q2 instanceof TermRangeQuery
-						|| q2 instanceof PhraseQuery){
-					resultQuery.add(q2,Occur.SHOULD);
-				}else{
+				if(q2 instanceof BooleanQuery){
 					BooleanClause[] clauses = ((BooleanQuery)q2).getClauses();
-					if(clauses[0].getOccur() == Occur.SHOULD){
+					if(clauses.length > 0 
+							&& clauses[0].getOccur() == Occur.SHOULD){
 						for(BooleanClause c : clauses){
 							resultQuery.add(c);
 						}					
 					}else{
 						resultQuery.add(q2,Occur.SHOULD);
 					}
+				}else{
+					//q2 instanceof TermQuery 
+					//q2 instanceof TermRangeQuery 
+					//q2 instanceof PhraseQuery
+					//others
+					resultQuery.add(q2,Occur.SHOULD);
+					
 				}
 				
 			}else if('-' == op.type){
 				
-				if(q1 instanceof TermQuery 
-						|| q1 instanceof TermRangeQuery
-						|| q1 instanceof PhraseQuery){
-					resultQuery.add(q1,Occur.MUST);
-				}else{
+				if(q1 instanceof BooleanQuery){
 					BooleanClause[] clauses = ((BooleanQuery)q1).getClauses();
-					for(BooleanClause c : clauses){
-						resultQuery.add(c);
+					if(clauses.length > 0){
+						for(BooleanClause c : clauses){
+							resultQuery.add(c);
+						}					
+					}else{
+						resultQuery.add(q1,Occur.MUST);
 					}
-				}
+
+				}else{
+					//q1 instanceof TermQuery 
+					//q1 instanceof TermRangeQuery 
+					//q1 instanceof PhraseQuery
+					//others
+					resultQuery.add(q1,Occur.MUST);
+				}				
 				
 				resultQuery.add(q2,Occur.MUST_NOT);
 			}
