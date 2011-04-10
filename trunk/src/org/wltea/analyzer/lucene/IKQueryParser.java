@@ -1230,8 +1230,8 @@ public final class IKQueryParser {
 		}
 	}
 	public static void main(String[] args){
-//		String ikQueryExp = "(id='1231231' && date:{'20010101','20110101'} && keyword:'^魔兽中国$') || (content:'魔兽 中国'  || ulr='www.ik.com') - name:'林良益'";
-		String ikQueryExp = "content:'----'  || title:'----' - name:'林良益'";
+		String ikQueryExp = "(id='ABcdRf' && date:{'20010101','20110101'} && keyword:'^魔兽中国$') || (content:'魔兽 中国'  || ulr='www.ik.com') - name:'林良益'";
+//		String ikQueryExp = "content:'----'  || title:'----' - name:'林良益'";
 		Query result = IKQueryParser.parse(ikQueryExp);
 //		Query result = IKQueryParser.parse("(newsKeyword='---' || newsTitle:'---' || newsContent:'---') && newsClass='1'");
 		System.out.println(result);

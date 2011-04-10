@@ -51,7 +51,7 @@ public class QuantifierSegmenter implements ISegmenter {
 //	public static final int NC_ANE = 04;
 	
 	//序数词（数词前缀）
-	public static String Num_Pre = "第";//Cpre
+	public static String Num_Pre = "第初";//Cpre
 	public static final int NC_NP = 11;
 	//中文数词
 	public static String Chn_Num = "○一二两三四五六七八九十零壹贰叁肆伍陆柒捌玖拾百千万亿拾佰仟萬億兆卅廿";//Cnum
