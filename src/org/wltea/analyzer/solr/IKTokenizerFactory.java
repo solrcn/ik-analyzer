@@ -7,7 +7,8 @@ import java.io.Reader;
 import java.util.Map;
 
 import org.apache.lucene.analysis.Tokenizer;
-import org.apache.solr.analysis.BaseTokenizerFactory;
+import org.apache.lucene.analysis.util.TokenizerFactory;
+import org.apache.lucene.util.AttributeFactory;
 import org.wltea.analyzer.lucene.IKTokenizer;
 
 /**
@@ -17,17 +18,18 @@ import org.wltea.analyzer.lucene.IKTokenizer;
  * @author 林良益、李良杰
  *
  */
-public final class IKTokenizerFactory extends BaseTokenizerFactory{
+public final class IKTokenizerFactory extends TokenizerFactory {
 	
 	private boolean isMaxWordLength = false;
-	
+
 	/**
 	 * IK分词器Solr TokenizerFactory接口实现类
 	 * 默认最细粒度切分算法
 	 */
-	public IKTokenizerFactory(){
+	public IKTokenizerFactory(Map<String, String> args){
+        super(args);
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.apache.solr.analysis.BaseTokenizerFactory#init(java.util.Map)
@@ -53,4 +55,9 @@ public final class IKTokenizerFactory extends BaseTokenizerFactory{
 		return isMaxWordLength;
 	}
 
+    @Override
+    public Tokenizer create(AttributeFactory attributeFactory) {
+
+        return null;
+    }
 }
